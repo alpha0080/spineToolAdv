@@ -51,10 +51,47 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
          # self.createImageTable()
         #  self.getImagesInFolder()
           self.defineImageInfoDock()
-          self.createPreviewImageDockButton()
+          self.defineDockImageButton()
      
      
      
+     def defineDockImageButton(self):
+        
+          self.errMsgLabel = QtWidgets.QLabel(self.dockImageButton)
+          self.errMsgLabel.setGeometry(QtCore.QRect(0, 50, 500, 50))
+          self.errMsgLabel.setObjectName("errMsgLabel")
+          self.errMsgLabel.setText(QtWidgets.QApplication.translate("MainWindow", "TextLabel", None, -1))
+          
+          
+          self.createSlotButton = QtWidgets.QPushButton(self.dockImageButton)
+          self.createSlotButton.setGeometry(QtCore.QRect(0, 200, 150, 50))
+          self.createSlotButton.setObjectName("pushButton")
+          self.createSlotButton.setText(QtWidgets.QApplication.translate("MainWindow", "create Slot", None, -1))
+          self.createSlotButton.clicked.connect(self.defineCreateSlotButton)
+     
+     def defineCreateSlotButton(self):
+          errMsg = "create Slot fail"
+          selectedImageCount = len(self.imageListTable.selectedItems())
+          currentImage = self.imageListTable.currentItem().text()
+          slotName = currentImage.split('.')[0]
+          print (currentImage)
+          if selectedImageCount ==0:
+              self.errMsgLabel.setText('no selected image')
+          else:
+               self.errMsgLabel.setText(currentImage)
+               imageSize = self.imageInfoTable.item(0,1).text()[1:-1].split(' ')
+               imageW = int(imageSize[0])
+               imageH = int(imageSize[1])
+               slotPlane = cmds.polyPlane(n='%s_#'%slotName,sx=1,sy=1)[0]
+               cmds.setAttr('%s.rotateX'%slotPlane,90)
+               cmds.setAttr('%s.scaleX'%slotPlane,imageW)
+               cmds.setAttr('%s.scaleZ'%slotPlane,imageH)
+               
+
+               print slotPlane
+               
+     def defineBone(self):
+          
      
      def defineImageInfoDock(self):
           folderDir = "C:/Users/alpha/Documents/GitHub/mayaTool/pipelineTool/UI"
@@ -167,11 +204,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           for i in range(0,rowCount):
                self.imageInfoTable.setRowHeight(i, rowHeight)
 
-     def createPreviewImageDockButton(self):
-          self.createSlotButton = QtWidgets.QPushButton(self.dockImageButton)
-          self.createSlotButton.setGeometry(QtCore.QRect(50, 50, 150, 46))
-          self.createSlotButton.setObjectName("pushButton")
-          self.createSlotButton.setText(QtWidgets.QApplication.translate("MainWindow", "create Slot", None, -1))
+          
 
 
 
@@ -248,29 +281,29 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           
           
      def createImageTable(self,images,folderDir,iconWidth):
-          self.tableWidget = QtWidgets.QTableWidget(self.dockWidgetImages)
+          self.imageListTable = QtWidgets.QTableWidget(self.dockWidgetImages)
           imagesCount = len(images)
           columnCount = 5
           columnWidth = iconWidth
           rowCount = int(math.ceil(float(len(images))/float(columnCount)))
           rowHeight = columnWidth
           
-          self.tableWidget.setGeometry(QtCore.QRect(10, 50,(columnCount*columnWidth+30), 500+30))
+          self.imageListTable.setGeometry(QtCore.QRect(10, 50,(columnCount*columnWidth+30), 500+30))
 
-          self.tableWidget.setObjectName("tableWidget")
-          self.tableWidget.setColumnCount(columnCount)
-          self.tableWidget.setRowCount(rowCount)
-          self.tableWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-          self.tableWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-          self.tableWidget.horizontalHeader().setVisible(False)
-          self.tableWidget.verticalHeader().setVisible(False)
-        #  self.tableWidget.setColumnWidth(0, 60)
-       #   self.tableWidget.setColumnWidth(1, 60)
+          self.imageListTable.setObjectName("tableWidget")
+          self.imageListTable.setColumnCount(columnCount)
+          self.imageListTable.setRowCount(rowCount)
+          self.imageListTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+          self.imageListTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+          self.imageListTable.horizontalHeader().setVisible(False)
+          self.imageListTable.verticalHeader().setVisible(False)
+        #  self.imageListTable.setColumnWidth(0, 60)
+       #   self.imageListTable.setColumnWidth(1, 60)
           for i in range(0,columnCount):
-               self.tableWidget.setColumnWidth(i, columnWidth)
+               self.imageListTable.setColumnWidth(i, columnWidth)
                
           for i in range(0,rowCount):
-               self.tableWidget.setRowHeight(i, columnWidth)
+               self.imageListTable.setRowHeight(i, columnWidth)
 
                
           for i in range (0,imagesCount):
@@ -282,14 +315,14 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                row = math.floor(float(i)/float(columnCount))
                column = i%columnCount
             #   print images[i]
-               self.tableWidget.setIconSize(QtCore.QSize(columnWidth,columnWidth))
+               self.imageListTable.setIconSize(QtCore.QSize(columnWidth,columnWidth))
 
-               self.tableWidget.setItem(row,column,item)
+               self.imageListTable.setItem(row,column,item)
                
-               self.tableWidget.item(row, column).setIcon(iconFile)
-               self.tableWidget.item(row, column).setText(QtWidgets.QApplication.translate("MainWindow",'%s'%itemName, None,-1))
+               self.imageListTable.item(row, column).setIcon(iconFile)
+               self.imageListTable.item(row, column).setText(QtWidgets.QApplication.translate("MainWindow",'%s'%itemName, None,-1))
 
-          self.tableWidget.setStyleSheet(" border: 3px solid #5E749C;\
+          self.imageListTable.setStyleSheet(" border: 3px solid #5E749C;\
                                              color:white;\
                                              text-align: top;\
                                              padding: 4px;\
@@ -300,7 +333,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                                              
 
                                                                                                
-          self.tableWidget.itemClicked.connect(self.imageInfo)
+          self.imageListTable.itemClicked.connect(self.imageInfo)
 
           
           
@@ -309,10 +342,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
      def imageInfo(self):
          # print 'asss'
           
-         # print self.tableWidget.currentItem().text()
+         # print self.imageListTable.currentItem().text()
           
           folderDir = "C:/Users/alpha/Documents/GitHub/mayaTool/pipelineTool/UI"
-          imageUrl = folderDir + '/' + self.tableWidget.currentItem().text()
+          imageUrl = folderDir + '/' + self.imageListTable.currentItem().text()
           #print imageUrl
           
           image = ice.Load(imageUrl)
