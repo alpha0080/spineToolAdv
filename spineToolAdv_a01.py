@@ -46,30 +46,98 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           super(mod_MainWindow, self).__init__(parent)
           #self.QTITEM.ACTION.connect(self.MODDEF)
           self.setupUi(self)
+          
+          #initial data
+          self.folderDir = 'C:/Temp/testImage'
+          
+          
           print ('2',self)
           self.createDock()
          # self.createImageTable()
         #  self.getImagesInFolder()
           self.defineImageInfoDock()
-          self.defineDockImageButton()
+          self.defineImageButtonDock()
+          self.definePreviewImageDock()
      
      
-     
-     def defineDockImageButton(self):
+     def defineImageButtonDock(self):
+          
+          buttonStyle = "\
+                         QPushButton {\
+                         background-color:#333333;\
+                         border-radius:10px;\
+                         border-style:solid;\
+                         border-width:3px;\
+                         border-color:#5E749C;\
+                         }\
+                         QPushButton:hover{\
+                         background-color:#883333;\
+                         border-radius:10px;\
+                         border-style:solid;\
+                         border-width:3px;\
+                         border-color:#5E749C;\
+                         }\
+                         QPushButton:pressed{\
+                         background-color:#AAAA33;\
+                         border-radius:10px;\
+                         border-style:solid;\
+                         border-width:3px;\
+                         border-color:#5E749C;\
+                         }\
+                         "
         
+         
+                         
+                   
+                                                                   
           self.errMsgLabel = QtWidgets.QLabel(self.dockImageButton)
           self.errMsgLabel.setGeometry(QtCore.QRect(0, 50, 500, 50))
           self.errMsgLabel.setObjectName("errMsgLabel")
           self.errMsgLabel.setText(QtWidgets.QApplication.translate("MainWindow", "TextLabel", None, -1))
           
           
-          self.createSlotButton = QtWidgets.QPushButton(self.dockImageButton)
-          self.createSlotButton.setGeometry(QtCore.QRect(0, 200, 150, 50))
-          self.createSlotButton.setObjectName("pushButton")
-          self.createSlotButton.setText(QtWidgets.QApplication.translate("MainWindow", "create Slot", None, -1))
-          self.createSlotButton.clicked.connect(self.defineCreateSlotButton)
+          self.createSlotBtn = QtWidgets.QPushButton(self.dockImageButton)
+          self.createSlotBtn.setGeometry(QtCore.QRect(0, 200, 150, 50))
+          self.createSlotBtn.setObjectName("createSlot")
+          self.createSlotBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Slot", None, -1))
+          self.createSlotBtn.clicked.connect(self.definecreateSlotBtn)
      
-     def defineCreateSlotButton(self):
+     
+         
+          self.creatBoneBtn = QtWidgets.QPushButton(self.dockImageButton)
+          self.creatBoneBtn.setGeometry(QtCore.QRect(200, 200, 150, 50))
+          self.creatBoneBtn.setObjectName("createBone")
+          self.creatBoneBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Bone", None, -1))
+          self.creatBoneBtn.clicked.connect(self.defineCreateBoneBtn)
+     
+     
+    # hover
+          
+          self.createSlotBtn.setStyleSheet(buttonStyle)             
+          self.creatBoneBtn.setStyleSheet(buttonStyle)
+
+     
+     def defineCreateBoneBtn(self):
+          print ('define bone')
+          boneName = 'bone_'
+          boneAttr = {'name':"string ",
+                    "length":"float",
+                    "transform":"enum",
+                    "x":"float",
+                    "y":"float",
+                    "rotation":"float",
+                    "scaleX":"float",
+                    "scaleY":"float",
+                    "shearX":"float",
+                    "shearY":"float",
+                    "inheritScale":"boolean",
+                    "inheritRotation":"boolean",
+                    "color":"float3"
+                    }
+          cmds.joint(p=(0,0,0))
+     
+     
+     def definecreateSlotBtn(self):
           errMsg = "create Slot fail"
           selectedImageCount = len(self.imageListTable.selectedItems())
           currentImage = self.imageListTable.currentItem().text()
@@ -80,6 +148,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           else:
                self.errMsgLabel.setText(currentImage)
                imageSize = self.imageInfoTable.item(0,1).text()[1:-1].split(' ')
+               fileName = self.imageInfoTable.item(2,1).text()
+
                imageW = int(imageSize[0])
                imageH = int(imageSize[1])
                slotPlane = cmds.polyPlane(n='%s_#'%slotName,sx=1,sy=1)[0]
@@ -87,19 +157,50 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                cmds.setAttr('%s.scaleX'%slotPlane,imageW)
                cmds.setAttr('%s.scaleZ'%slotPlane,imageH)
                
-
+               self.assignSurfaceShader(slotName,slotPlane,fileName)
                print slotPlane
                
-     def defineBone(self):
+          
+     def assignSurfaceShader(self,imageName,object,fileName):  #imageName  as slot name
+          print ('fileName',fileName)
+          slotShaderName =  imageName + '_surfaceShader'
+          slotFileName = imageName + '_imageFile'
+          slotSG = imageName + '_SG'
+          if len(cmds.ls(slotShaderName)) == 0:
+               print ('slotShaderName is not exist')
+               shader=cmds.shadingNode("surfaceShader",asShader=True,n=slotShaderName)
+              # shader=cmds.rename(shader,slotShaderName)
+               file_node=cmds.shadingNode("file",asTexture=True,n=slotFileName)
+               shading_group= cmds.sets(renderable=True,noSurfaceShader=True,empty=True,n=slotSG)
+               cmds.connectAttr('%s.outColor' %shader ,'%s.surfaceShader' %shading_group)
+               cmds.connectAttr('%s.outColor' %file_node, '%s.outColor' %shader)
+               cmds.connectAttr('%s.outTransparency' %file_node, '%s.outTransparency' %shader)
+               cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
+               cmds.select(object)
+               cmds.hyperShade( assign=slotShaderName )
+               cmds.select(cl=True)
+
+             #  print ('create shrfaceShader named %s'%slotShaderName)
+
+          elif len(cmds.ls(slotShaderName)) == 1:
+               
+               print ('%s is exist'%slotShaderName)
+               cmds.select(object)
+               cmds.hyperShade( assign=slotShaderName )
+               cmds.select(cl=True)
+
+        
+   
+          
           
      
      def defineImageInfoDock(self):
-          folderDir = "C:/Users/alpha/Documents/GitHub/mayaTool/pipelineTool/UI"
+          #folderDir = "C:/Users/alpha/Documents/GitHub/mayaTool/pipelineTool/UI"
 
-          images = self.getImagesInFolder(folderDir)
-          self.createImageTable(images,folderDir,50)
+          images = self.getImagesInFolder()
+          self.createImageTable(images,50)
           self.createImageInfoTable()
-          self.createImagePreviewTable()
+          #self.createImagePreviewTable()
 
      def createDock(self):
           
@@ -114,7 +215,6 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           self.previewImageDock.setObjectName("previewImageDock")
           self.previewImageDock.setMinimumWidth(300)
           self.previewImageDock.setMinimumHeight(350)
-
           self.dockWidgetImagesInfo = QtWidgets.QDockWidget(self)
           self.dockWidgetImagesInfo.setObjectName("dockWidget")
           self.dockWidgetImagesInfo.setMinimumWidth(600)
@@ -133,24 +233,15 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           self.dockCamview.setObjectName("dockCamview")
           self.dockCamview.setMinimumWidth(600)
           self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockCamview)
-         # self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.previewImageDock)
-         # self.dockWidgetContents = QtWidgets.QWidget()
-          #self.dockWidgetContents.setObjectName("dockWidgetContents") 
-         # self.dockWidgetImages.setGeometry(QtCore.QRect(0, 0, 400, 600))
-
-          #self.dockWidget2 = QtWidgets.QDockWidget(self)
-          #self.dockWidget2.setObjectName("dockWidget")
-         # self.dockWidgetContents = QtWidgets.QWidget()
-          #self.dockWidgetContents.setObjectName("dockWidgetContents") 
-         # self.dockWidget2.setMinimumWidth(300)
-
-        #  self.addDockWidget(QtCore.Qt.DockWidgetArea(1), self.dockWidget2)
+    
           self.splitDockWidget( self.dockWidgetImages, self.dockWidgetImagesInfo, QtCore.Qt.Horizontal)
           self.splitDockWidget( self.dockWidgetImagesInfo, self.dockCamview, QtCore.Qt.Horizontal)
 
           self.splitDockWidget( self.dockWidgetImages, self.previewImageDock, QtCore.Qt.Vertical)
           self.splitDockWidget( self.dockWidgetImagesInfo, self.dockImageButton, QtCore.Qt.Vertical)
 
+
+   
 
      def createCamview(self):
          # We have our Qt Layout where we want to insert, say, a Maya viewport
@@ -177,9 +268,9 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           qtLayout.addWidget(paneLayoutQt)
 
        
-     def getImagesInFolder(self,folderDir):
+     def getImagesInFolder(self):
           "define image folder"
-          files = os.listdir(folderDir)
+          files = os.listdir(self.folderDir)
           imagesAllow = ['png','jpg','PNG','JPG']
           imageFiles = filter(lambda x: x.split('.')[-1] in imagesAllow, files)
           return imageFiles          
@@ -203,48 +294,27 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           self.imageInfoTable.verticalHeader().setVisible(False)
           for i in range(0,rowCount):
                self.imageInfoTable.setRowHeight(i, rowHeight)
-
+     
+     
+     def definePreviewImageDock(self):
+          self.createPreviewPannel()
+          
           
 
+     def createPreviewPannel(self):
+         # imageUrl = self.folderDir + '/' + self.imageListTable.currentItem().text()
+          self.imagePreviewLabel = QtWidgets.QLabel(self.previewImageDock)
+          self.imagePreviewLabel.setGeometry(QtCore.QRect(10, 50, 280, 280))
+          self.imagePreviewLabel.setStyleSheet("background-color:#333333;\
+                                                  border-radius:10px;\
+                                                  border-style:solid;\
+                                                  border-width:3px;\
+                                                  border-color:#5E749C")
+          self.imagePreviewLabel.setText("")
+          self.imagePreviewLabel.setPixmap(QtGui.QPixmap())
+          self.imagePreviewLabel.setScaledContents(True)
+          self.imagePreviewLabel.setObjectName("imagePreview")
 
-
-     def createImagePreviewTable(self):
-          self.imagePreviewTable = QtWidgets.QTableWidget(self.previewImageDock)
-          self.imagePreviewTable.setGeometry(QtCore.QRect(10, 50,280,280))
-          self.imagePreviewTable.setObjectName("imagePreviewTable")
-          self.imagePreviewTable.setColumnCount(1)
-          self.imagePreviewTable.setRowCount(1)
-          self.imagePreviewTable.setColumnWidth(0, 280)
-          self.imagePreviewTable.setRowHeight(0, 280)
-          self.imagePreviewTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-          self.imagePreviewTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-
-          self.imagePreviewTable.horizontalHeader().setVisible(False)
-          self.imagePreviewTable.verticalHeader().setVisible(False) 
-          #self.imagePreviewTable.setStyleSheet(";\
-         #                                    background-color:rgb(0,0,0);\
-          #                                   ");
-          self.imagePreviewTable.setStyleSheet("\
-                                                  QTableWidget {\
-                                                      background-color: rgb(0,0,0);\
-                                                  }\
-                                                  QTableWidget::item {\
-                                                     background-color: rgb(0,0,0);\
-                                                     padding:5px;\
-                                                    }\
-                                                  QTableWidget::icon {\
-                                                     background-color: rgb(0,0,0);\
-                                                     width:260px;\
-                                                     heigth:260px;\
-                                                    }\
-                                                  QTableWidget::item:selected {\
-                                                      background-color: rgb(0,0,0);\
-                                                  }\
-                                                  QTableWidget::item:hover {\
-                                                      background-color: rgb(0,0,0);\
-                                                  }\
-                                                  "
-                                                  )
 
 
           
@@ -280,7 +350,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           
           
           
-     def createImageTable(self,images,folderDir,iconWidth):
+     def createImageTable(self,images,iconWidth):
           self.imageListTable = QtWidgets.QTableWidget(self.dockWidgetImages)
           imagesCount = len(images)
           columnCount = 5
@@ -310,7 +380,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
                item = QtWidgets.QTableWidgetItem()
                itemName = images[i]
-               imageUrl = folderDir +'/'+ itemName
+               imageUrl = self.folderDir +'/'+ itemName
                iconFile =QtGui.QIcon(imageUrl)
                row = math.floor(float(i)/float(columnCount))
                column = i%columnCount
@@ -344,8 +414,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           
          # print self.imageListTable.currentItem().text()
           
-          folderDir = "C:/Users/alpha/Documents/GitHub/mayaTool/pipelineTool/UI"
-          imageUrl = folderDir + '/' + self.imageListTable.currentItem().text()
+          imageUrl = self.folderDir + '/' + self.imageListTable.currentItem().text()
           #print imageUrl
           
           image = ice.Load(imageUrl)
@@ -353,13 +422,14 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
          # print imageMetaData.keys(),len(imageMetaData.keys())
 
           self.defineImageTableData(imageMetaData)
+          self.imagePreviewLabel.setPixmap(QtGui.QPixmap(imageUrl))
 
-          item = QtWidgets.QTableWidgetItem()
-          self.imagePreviewTable.setItem(0,0,item)
-          iconFile =QtGui.QIcon(imageUrl)
-          self.imagePreviewTable.setIconSize(QtCore.QSize(270,270))
-          self.imagePreviewTable.item(0, 0).setIcon(iconFile)
-
+         # item = QtWidgets.QTableWidgetItem()
+        #  self.imagePreviewTable.setItem(0,0,item)
+         # iconFile =QtGui.QIcon(imageUrl)
+        #  self.imagePreviewTable.setIconSize(QtCore.QSize(270,270))
+        #  self.imagePreviewTable.item(0, 0).setIcon(iconFile)
+#
 
 
 
