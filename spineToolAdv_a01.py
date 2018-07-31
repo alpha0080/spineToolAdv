@@ -120,22 +120,44 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
      def defineCreateBoneBtn(self):
           print ('define bone')
           boneName = 'bone_'
-          boneAttr = {'name':"string ",
-                    "length":"float",
-                    "transform":"enum",
-                    "x":"float",
-                    "y":"float",
-                    "rotation":"float",
-                    "scaleX":"float",
-                    "scaleY":"float",
-                    "shearX":"float",
-                    "shearY":"float",
-                    "inheritScale":"boolean",
-                    "inheritRotation":"boolean",
-                    "color":"float3"
+          boneAttr = {'bone_name':"string ",
+                    "bone_length":"float",
+                    "bone_transform":"enum",
+                    "bone_x":"float",
+                    "bone_y":"float",
+                    "bone_rotation":"float",
+                    "bone_scaleX":"float",
+                    "bone_scaleY":"float",
+                    "bone_shearX":"float",
+                    "bone_shearY":"float",
+                    "bone_inheritScale":"bool",
+                    "bone_inheritRotation":"bool",
+                    "bone_color":"float3"
                     }
-          cmds.joint(p=(0,0,0))
-     
+          cmds.select(cl=True)
+          bone = cmds.joint(p=(0,0,0),n=boneName)
+          #print (bone)
+          #attrCount = len(boneAttr.keys())
+          cmds.addAttr(bone, ln='spineBone', numberOfChildren=15, attributeType='compound' )
+          cmds.addAttr(bone, ln='bone_name', sn='name' , dt="string", parent='spineBone'  )
+          cmds.addAttr(bone, ln='bone_parent', sn='parent' , dt="string", parent='spineBone'  )
+          cmds.addAttr(bone, ln='bone_slot', sn='slot' , dt="string", parent='spineBone'  )
+          cmds.addAttr(bone, ln='bone_length', sn='length' , at="float", dv=0,parent='spineBone' ,k=True )
+          cmds.addAttr(bone, ln='bone_transform', sn='transform' , at="enum",en="normal:onlyTranslation:noRotationOrReflection:noScale:noScaleOrReflection", parent='spineBone' ,k=True )
+          cmds.addAttr(bone, ln='bone_x', sn='x' , at="float", dv=0,parent='spineBone' ,k=True )
+          cmds.addAttr(bone, ln='bone_y', sn='y' , at="float", dv=0,parent='spineBone' ,k=True )
+          cmds.addAttr(bone, ln='bone_rotation', sn='rotation' , at="float", dv=0,parent='spineBone' ,k=True )
+          cmds.addAttr(bone, ln='bone_scaleX',  at="float", dv=0,parent='spineBone' ,k=True )
+          cmds.addAttr(bone, ln='bone_scaleY',  at="float", dv=0,parent='spineBone' ,k=True )
+          cmds.addAttr(bone, ln='bone_shearX', sn='shearX' , at="float", dv=0,parent='spineBone' ,k=True )
+          cmds.addAttr(bone, ln='bone_shearY', sn='shearY' , at="float", dv=0,parent='spineBone' ,k=True )
+          cmds.addAttr(bone, ln='bone_inheritScale', sn='inheritScale' , at="bool", dv=1,parent='spineBone' ,k=True )
+          cmds.addAttr(bone, ln='bone_inheritRotation', sn='inheritRotation' , at="bool", dv=1,parent='spineBone' ,k=True )
+          cmds.addAttr(bone, longName='bone_color', usedAsColor=True, attributeType='float3',parent='spineBone' ,k=True )
+          cmds.addAttr(bone, longName='bone_red', attributeType='float', parent='bone_color',k=True )
+          cmds.addAttr(bone, longName='bone_green', attributeType='float', parent='bone_color',k=True )
+          cmds.addAttr(bone, longName='bone_blue', attributeType='float', parent='bone_color',k=True )
+
      
      def definecreateSlotBtn(self):
           errMsg = "create Slot fail"
