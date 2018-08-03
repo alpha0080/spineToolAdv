@@ -58,11 +58,22 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           self.defineImageInfoDock()
           self.defineImageButtonDock()
           self.definePreviewImageDock()
+          self.defineDockCamview()
+     
      
      
      def defineImageButtonDock(self):
           
           buttonStyle = "\
+                         QComboBox {\
+                         htight:50px;\
+                         background-color:#333333;\
+                         border-radius :5px;\
+                         border-style:solid;\
+                         border-width:3px;\
+                         border-color:#5E749C;\
+                         text-align:right;\
+                         }\
                          QPushButton {\
                          background-color:#333333;\
                          border-radius:10px;\
@@ -104,22 +115,68 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
      
      
          
-          self.creatBoneBtn = QtWidgets.QPushButton(self.dockImageButton)
-          self.creatBoneBtn.setGeometry(QtCore.QRect(200, 200, 150, 50))
-          self.creatBoneBtn.setObjectName("createBone")
-          self.creatBoneBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Bone", None, -1))
-          self.creatBoneBtn.clicked.connect(self.defineCreateBoneBtn)
+          self.createBoneBtn = QtWidgets.QPushButton(self.dockImageButton)
+          self.createBoneBtn.setGeometry(QtCore.QRect(200, 200, 150, 50))
+          self.createBoneBtn.setObjectName("createBone")
+          self.createBoneBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Bone", None, -1))
+          self.createBoneBtn.clicked.connect(self.defineCreateBoneBtn)
      
      
-    # hover
+          self.createBGBtn = QtWidgets.QPushButton(self.dockImageButton)
+          self.createBGBtn.setGeometry(QtCore.QRect(0, 300, 150, 50))
+          self.createBGBtn.setObjectName("createBone")
+          self.createBGBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Define BG", None, -1))
+          self.createBGBtn.clicked.connect(self.defineCreateBGBtn)
+          
+
+          self.createBG_comboBox = QtWidgets.QComboBox(self.dockImageButton)
+          self.createBG_comboBox.setGeometry(QtCore.QRect(160, 300, 300, 50))
+          self.createBG_comboBox.setObjectName("comboBox")
+          itemNameList = ["100x100","200x200","250x250","300x300","400x400",
+                         "512x512","600x600","800x800","1000x1000","1024x1024",
+                         "1200x1200","1500x1500","1600x1600","1920x1080","1920x1920","2000x2000","2048x2048"]
+          for i in range(0,len(itemNameList)):
+               self.createBG_comboBox.addItem("")
+               self.createBG_comboBox.setItemText(i, QtWidgets.QApplication.translate("MainWindow", itemNameList[i], None, -1))
+
+          self.createBG_comboBox.setCurrentIndex(13)
           
           self.createSlotBtn.setStyleSheet(buttonStyle)             
-          self.creatBoneBtn.setStyleSheet(buttonStyle)
+          self.createBoneBtn.setStyleSheet(buttonStyle)
+          self.createBGBtn.setStyleSheet(buttonStyle)
+          self.createBG_comboBox.setStyleSheet(buttonStyle)
+
+     
+     def defineDockCamview(self):
+          print ('define DockCameView')
+     
+          self.spineItemTree = QtWidgets.QTreeWidget(self.dockCamview)
+          self.spineItemTree.setGeometry(QtCore.QRect(0, 50, 300, 800))
+          self.spineItemTree.setDragEnabled(True)
+          self.spineItemTree.setDragDropOverwriteMode(True)
+          self.spineItemTree.header().setVisible(False)
+
+          self.spineItemTree.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
+          self.spineItemTree.setObjectName("spineItemTree")
+
+     
+     
+     
+     def defineCreateBGBtn(self):
+          bgWidth = int(self.createBG_comboBox.currentText().split('x')[0])
+          bgHeight = int(self.createBG_comboBox.currentText().split('x')[1])
+          print (bgWidth,bgHeight)
+          slotPlane = cmds.polyPlane(n='BG_plane',sx=1,sy=1)[0]
+          cmds.setAttr('%s.rotateX'%slotPlane,90)
+          cmds.setAttr('%s.scaleX'%slotPlane,bgWidth)
+          cmds.setAttr('%s.scaleZ'%slotPlane,bgHeight)
+
 
      
      def defineCreateBoneBtn(self):
           print ('define bone')
-          boneName = 'bone_'
+          #boneNum = 1
+          boneName = 'bone_'+'{:04d}'.format(0)
           boneAttr = {'bone_name':"string ",
                     "bone_length":"float",
                     "bone_transform":"enum",
@@ -135,10 +192,13 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     "bone_color":"float3"
                     }
           cmds.select(cl=True)
+          
           bone = cmds.joint(p=(0,0,0),n=boneName)
           #print (bone)
           #attrCount = len(boneAttr.keys())
-          cmds.addAttr(bone, ln='spineBone', numberOfChildren=15, attributeType='compound' )
+          cmds.addAttr(bone, ln='spineBone', numberOfChildren=16, attributeType='compound' )
+          cmds.addAttr(bone, ln='spine_tag', sn='stag' , dt="string", parent='spineBone'  )
+
           cmds.addAttr(bone, ln='bone_name', sn='name' , dt="string", parent='spineBone'  )
           cmds.addAttr(bone, ln='bone_parent', sn='parent' , dt="string", parent='spineBone'  )
           cmds.addAttr(bone, ln='bone_slot', sn='slot' , dt="string", parent='spineBone'  )
@@ -158,7 +218,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           cmds.addAttr(bone, longName='bone_green', attributeType='float', parent='bone_color',k=True )
           cmds.addAttr(bone, longName='bone_blue', attributeType='float', parent='bone_color',k=True )
 
-     
+
+          ## add Spine Tag
+          cmds.setAttr('%s.spine_tag'%bone,'spine_bone',type='string')
+          cmds.setAttr('%s.bone_name'%bone,bone,type='string')
+
      def definecreateSlotBtn(self):
           errMsg = "create Slot fail"
           selectedImageCount = len(self.imageListTable.selectedItems())
@@ -182,7 +246,44 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                self.assignSurfaceShader(slotName,slotPlane,fileName)
                print slotPlane
                
+       
+     
+     def defineSlot(self):
           
+          slotAttr = {'name':'string',
+                       'bone':'string',
+                       'color':'rgba',
+                       'darl':'rgba',
+                       'attachment':'strng',
+                       'blend':'enum'
+                         }
+          
+     def defineSkin(self):
+          '''
+          'skin':{
+               'skinName':{
+                    'slotName':{
+                         'attachmentName':{'x':0.0,'y':0.0,'width':0,'height':0},
+                    },
+               'skinName':{
+                    
+               },
+                    
+               }
+               
+               
+               
+               
+               
+          }
+          
+          
+          
+          '''
+     
+     
+             
+                   
      def assignSurfaceShader(self,imageName,object,fileName):  #imageName  as slot name
           print ('fileName',fileName)
           slotShaderName =  imageName + '_surfaceShader'
