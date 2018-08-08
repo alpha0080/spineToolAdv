@@ -65,6 +65,15 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
      def defineImageButtonDock(self):
           
           buttonStyle = "\
+                         QLineEdit {\
+                         htight:50px;\
+                         background-color:#333333;\
+                         border-radius :5px;\
+                         border-style:solid;\
+                         border-width:3px;\
+                         border-color:#5E749C;\
+                         text-align:center;\
+                         }\
                          QComboBox {\
                          htight:50px;\
                          background-color:#333333;\
@@ -108,7 +117,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           
           
           self.createSlotBtn = QtWidgets.QPushButton(self.dockImageButton)
-          self.createSlotBtn.setGeometry(QtCore.QRect(0, 200, 150, 50))
+          self.createSlotBtn.setGeometry(QtCore.QRect(0, 100, 150, 50))
           self.createSlotBtn.setObjectName("createSlot")
           self.createSlotBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Slot", None, -1))
           self.createSlotBtn.clicked.connect(self.definecreateSlotBtn)
@@ -116,21 +125,21 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
      
          
           self.createBoneBtn = QtWidgets.QPushButton(self.dockImageButton)
-          self.createBoneBtn.setGeometry(QtCore.QRect(200, 200, 150, 50))
+          self.createBoneBtn.setGeometry(QtCore.QRect(200, 100, 150, 50))
           self.createBoneBtn.setObjectName("createBone")
           self.createBoneBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Bone", None, -1))
           self.createBoneBtn.clicked.connect(self.defineCreateBoneBtn)
      
      
           self.createBGBtn = QtWidgets.QPushButton(self.dockImageButton)
-          self.createBGBtn.setGeometry(QtCore.QRect(0, 300, 150, 50))
+          self.createBGBtn.setGeometry(QtCore.QRect(0, 170, 150, 50))
           self.createBGBtn.setObjectName("createBone")
           self.createBGBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Define BG", None, -1))
           self.createBGBtn.clicked.connect(self.defineCreateBGBtn)
           
 
           self.createBG_comboBox = QtWidgets.QComboBox(self.dockImageButton)
-          self.createBG_comboBox.setGeometry(QtCore.QRect(160, 300, 300, 50))
+          self.createBG_comboBox.setGeometry(QtCore.QRect(160, 170, 300, 50))
           self.createBG_comboBox.setObjectName("comboBox")
           itemNameList = ["100x100","200x200","250x250","300x300","400x400",
                          "512x512","600x600","800x800","1000x1000","1024x1024",
@@ -141,12 +150,77 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
           self.createBG_comboBox.setCurrentIndex(13)
           
+          
+          self.jointSizeLabel = QtWidgets.QLabel(self.dockImageButton)
+          self.jointSizeLabel.setGeometry(QtCore.QRect(5, 250, 500, 50))
+          self.jointSizeLabel.setObjectName("jointSizeLabel")
+          self.jointSizeLabel.setText(QtWidgets.QApplication.translate("MainWindow", "joint size", None, -1))
+          
+          self.jointSizeValueLabel = QtWidgets.QLabel(self.dockImageButton)
+          self.jointSizeValueLabel.setGeometry(QtCore.QRect(100, 250, 500, 50))
+          self.jointSizeValueLabel.setObjectName("jointSizeLabel")
+          self.jointSizeValueLabel.setText(QtWidgets.QApplication.translate("MainWindow", "10", None, -1))
+          
+          self.horizontalSlider = QtWidgets.QSlider(self.dockImageButton)
+          self.horizontalSlider.setGeometry(QtCore.QRect(150, 250, 300, 50))
+          self.horizontalSlider.setMinimum(1)
+          self.horizontalSlider.setMaximum(100)
+          self.horizontalSlider.setProperty("value", 10)
+          self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
+          self.horizontalSlider.setObjectName("horizontalSlider")
+          self.horizontalSlider.valueChanged.connect(self.jointSizeValueChange)
+         
+          self.setRootBoneJointBtn = QtWidgets.QPushButton(self.dockImageButton)
+          self.setRootBoneJointBtn.setGeometry(QtCore.QRect(0, 320, 150, 50))
+          self.setRootBoneJointBtn.setObjectName("setRootBoneBtn")
+          self.setRootBoneJointBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Set Root", None, -1))
+          self.setRootBoneJointBtn.clicked.connect(self.defineRootBone)
+            
+          
+          self.setRootLineEdit = QtWidgets.QLineEdit(self.dockImageButton)
+          self.setRootLineEdit.setGeometry(QtCore.QRect(170, 320, 300, 50))
+          self.setRootLineEdit.setObjectName("rootJointLineEdit")
+          self.setRootLineEdit.setAlignment(QtCore.Qt.AlignCenter)
+
+          ##
+          self.testBtn = QtWidgets.QPushButton(self.dockImageButton)
+          self.testBtn.setGeometry(QtCore.QRect(0, 420, 150, 50))
+          self.testBtn.setObjectName("setRootBoneBtn")
+          self.testBtn.setText(QtWidgets.QApplication.translate("MainWindow", "testA", None, -1))
+          self.testBtn.clicked.connect(self.run)
+
+
+                  
           self.createSlotBtn.setStyleSheet(buttonStyle)             
           self.createBoneBtn.setStyleSheet(buttonStyle)
           self.createBGBtn.setStyleSheet(buttonStyle)
-          self.createBG_comboBox.setStyleSheet(buttonStyle)
+          self.setRootBoneJointBtn.setStyleSheet(buttonStyle)             
+          self.setRootLineEdit.setStyleSheet(buttonStyle)             
+          self.testBtn.setStyleSheet(buttonStyle)             
 
-     
+          self.createBG_comboBox.setStyleSheet(buttonStyle)
+          
+     def defineRootBone(self):
+          rootBone = cmds.ls(sl=True,typ='joint')
+          if len(rootBone) == 1:
+               rootBoneName = rootBone[0]
+               self.setRootLineEdit.setText(rootBoneName)
+               #print rootBone
+          else:
+               errMsg = 'get root bone'
+               print errMsg
+          
+
+     def jointSizeValueChange(self):
+         
+          currentValue = self.horizontalSlider.value() 
+         # print currentValue
+
+          self.jointSizeValueLabel.setText(QtWidgets.QApplication.translate("MainWindow", '%s'%currentValue, None, -1))
+          
+          cmds.jointDisplayScale(currentValue)
+
+
      def defineDockCamview(self):
           print ('define DockCameView')
      
@@ -249,15 +323,37 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
        
      
      def defineSlot(self):
-          
+          '''
           slotAttr = {'name':'string',
                        'bone':'string',
                        'color':'rgba',
-                       'darl':'rgba',
+                       'dark':'rgba',
                        'attachment':'strng',
                        'blend':'enum'
                          }
+          '''
           
+          cmds.addAttr(slot, ln='spineSlot', numberOfChildren=16, attributeType='compound' )
+          cmds.addAttr(slot, ln='spine_tag', sn='stag' , dt="string", parent='spineSlot'  )
+          cmds.addAttr(slot, ln='slot_name', sn='s_name' , dt="string", parent='spineSlot'  )
+          cmds.addAttr(slot, ln='slot_bone', sn='s_bone' , dt="string", parent='spineSlot'  )
+          cmds.addAttr(slot, ln='slot_color', usedAsColor=True, attributeType='float3',parent='spineSlot' ,k=True )
+          cmds.addAttr(slot, ln='slot_red', attributeType='float', parent='slot_color',k=True )
+          cmds.addAttr(slot, ln='slot_green', attributeType='float', parent='slot_color',k=True )
+          cmds.addAttr(slot, ln='slot_blue', attributeType='float', parent='slot_color',k=True )
+          cmds.addAttr(slot, ln='slot_color', usedAsColor=True, attributeType='float3',parent='spineSlot' ,k=True )
+          cmds.addAttr(slot, ln='slot_red', attributeType='float', parent='slot_color',k=True )
+          cmds.addAttr(slot, ln='slot_green', attributeType='float', parent='slot_color',k=True )
+          cmds.addAttr(slot, ln='slot_blue', attributeType='float', parent='slot_color',k=True )
+          cmds.addAttr(slot, ln='slot_alpha', attributeType='float', parent='slot_color',k=True )
+          cmds.addAttr(slot, ln='slot_dark', usedAsColor=True, attributeType='float3',parent='spineSlot' ,k=True )
+          cmds.addAttr(slot, ln='slot_darkRed', attributeType='float', parent='slot_dark',k=True )
+          cmds.addAttr(slot, ln='slot_darkGreen', attributeType='float', parent='slot_dark',k=True )
+          cmds.addAttr(slot, ln='slot_darkBlue', attributeType='float', parent='slot_dark',k=True )                
+          cmds.addAttr(slot, ln='slot_attachment', sn='s_att' , dt="string", parent='spineSlot'  )
+          cmds.addAttr(bone, ln='slot_blend', sn='s_blend' , at="enum",en="normal:additive:multiply:screen", parent='spineSlot' ,k=True )
+                       
+                                          
      def defineSkin(self):
           '''
           'skin':{
@@ -266,19 +362,23 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                          'attachmentName':{'x':0.0,'y':0.0,'width':0,'height':0},
                     },
                'skinName':{
-                    
+                    'slotName':{
+                         'type':'mesh',
+                         'uvs':[],
+                         'triangles':[],
+                         'vertices':[],
+                         'hull':[],
+                         'edges':[],
+                         'x':0,
+                         'y':0,
+                         'rotation':0
+                         'width':50,
+                         'height':50,
+                    }
                },
                     
-               }
-               
-               
-               
-               
-               
-          }
-          
-          
-          
+               }                                                                  
+          }        
           '''
      
      
@@ -554,8 +654,99 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #  self.imagePreviewTable.item(0, 0).setIcon(iconFile)
 #
 
+     def run(self):
+          print ("export json")
+          boneList = self.defineBone('joint19')
+          print (boneList)
+
+     def defineBone(self,root):
+         
+          boneList=[]
+          allNode =  self.getItemDepth(root)
+          print ('allNode',allNode)
+          for i in allNode:
+               print "i",i,type(i),cmds.nodeType(i)
+               
+               if cmds.nodeType(i) == "joint":
+                    #  print i
+                    
+                      x = float("%.3f"%(cmds.getAttr("%s.translateX"%i)))
+                      y = float("%.3f"%(cmds.getAttr("%s.translateY"%i)))
+                      rz = float("%.3f"%(cmds.getAttr("%s.rotateZ"%i)))
+                      sx = float("%.3f"%(cmds.getAttr("%s.scaleX"%i)))
+                      sy = float("%.3f"%(cmds.getAttr("%s.scaleY"%i)))
+                      ox = float("%.3f"%(cmds.getAttr("%s.jointOrientX"%i)))
+                      oy = float("%.3f"%(cmds.getAttr("%s.jointOrientY"%i)))
+                      oz = float("%.3f"%(cmds.getAttr("%s.jointOrientZ"%i)))
+                      r  = oz+rz
+                      child = cmds.listRelatives(i,c=True)
+                   #   print "child",child
+                      if child == None:
+                          length = 0
+                      else:
+                          length = float("%.3f"%cmds.getAttr("%s.translateX"%child[0]))
+                         # print "length",length
+                          
+                      #length = cmds.getAttr("%s.translateX"%child)
+                   #   print length,type(length)
+                      if cmds.listRelatives(i,p=True) == None:
+                          
+                          boneInfo = {"name":i,"rotation":r,"x":x,"y":y,"length":length,"color":"ffffffff"}
+                    #      print "It's root"
+                      else:
+                          parentBone = cmds.listRelatives(i,p=True)[0]
+                    #      print "bone,(joint):",i, "parent:",parentBone
+                          boneInfo = {"name":i,"parent":parentBone,"rotation":r,"x":x,"y":y,"length":length,"color":"ffffffff"}
+
+             
+                      boneList.append(boneInfo)
+                    
+          return boneList
+               
+                 
+     def getItemDepth(self,baseRoot):
+          allNode =  cmds.ls(baseRoot,dag=2,l=True,typ ="joint")
+          checkMaxDepth = []
+          for i in allNode: #check joint depth
+            # print "allNode",i
+             if len(i.split("|")) in checkMaxDepth:
+                 pass
+             else:
+                 checkMaxDepth.append(len(i.split("|")))
+          depth =  sorted(checkMaxDepth)[-1]
+          print "depth",depth
+          # return depth
+
+          jointListByLevel = []
+          for i in range(0,depth):
+             for j in allNode:
+                # print "j",j,j.split("|")[-1],len(j.split("|"))
+                 #print "i",i
+                 if len(j.split("|")) == (i+1):
+                     if j.split("|")[-1] in jointListByLevel:
+                        # print "aaaa"
+                         pass
+                     else:
+                        # print "bbbb"
+                         jointListByLevel.append(j.split("|")[-1])
+          print "jointListByLevel",jointListByLevel
+          return jointListByLevel            
+                     
+      
 
 
+     def defineExportData(self):
+          
+          exportFile = "C:/Users/alpha/Documents/GitHub/spineToolAdv/test_01.json"
+          exportData = {'skeleton':{},
+                         'bones':[],
+                         'slots':[],
+                         'skins':{},
+                         'events':{},
+                         'animations':{}          
+          }
+          
+          
 
 
 
