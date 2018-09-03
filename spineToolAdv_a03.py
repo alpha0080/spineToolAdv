@@ -110,36 +110,67 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                          
                    
                                                                    
-          self.errMsgLabel = QtWidgets.QLabel(self.dockImageButton)
-          self.errMsgLabel.setGeometry(QtCore.QRect(0, 50, 500, 50))
-          self.errMsgLabel.setObjectName("errMsgLabel")
-          self.errMsgLabel.setText(QtWidgets.QApplication.translate("MainWindow", "TextLabel", None, -1))
+          #self.errMsgLabel = QtWidgets.QLabel(self.dockImageButton)
+          #self.errMsgLabel.setGeometry(QtCore.QRect(0, 50, 500, 50))
+          #self.errMsgLabel.setObjectName("errMsgLabel")
+          #self.errMsgLabel.setText(QtWidgets.QApplication.translate("MainWindow", "TextLabel", None, -1))
+          
+          
+          self.createRootBtn = QtWidgets.QPushButton(self.dockImageButton)
+          self.createRootBtn.setGeometry(QtCore.QRect(0, 50, 150, 50))
+          self.createRootBtn.setObjectName("createRoot")
+          self.createRootBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Root", None, -1))
+          self.createRootBtn.clicked.connect(self.createRootCtrl)
+          
+          
           
           
           self.createSlotBtn = QtWidgets.QPushButton(self.dockImageButton)
-          self.createSlotBtn.setGeometry(QtCore.QRect(0, 100, 150, 50))
+          self.createSlotBtn.setGeometry(QtCore.QRect(0, 170, 150, 50))
           self.createSlotBtn.setObjectName("createSlot")
           self.createSlotBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Slot", None, -1))
           self.createSlotBtn.clicked.connect(self.definecreateSlotBtn)
      
-     
+          self.createMeshBtn = QtWidgets.QPushButton(self.dockImageButton)
+          self.createMeshBtn.setGeometry(QtCore.QRect(170, 170, 150, 50))
+          self.createMeshBtn.setObjectName("createMesh")
+          self.createMeshBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Mesh", None, -1))
+          self.createMeshBtn.clicked.connect(self.definecreateMesh)
+         
+          self.createClippingBtn = QtWidgets.QPushButton(self.dockImageButton)
+          self.createClippingBtn.setGeometry(QtCore.QRect(340, 170, 150, 50))
+          self.createClippingBtn.setObjectName("createClipping")
+          self.createClippingBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Clip", None, -1))
+          #self.createClippingBtn.clicked.connect(self.definecreateSlotBtn)
+          
+          
+          
+          self.defineMeshBtn = QtWidgets.QPushButton(self.dockImageButton)
+          self.defineMeshBtn.setGeometry(QtCore.QRect(0, 240, 150, 50))
+          self.defineMeshBtn.setObjectName("defineMesh")
+          self.defineMeshBtn.setText(QtWidgets.QApplication.translate("MainWindow", "define Mesh", None, -1))
+          self.defineMeshBtn.clicked.connect(self.getSkinData)
+          
+          
+          
+          
          
           self.createBoneBtn = QtWidgets.QPushButton(self.dockImageButton)
-          self.createBoneBtn.setGeometry(QtCore.QRect(200, 100, 150, 50))
+          self.createBoneBtn.setGeometry(QtCore.QRect(170, 240, 150, 50))
           self.createBoneBtn.setObjectName("createBone")
           self.createBoneBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Bone", None, -1))
           self.createBoneBtn.clicked.connect(self.defineCreateBoneBtn)
      
      
           self.createBGBtn = QtWidgets.QPushButton(self.dockImageButton)
-          self.createBGBtn.setGeometry(QtCore.QRect(0, 170, 150, 50))
+          self.createBGBtn.setGeometry(QtCore.QRect(0, 310, 150, 50))
           self.createBGBtn.setObjectName("createBone")
           self.createBGBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Define BG", None, -1))
           self.createBGBtn.clicked.connect(self.defineCreateBGBtn)
           
 
           self.createBG_comboBox = QtWidgets.QComboBox(self.dockImageButton)
-          self.createBG_comboBox.setGeometry(QtCore.QRect(160, 170, 300, 50))
+          self.createBG_comboBox.setGeometry(QtCore.QRect(160, 310, 300, 50))
           self.createBG_comboBox.setObjectName("comboBox")
           itemNameList = ["100x100","200x200","250x250","300x300","400x400",
                          "512x512","600x600","800x800","1000x1000","1024x1024",
@@ -152,17 +183,17 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           
           
           self.jointSizeLabel = QtWidgets.QLabel(self.dockImageButton)
-          self.jointSizeLabel.setGeometry(QtCore.QRect(5, 250, 500, 50))
+          self.jointSizeLabel.setGeometry(QtCore.QRect(5, 380, 500, 50))
           self.jointSizeLabel.setObjectName("jointSizeLabel")
           self.jointSizeLabel.setText(QtWidgets.QApplication.translate("MainWindow", "joint size", None, -1))
           
           self.jointSizeValueLabel = QtWidgets.QLabel(self.dockImageButton)
-          self.jointSizeValueLabel.setGeometry(QtCore.QRect(100, 250, 500, 50))
+          self.jointSizeValueLabel.setGeometry(QtCore.QRect(100, 380, 500, 50))
           self.jointSizeValueLabel.setObjectName("jointSizeLabel")
           self.jointSizeValueLabel.setText(QtWidgets.QApplication.translate("MainWindow", "10", None, -1))
           
           self.horizontalSlider = QtWidgets.QSlider(self.dockImageButton)
-          self.horizontalSlider.setGeometry(QtCore.QRect(150, 250, 300, 50))
+          self.horizontalSlider.setGeometry(QtCore.QRect(150, 380, 300, 50))
           self.horizontalSlider.setMinimum(1)
           self.horizontalSlider.setMaximum(100)
           self.horizontalSlider.setProperty("value", 10)
@@ -171,32 +202,41 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           self.horizontalSlider.valueChanged.connect(self.jointSizeValueChange)
          
           self.setRootBoneJointBtn = QtWidgets.QPushButton(self.dockImageButton)
-          self.setRootBoneJointBtn.setGeometry(QtCore.QRect(0, 320, 150, 50))
+          self.setRootBoneJointBtn.setGeometry(QtCore.QRect(0, 450, 150, 50))
           self.setRootBoneJointBtn.setObjectName("setRootBoneBtn")
           self.setRootBoneJointBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Set Root", None, -1))
           self.setRootBoneJointBtn.clicked.connect(self.defineRootBone)
             
           
           self.setRootLineEdit = QtWidgets.QLineEdit(self.dockImageButton)
-          self.setRootLineEdit.setGeometry(QtCore.QRect(170, 320, 300, 50))
+          self.setRootLineEdit.setGeometry(QtCore.QRect(170, 450, 300, 50))
           self.setRootLineEdit.setObjectName("rootJointLineEdit")
           self.setRootLineEdit.setAlignment(QtCore.Qt.AlignCenter)
 
           ##
           self.testABtn = QtWidgets.QPushButton(self.dockImageButton)
-          self.testABtn.setGeometry(QtCore.QRect(0, 420, 150, 50))
+          self.testABtn.setGeometry(QtCore.QRect(0, 520, 150, 50))
           self.testABtn.setObjectName("setRootBoneBtn")
           self.testABtn.setText(QtWidgets.QApplication.translate("MainWindow", "testA", None, -1))
           self.testABtn.clicked.connect(self.run)
 
           self.testBBtn = QtWidgets.QPushButton(self.dockImageButton)
-          self.testBBtn.setGeometry(QtCore.QRect(200, 420, 150, 50))
+          self.testBBtn.setGeometry(QtCore.QRect(200, 520, 150, 50))
           self.testBBtn.setObjectName("setRootBoneBtn")
           self.testBBtn.setText(QtWidgets.QApplication.translate("MainWindow", "testB", None, -1))
-          self.testBBtn.clicked.connect(self.defineSelectObj)
+          self.testBBtn.clicked.connect(self.defineAllItemInRootCtrl)
 
-                  
-          self.createSlotBtn.setStyleSheet(buttonStyle)             
+          self.createRootBtn.setStyleSheet(buttonStyle)     
+       
+          self.createSlotBtn.setStyleSheet(buttonStyle)     
+          self.createMeshBtn.setStyleSheet(buttonStyle)             
+          self.createClippingBtn.setStyleSheet(buttonStyle)             
+        
+        
+        
+        
+          self.defineMeshBtn.setStyleSheet(buttonStyle)
+
           self.createBoneBtn.setStyleSheet(buttonStyle)
           self.createBGBtn.setStyleSheet(buttonStyle)
           self.setRootBoneJointBtn.setStyleSheet(buttonStyle)             
@@ -205,7 +245,98 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           self.testBBtn.setStyleSheet(buttonStyle)             
 
 
+
+
           self.createBG_comboBox.setStyleSheet(buttonStyle)
+          
+          
+          
+          
+     def createRootCtrl(self):
+          errMsg = "create Root Ctrl"
+          
+          ctrlScale = 10
+          points = [(0,2*ctrlScale,0),(6*ctrlScale,2*ctrlScale,0),(6*ctrlScale,3*ctrlScale,0),(9*ctrlScale,0,0),(6*ctrlScale,-3*ctrlScale,0),(6*ctrlScale,-2*ctrlScale,0),(0,-2*ctrlScale,0),(-6*ctrlScale,-2*ctrlScale,0),(-6*ctrlScale,-3*ctrlScale,0),(-9*ctrlScale,0,0),(-6*ctrlScale,3*ctrlScale,0),(-6*ctrlScale,2*ctrlScale,0),(0,2*ctrlScale,0)]
+
+          curve = cmds.curve(d=1,p=points)     
+          
+          
+          cmds.addAttr(curve, ln='spineRootCtrl', numberOfChildren=2, attributeType='compound' )
+          cmds.addAttr(curve, ln='spine_tag', sn='stag' , dt="string", parent='spineRootCtrl'  )
+
+          cmds.addAttr(curve, ln='spine_rootCtrl', sn='rootCtrl' , dt="string", parent='spineRootCtrl'  )
+          
+          cmds.setAttr('%s.spine_tag'%curve,'spine_ctrl',type='string')
+
+          cmds.rename(curve,'rootCtrl')
+          
+     def defineAllItemInRootCtrl(self):
+          errMsg = "define all items in root ctrl"
+          rootCtrlName = "rootCtrl"
+          boneList = []
+          allMeshItem = []
+          meshSlotList = []
+          skinDict = {}
+
+          allItemsInRootCtrl = cmds.listRelatives( rootCtrlName, c=True,ad=True )
+          
+          
+          allItems = cmds.listRelatives( 'rootCtrl', c=True,ad=True)
+
+          for i in allItems:
+             #  print i, cmds.nodeType(i)
+               if cmds.nodeType(i) == 'transform':
+                    itemsInTransformNode = cmds.listRelatives(i,c=True,s=True,ni=True)
+                    if len(itemsInTransformNode) > 1:
+                         errMsg = "more than one obj in transform node"
+                    if len(itemsInTransformNode) == 1:
+                         if cmds.nodeType(itemsInTransformNode[0]) == "mesh":
+                              errMsg = "define %s as slot"%itemsInTransformNode[0]
+                              #slot = i
+                              meshSlotList.append(i)
+                    
+          
+          
+          for i in allItemsInRootCtrl:
+               ###check duplicated name object
+               items = cmds.ls(i)
+               if len(items) >1:
+                    errmsg = "duplicated items"
+               
+               else:
+                    #print cmds.nodeType(i)
+                
+                    if cmds.nodeType(i) == "mesh":
+                         try:
+                              
+                              if cmds.getAttr('%s.spine_skinType'%i) == "mesh":
+                                   allMeshItem.append(i)
+                         except:
+                              pass
+              # print i,cmds.nodeType(i)
+          
+          #self.defineExportData(boneList,skinDict)
+          for i in meshSlotList: ## define all mesh's slot
+            #   print cmds.ls(i)
+               self.defineSlot(i,rootCtrlName) 
+          
+          
+          for i in allMeshItem:
+               skinData = cmds.getAttr('%s.spine_skinData'%i)
+              # skinDict.update(skinData)
+               skinDict.update({"default":skinData})
+        #  exportFile = "C:/Users/alpha/Documents/GitHub/spineToolAdv/test_01.json" 
+          #print errMsg,skinDict
+          #print allSlotItem
+          slotList = self.getAllMeshSlots(meshSlotList)
+
+          self.defineExportData(boneList,skinDict,slotList)
+
+         # print slotList
+          
+          
+
+          
           
      def defineRootBone(self):
           rootBone = cmds.ls(sl=True,typ='joint')
@@ -216,7 +347,475 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           else:
                errMsg = 'get root bone'
                print errMsg
+      
+     def definecreateMesh(self):
+          if len(cmds.ls(sl=True)) >1:
+               pass
+          else:
+               currentMesh = cmds.ls(sl=True,dag=2,typ='mesh')[0]
+               currentTransformName = cmds.ls(sl=True)[0]
+               bbox = cmds.polyEvaluate(currentMesh,b=True)
+               pivotX = bbox[0][0]+(bbox[0][1]-bbox[0][0])/2
+               pivotY = bbox[1][0]+(bbox[1][1]-bbox[1][0])/2
+               boneName = 'bone_'+'{:04d}'.format(0)
+               cmds.select(cl=True)
+               bone = cmds.joint(p=(pivotX,pivotY,0),n=boneName)
+               
+               print pivotX,pivotY
+               cmds.addAttr(bone, ln='spineBone', numberOfChildren=17, attributeType='compound' )
+               cmds.addAttr(bone, ln='spine_tag', sn='stag' , dt="string", parent='spineBone'  )
+
+               cmds.addAttr(bone, ln='bone_name', sn='name' , dt="string", parent='spineBone'  )
+               cmds.addAttr(bone, ln='bone_parent', sn='parent' , dt="string", parent='spineBone'  )
+               cmds.addAttr(bone, ln='bone_slot', sn='slot' , dt="string", parent='spineBone'  )
+               cmds.addAttr(bone, ln='bone_length', sn='length' , at="float", dv=0,parent='spineBone' ,k=True )
+               cmds.addAttr(bone, ln='bone_transform', sn='transform' , at="enum",en="normal:onlyTranslation:noRotationOrReflection:noScale:noScaleOrReflection", parent='spineBone' ,k=True )
+               cmds.addAttr(bone, ln='bone_x', sn='x' , at="float", dv=0,parent='spineBone' ,k=True )
+               cmds.addAttr(bone, ln='bone_y', sn='y' , at="float", dv=0,parent='spineBone' ,k=True )
+               cmds.addAttr(bone, ln='bone_rotation', sn='rotation' , at="float", dv=0,parent='spineBone' ,k=True )
+               cmds.addAttr(bone, ln='bone_scaleX',  at="float", dv=0,parent='spineBone' ,k=True )
+               cmds.addAttr(bone, ln='bone_scaleY',  at="float", dv=0,parent='spineBone' ,k=True )
+               cmds.addAttr(bone, ln='bone_shearX', sn='shearX' , at="float", dv=0,parent='spineBone' ,k=True )
+               cmds.addAttr(bone, ln='bone_shearY', sn='shearY' , at="float", dv=0,parent='spineBone' ,k=True )
+               cmds.addAttr(bone, ln='bone_inheritScale', sn='inheritScale' , at="bool", dv=1,parent='spineBone' ,k=True )
+               cmds.addAttr(bone, ln='bone_inheritRotation', sn='inheritRotation' , at="bool", dv=1,parent='spineBone' ,k=True )
+               cmds.addAttr(bone, longName='bone_color', usedAsColor=True, attributeType='float3',parent='spineBone' ,k=True )
+               cmds.addAttr(bone, longName='bone_red', attributeType='float', parent='bone_color',k=True )
+               cmds.addAttr(bone, longName='bone_green', attributeType='float', parent='bone_color',k=True )
+               cmds.addAttr(bone, longName='bone_blue', attributeType='float', parent='bone_color',k=True )
+               cmds.addAttr(bone, ln='skin_type', sn='skinType' , dt="string", parent='spineBone'  )
+
+
+               ## add Spine Tag
+               cmds.setAttr('%s.spine_tag'%bone,'spine_bone',type='string')
+               cmds.setAttr('%s.bone_name'%bone,bone,type='string')
+               cmds.setAttr('%s.bone_slot'%bone,currentTransformName,type='string')                        
+               cmds.setAttr('%s.skin_type'%bone,'mesh',type='string')
+                 
+               borderEdges = self.getMeshData(currentMesh)
+               
+               dataForSpine = self.getUVData(currentMesh,boneName,borderEdges)
+               
+               
+               #attachment = i["attachment"]
+
+               #slotSkinData = { slotName:{"attachment":slotSkinData}}
+                # #print 'getSlotSkinData',getSlotSkinData
+                # print 'slotSkinData',slotSkinData
+              # skinList["default"].update(slotSkinData)
           
+               print dataForSpine 
+     
+     
+     def getAllMeshSlots(self,meshSlotList):
+          slotList = []
+          for i in meshSlotList:
+               slotName = cmds.getAttr('%s.spine_tag'%i)
+               boneName = cmds.getAttr('%s.slot_bone'%i)
+               attachment = cmds.getAttr('%s.slot_attachment'%i)
+               slotBlend = cmds.getAttr('%s.slot_blend'%i)
+
+               slotList.append({"name":slotName,
+                                "bone":boneName,
+                                "color":"ffffffff",
+                                "attachment":attachment,
+                                "blend":slotBlend})  #additive
+          return slotList
+  
+          
+
+     def getAllSlots(self,boneList):
+          slotList = []
+          for i in boneList:
+               boneName = i["name"]
+            # print i
+            # print boneName
+         
+               itemList = cmds.listRelatives(boneName,c=True)
+               print "itemList",boneName,itemList
+               try:
+                    for j in itemList:
+                    # print j , cmds.nodeType(j)
+                         if cmds.nodeType(j) == "transform" :
+                              parentBone = cmds.listRelatives(j,p=True)[0]
+                              getObj =  cmds.ls(j,dag=1)[1]
+                              shadingGrps = cmds.listConnections(getObj,type='shadingEngine')
+                              shaders = cmds.ls(cmds.listConnections(shadingGrps),materials=1)
+                              fileNode = cmds.listConnections('%s.color' % (shaders[0]), type='file')
+                              currentFile = cmds.getAttr("%s.fileTextureName" % fileNode[0])
+                              fileInSlot = currentFile.split("/")[-1].split(".png")[0]
+                            #  print "fileInSlot",fileInSlot
+                              #print j , cmds.listRelatives(j,p=True)[0]
+                            #  print "%s.blendMode" % fileNode[0]
+                              try:
+                                   blendMode = cmds.getAttr("%s.blendMode" % fileNode[0])
+                                  
+                              #    print blendMode
+                              except:
+                                   blendMode = "normal"
+                              slotList.append({"name":j,
+                                               "bone":parentBone,
+                                               "color":"ffffffff",
+                                               "attachment":fileInSlot,
+                                               "blend":blendMode})  #additive
+               except:
+                    pass
+          return slotList
+         
+
+
+
+
+     def getMeshData(self,meshName):
+         alledges = cmds.polyListComponentConversion(meshName,te=True)
+         cmds.select(alledges)
+         allEdgesList = cmds.ls(sl=True,fl=True)
+
+         borderEdge = []
+         for i in allEdgesList:
+             toFace = cmds.select(cmds.polyListComponentConversion(i,tf=True))
+             listFace = cmds.ls(sl=True,fl=True)
+           #  print listFace
+             if len(listFace )> 1:
+                 pass
+             else:
+                 borderEdge.append(i)
+         cmds.select(cl=True)
+
+        # len(borderEdge)
+
+        # cmds.select(borderEdge)
+
+         return borderEdge
+
+
+
+     def getBoneList(self):
+          allJoints = cmds.ls(typ='joint')
+          boneList = []
+          for i in allJoints:
+               
+               try:
+                    if cmds.getAttr('%s.spine_tag'%i) == 'spine_bone':
+                         boneList.append(i)
+               except:
+                    pass
+
+          return boneList
+
+
+
+     def getSkinsList(self,slotList):
+         skinList= {"default":{}}
+         for i in slotList:
+             slotName = i["name"]
+             joinName = i["bone"]
+             attachment = i["attachment"]
+             #print "slotName",slotName
+             type = cmds.getAttr("%s.meshType"%slotName)
+             if type == "mesh" :
+                 boneList = getMeshData(slotName)
+                 getSlotSkinData = getUVData(slotName,joinName,boneList)
+                # getSlotSkinData.update({})
+                 slotSkinData = { slotName:{attachment:getSlotSkinData}}
+                 #print 'getSlotSkinData',getSlotSkinData
+                # print 'slotSkinData',slotSkinData
+                 skinList["default"].update(slotSkinData)
+         return skinList
+  
+     '''
+     'skins':{
+          'default':{
+               slotName/skinName:{
+                    attachmentName:slotSkinData
+               }
+          }
+     }
+     
+     '''
+
+
+     def getSkinData(self): 
+          'meshName,borderEdges'
+          meshName = cmds.ls(sl=True,dag=2,typ='mesh')[0]
+          
+          cmds.addAttr(meshName, ln='spineSlot', numberOfChildren=7, attributeType='compound' )
+          cmds.addAttr(meshName, ln='spine_tag', sn='stag' , dt="string", parent='spineSlot')
+          cmds.addAttr(meshName, ln='spine_skinType', sn='skinType' , dt="string", parent='spineSlot')
+
+          cmds.addAttr(meshName, ln='spine_slotName', sn='slotName' , dt="string", parent='spineSlot')
+          cmds.addAttr(meshName, ln='spine_skinName', sn='skunName' , dt="string", parent='spineSlot')
+          cmds.addAttr(meshName, ln='spine_attachmentName', sn='attachName' , dt="string", parent='spineSlot')
+          cmds.addAttr(meshName, ln='spine_boneName', sn='boneName' , dt="string", parent='spineSlot')
+          cmds.addAttr(meshName, ln='spine_skinData', sn='skinData' , dt="string", parent='spineSlot')
+          
+
+     
+
+          #cmds.addAttr(bone, ln='bone_name', sn='name' , dt="string", parent='spineBone'  )
+         # cmds.addAttr(bone, ln='bone_parent', sn='parent' , dt="string", parent='spineBone'  )
+
+          
+          
+          errMsg ="unDefine"
+          borderEdges = self.getMeshData(meshName)
+          #dataForSpine = self.getUVData(currentMesh,boneName,borderEdges) joinName
+          
+          
+          shadingGrps = cmds.listConnections(meshName ,type='shadingEngine')
+     
+          shaders = cmds.ls(cmds.listConnections(shadingGrps),materials=1)
+          fileNode = cmds.listConnections('%s.color' % (shaders[0]), type='file')[0]
+         # print fileNode
+          
+          attachmentName = cmds.getAttr("%s.fileTextureName" %fileNode).split('/')[-1].split('.')[0]
+          
+          #print attachmentName
+
+          
+
+          imageWidth = self.getImageMetaData(fileNode)[1]
+          imageHeight = self.getImageMetaData(fileNode)[2]
+         #print imageWidth,imageHeight, getImageMetaData(fileNode)
+        # scaleRatio = imageHeight/imageWidth
+        # print "scaleRatio",scaleRatio.imageWidth,imageHeight
+          uvCount = cmds.polyEvaluate(meshName,uv=True)
+          uvCoordDict ={}
+          for i in range(0,uvCount):
+               uvCoord = cmds.polyEditUV("%s.map[%s]"%(meshName,i),q=True)
+        
+               uvCoordDict.update({i:uvCoord})
+          triangleVertexDict = {} 
+          faceCount = cmds.polyEvaluate(meshName,f=True)
+          for i in range(0,faceCount):
+               toVertex = cmds.polyListComponentConversion("%s.f[%s]"%(meshName,i),tv=True,)
+               cmds.select(toVertex)
+               faceRefVertex = cmds.ls(sl=True,fl=True)
+               triangleVertexDict.update({i:faceRefVertex})
+          cmds.select(cl=True)
+
+          edgeCount = cmds.polyEvaluate(meshName,e=True)
+      
+          border = cmds.polyListComponentConversion(cmds.ls(sl=True,fl=True),uvs=True)
+
+          cmds.select(cl=True)
+         
+          uvCoordListForSpine = []
+          for i in uvCoordDict.keys():
+          #   print i
+               uvCoordListForSpine.append(uvCoordDict[i][0])
+               uvCoordListForSpine.append((1-uvCoordDict[i][1]))
+        # print "uvCoordListForSpine",uvCoordListForSpine
+
+          trianglesListForSpine = []
+          for i in triangleVertexDict.keys():
+               trianglesListForSpine.append(int(triangleVertexDict[i][0].split("[")[1].split("]")[0]))
+               trianglesListForSpine.append(int(triangleVertexDict[i][1].split("[")[1].split("]")[0]))
+               trianglesListForSpine.append(int(triangleVertexDict[i][2].split("[")[1].split("]")[0]))
+             
+        # print "trianglesListForSpine",trianglesListForSpine
+
+          allvertexs = cmds.polyListComponentConversion(meshName,tv=True)
+          #vertexList = []
+          cmds.select(allvertexs)
+          vertexList = cmds.ls(sl=True,fl=True)
+          cmds.select(cl=True)
+          ox = 0##cmds.getAttr("%s.translateX"%joinName)
+          oy = 0##cmds.getAttr("%s.translateY"%joinName)
+          print ox,oy
+
+       #  print vertexList
+          vertexPositionForSpine= []
+          for i in vertexList:
+          #   print cmds.pointPosition(i)
+               vertexPositionForSpine.append(cmds.pointPosition(i)[0]-ox)
+               vertexPositionForSpine.append(cmds.pointPosition(i)[1]-oy)
+             
+        # print "vertexPositionForSpin",vertexPositionForSpine
+
+        # borderEdgesString = cmds.getAttr("%s.borderList"%meshName)
+        # borderEdges = borderEdgesString.split(",")
+          borderEdgesCount = len(borderEdges)
+         
+          edgesVertexDict = {}
+          for i in range(0,borderEdgesCount):
+               toVertex = cmds.polyListComponentConversion(borderEdges[i],tv=True,)
+               cmds.select(toVertex)
+               edgeRefVertex = cmds.ls(sl=True,fl=True)
+               edgesVertexDict.update({i:edgeRefVertex})
+
+          edgesVertexForSpineList = []
+          for i in edgesVertexDict.keys():
+               v1 = edgesVertexDict[i][0].split("[")[-1].split("]")[0]
+               v2 = edgesVertexDict[i][1].split("[")[-1].split("]")[0]
+     
+               edgesVertexForSpineList.append(int(v1)*2)
+               edgesVertexForSpineList.append(int(v2)*2)
+         #print "edgesVertexForSpineList",edgesVertexForSpineList
+          width = imageWidth#cmds.getAttr("%s.scaleX"%meshName)
+          height = imageHeight#cmds.getAttr#("%s.scaleZ"%meshName)
+
+          dataForSpine = {"type":"mesh",
+                         "width":width,
+                         "height":height,
+                         "uvs":uvCoordListForSpine,"triangles":trianglesListForSpine,
+                         "vertices":vertexPositionForSpine,"hull":borderEdgesCount,
+                         "edges":edgesVertexForSpineList}
+          
+          #return dataForSpine
+          
+          
+               
+        
+          
+          
+          slotName = meshName
+          errMsg ="Define Data"
+          print dataForSpine
+          skinData = {slotName:{attachmentName:dataForSpine}}
+          
+          cmds.setAttr('%s.spine_tag'%meshName,'spine_skin',type='string')
+          cmds.setAttr('%s.spine_skinType'%meshName,'mesh',type='string')
+
+          cmds.setAttr('%s.spine_slotName'%meshName,slotName,type='string')
+          cmds.setAttr('%s.spine_skinName'%meshName,slotName,type='string')  
+          #cmds.setAttr('%s.spine_boneName'%meshName,currentTransformName,type='string')             
+                      
+          cmds.setAttr('%s.spine_attachmentName'%meshName,attachmentName,type='string')
+          cmds.setAttr('%s.spine_skinData'%meshName,skinData,type='string')  
+
+          return skinData
+          
+          
+          
+          
+
+
+
+     def getUVData(self,meshName,joinName,borderEdges):
+         
+         #getObj =  cmds.ls(meshName,dag=1)[1]
+          print "meshName",meshName
+         
+          shadingGrps = cmds.listConnections(meshName ,type='shadingEngine')
+          
+          print shadingGrps
+         
+          
+ 
+         #cmds.polyEditUV("pPlane8.map[3]",q=True)
+         #shadingGrps = cmds.listConnections(meshName,type='shadingEngine')
+          shaders = cmds.ls(cmds.listConnections(shadingGrps),materials=1)
+          fileNode = cmds.listConnections('%s.color' % (shaders[0]), type='file')[0]
+          print fileNode
+          imageWidth = self.getImageMetaData(fileNode)[1]
+          imageHeight = self.getImageMetaData(fileNode)[2]
+         #print imageWidth,imageHeight, getImageMetaData(fileNode)
+        # scaleRatio = imageHeight/imageWidth
+        # print "scaleRatio",scaleRatio.imageWidth,imageHeight
+          uvCount = cmds.polyEvaluate(meshName,uv=True)
+          uvCoordDict ={}
+          for i in range(0,uvCount):
+               uvCoord = cmds.polyEditUV("%s.map[%s]"%(meshName,i),q=True)
+        
+               uvCoordDict.update({i:uvCoord})
+          triangleVertexDict = {} 
+          faceCount = cmds.polyEvaluate(meshName,f=True)
+          for i in range(0,faceCount):
+               toVertex = cmds.polyListComponentConversion("%s.f[%s]"%(meshName,i),tv=True,)
+               cmds.select(toVertex)
+               faceRefVertex = cmds.ls(sl=True,fl=True)
+               triangleVertexDict.update({i:faceRefVertex})
+          cmds.select(cl=True)
+
+          edgeCount = cmds.polyEvaluate(meshName,e=True)
+      
+          border = cmds.polyListComponentConversion(cmds.ls(sl=True,fl=True),uvs=True)
+
+          cmds.select(cl=True)
+         
+          uvCoordListForSpine = []
+          for i in uvCoordDict.keys():
+          #   print i
+               uvCoordListForSpine.append(uvCoordDict[i][0])
+               uvCoordListForSpine.append((1-uvCoordDict[i][1]))
+        # print "uvCoordListForSpine",uvCoordListForSpine
+
+          trianglesListForSpine = []
+          for i in triangleVertexDict.keys():
+               trianglesListForSpine.append(int(triangleVertexDict[i][0].split("[")[1].split("]")[0]))
+               trianglesListForSpine.append(int(triangleVertexDict[i][1].split("[")[1].split("]")[0]))
+               trianglesListForSpine.append(int(triangleVertexDict[i][2].split("[")[1].split("]")[0]))
+             
+        # print "trianglesListForSpine",trianglesListForSpine
+
+          allvertexs = cmds.polyListComponentConversion(meshName,tv=True)
+          #vertexList = []
+          cmds.select(allvertexs)
+          vertexList = cmds.ls(sl=True,fl=True)
+          cmds.select(cl=True)
+          ox = cmds.getAttr("%s.translateX"%joinName)
+          oy = cmds.getAttr("%s.translateY"%joinName)
+          print ox,oy
+
+       #  print vertexList
+          vertexPositionForSpine= []
+          for i in vertexList:
+          #   print cmds.pointPosition(i)
+               vertexPositionForSpine.append(cmds.pointPosition(i)[0]-ox)
+               vertexPositionForSpine.append(cmds.pointPosition(i)[1]-oy)
+             
+        # print "vertexPositionForSpin",vertexPositionForSpine
+
+        # borderEdgesString = cmds.getAttr("%s.borderList"%meshName)
+        # borderEdges = borderEdgesString.split(",")
+          borderEdgesCount = len(borderEdges)
+         
+          edgesVertexDict = {}
+          for i in range(0,borderEdgesCount):
+               toVertex = cmds.polyListComponentConversion(borderEdges[i],tv=True,)
+               cmds.select(toVertex)
+               edgeRefVertex = cmds.ls(sl=True,fl=True)
+               edgesVertexDict.update({i:edgeRefVertex})
+
+          edgesVertexForSpineList = []
+          for i in edgesVertexDict.keys():
+               v1 = edgesVertexDict[i][0].split("[")[-1].split("]")[0]
+               v2 = edgesVertexDict[i][1].split("[")[-1].split("]")[0]
+     
+               edgesVertexForSpineList.append(int(v1)*2)
+               edgesVertexForSpineList.append(int(v2)*2)
+         #print "edgesVertexForSpineList",edgesVertexForSpineList
+          width = imageWidth#cmds.getAttr("%s.scaleX"%meshName)
+          height = imageHeight#cmds.getAttr#("%s.scaleZ"%meshName)
+
+          dataForSpine = {"type":"mesh",
+                         "width":width,
+                         "height":height,
+                         "uvs":uvCoordListForSpine,"triangles":trianglesListForSpine,
+                         "vertices":vertexPositionForSpine,"hull":borderEdgesCount,
+                         "edges":edgesVertexForSpineList}
+          
+          return dataForSpine
+          
+
+
+     def getImageMetaData(self,fileNode):
+         
+         currentFile = cmds.getAttr("%s.fileTextureName" % fileNode)
+         fileInSlot = currentFile.split("/")[-1].split(".png")[0]
+         image = ice.Load(currentFile)
+         imageMetaData = image.GetMetaData()
+         imageSize = imageMetaData['Original Size']
+         imageWidth = int(imageMetaData['Original Size'].split(" ")[0].split("(")[1])
+         imageHeight = int(imageMetaData['Original Size'].split(" ")[1].split(")")[0])
+
+         return currentFile,imageWidth,imageHeight
+
+
+
+
+                                                                           
 
      def jointSizeValueChange(self):
          
@@ -335,7 +934,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           self.defineSlot(currentTarget)
           self.defineSkin(currentTarget)
           
-     def defineSlot(self,slot):
+     def defineSlot(self,slot,boneName):
           '''
           slotAttr = {'name':'string',
                        'bone':'string',
@@ -345,34 +944,48 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                        'blend':'enum'
                          }
           '''
-          slot = cmds.ls(sl=True,typ='transform')[0]
+         # slot = cmds.ls(sl=True,typ='transform')[0]
           #print slot
-          cmds.addAttr(slot, ln='spineSlot', numberOfChildren=8, attributeType='compound' )
-          cmds.addAttr(slot, ln='spine_tag', sn='stag' , dt="string", parent='spineSlot'  )
-          cmds.addAttr(slot, ln='slot_name', sn='s_name' , dt="string", parent='spineSlot'  )
-          cmds.addAttr(slot, ln='slot_bone', sn='s_bone' , dt="string", parent='spineSlot'  )
-          cmds.addAttr(slot, ln='slot_color', usedAsColor=True, attributeType='float3',parent='spineSlot' ,k=True )
-          cmds.addAttr(slot, ln='slot_red', attributeType='float',dv=1.0, parent='slot_color',k=True )
-          cmds.addAttr(slot, ln='slot_green', attributeType='float',dv=1.0, parent='slot_color',k=True )
-          cmds.addAttr(slot, ln='slot_blue', attributeType='float',dv=1.0, parent='slot_color',k=True )
-          cmds.addAttr(slot, ln='slot_alpha', attributeType='float',dv=1.0, parent='spineSlot',k=True )
-          
-          cmds.addAttr(slot, ln='slot_dark', usedAsColor=True, attributeType='float3',parent='spineSlot' ,k=True )
-          cmds.addAttr(slot, ln='slot_darkRed', attributeType='float', parent='slot_dark',k=True )
-          cmds.addAttr(slot, ln='slot_darkGreen', attributeType='float', parent='slot_dark',k=True )
-          cmds.addAttr(slot, ln='slot_darkBlue', attributeType='float', parent='slot_dark',k=True )                
-          cmds.addAttr(slot, ln='slot_attachment', sn='s_att' , dt="string", parent='spineSlot'  )
-          cmds.addAttr(slot, ln='slot_blend', sn='s_blend' , at="enum",en="normal:additive:multiply:screen", parent='spineSlot' ,k=True )
-           
+          try:
+               cmds.addAttr(slot, ln='spineSlot', numberOfChildren=8, attributeType='compound' )
+               cmds.addAttr(slot, ln='spine_tag', sn='stag' , dt="string", parent='spineSlot'  )
+               cmds.addAttr(slot, ln='slot_name', sn='s_name' , dt="string", parent='spineSlot'  )
+               cmds.addAttr(slot, ln='slot_bone', sn='s_bone' , dt="string", parent='spineSlot'  )
+               cmds.addAttr(slot, ln='slot_color', usedAsColor=True, attributeType='float3',parent='spineSlot' ,k=True )
+               cmds.addAttr(slot, ln='slot_red', attributeType='float',dv=1.0, parent='slot_color',k=True )
+               cmds.addAttr(slot, ln='slot_green', attributeType='float',dv=1.0, parent='slot_color',k=True )
+               cmds.addAttr(slot, ln='slot_blue', attributeType='float',dv=1.0, parent='slot_color',k=True )
+               cmds.addAttr(slot, ln='slot_alpha', attributeType='float',dv=1.0, parent='spineSlot',k=True )
+               
+               cmds.addAttr(slot, ln='slot_dark', usedAsColor=True, attributeType='float3',parent='spineSlot' ,k=True )
+               cmds.addAttr(slot, ln='slot_darkRed', attributeType='float', parent='slot_dark',k=True )
+               cmds.addAttr(slot, ln='slot_darkGreen', attributeType='float', parent='slot_dark',k=True )
+               cmds.addAttr(slot, ln='slot_darkBlue', attributeType='float', parent='slot_dark',k=True )                
+               cmds.addAttr(slot, ln='slot_attachment', sn='s_att' , dt="string", parent='spineSlot'  )
+               cmds.addAttr(slot, ln='slot_blend', sn='s_blend' , at="enum",en="normal:additive:multiply:screen", parent='spineSlot' ,k=True )
+                
+             
+               
+               
+               
+          except:
+               pass
           cmds.setAttr('%s.spine_tag'%slot,'spine_slot',type='string')
           cmds.setAttr('%s.slot_name'%slot,slot,type='string')
-          
+          cmds.setAttr('%s.slot_bone'%slot,boneName,type='string')
           getObj =  cmds.ls(slot,dag=1)[1]
+          #print 'getObj',getObj
           shadingGrps = cmds.listConnections(getObj,type='shadingEngine')
           shaders = cmds.ls(cmds.listConnections(shadingGrps),materials=1)
-          fileNode = cmds.listConnections('%s.outColor' % (shaders[0]), type='file')
+          if cmds.nodeType(shaders) == 'lambert':
+               fileNode = cmds.listConnections('%s.color' % (shaders[0]), type='file')
+          elif cmds.nodeType(shaders) == 'surfaceShader':
+
+               fileNode = cmds.listConnections('%s.outColor' % (shaders[0]), type='file')
           currentFile = cmds.getAttr("%s.fileTextureName" % fileNode[0])
+         # print 'currentFile',currentFile
           fileInSlot = currentFile.split("/")[-1][0:-4]
+          #print 'fileInSlot',fileInSlot
           cmds.setAttr('%s.slot_attachment'%slot,fileInSlot,type='string')
                                           
      def defineSkin(self,slot):
@@ -681,12 +1294,14 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
      def run(self):
           print ("export json")
-          boneList = self.defineBone('Root')
-          self.defineExportData(boneList)
+          setRoot = self.setRootLineEdit.text()
+          boneList = self.defineBone(setRoot)
+          skinDict = self.getSkinData()
+          self.defineExportData(boneList,skinDict)
           #print (boneList)
 
      def defineBone(self,root):
-         
+          ###all z axis should aim up
           boneList=[]
           allNode =  self.getItemDepth(root)
           print ('allNode',allNode)
@@ -702,9 +1317,13 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                       sx = float("%.3f"%(cmds.getAttr("%s.scaleX"%i)))
                       sy = float("%.3f"%(cmds.getAttr("%s.scaleY"%i)))
                       ox = float("%.3f"%(cmds.getAttr("%s.jointOrientX"%i)))
+                    #  if abs(ox) == 180:
+                     #    cmds.setAttr('%s.rotateAxisX'%i,180)
                       oy = float("%.3f"%(cmds.getAttr("%s.jointOrientY"%i)))
                       oz = float("%.3f"%(cmds.getAttr("%s.jointOrientZ"%i)))
-                      r  = oz+rz
+                    #  if oz <0 :
+                     #    cmds.setAttr('%s.rotateAxisX'%i,180)
+                      r  = oz+rz+oy
                       child = cmds.listRelatives(i,c=True)
                    #   print "child",child
                       if child == None:
@@ -722,7 +1341,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                       else:
                           parentBone = cmds.listRelatives(i,p=True)[0]
                     #      print "bone,(joint):",i, "parent:",parentBone
-                          boneInfo = {"name":i,"parent":parentBone,"rotation":r,"x":x,"y":y,"length":length,"color":"ffffffff"}
+                          boneInfo = {"name":i,"parent":parentBone,"rotation":r,"x":x,"y":y,"length":length,"color":"ffffffff","transform":"normal"}
 
              
                       boneList.append(boneInfo)
@@ -761,16 +1380,18 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
       
 
 
-     def defineExportData(self,boneList):
+     def defineExportData(self,boneList,skinDict,slotList):
           
           exportFile = "C:/Users/alpha/Documents/GitHub/spineToolAdv/test_01.json"
           exportData = {'skeleton':{},
                          'bones':boneList,
-                         'slots':[],
-                         'skins':{},
+                         'slots':slotList,
+                         'skins':skinDict,
                          'events':{},
                          'animations':{}          
           }
+          
+          
           
           writeData = json.dumps(exportData, sort_keys=True , indent =4) 
           #writeData = json.dumps(exportJson) 
