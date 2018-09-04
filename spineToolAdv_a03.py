@@ -110,14 +110,14 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                          
                    
                                                                    
-          #self.errMsgLabel = QtWidgets.QLabel(self.dockImageButton)
-          #self.errMsgLabel.setGeometry(QtCore.QRect(0, 50, 500, 50))
-          #self.errMsgLabel.setObjectName("errMsgLabel")
-          #self.errMsgLabel.setText(QtWidgets.QApplication.translate("MainWindow", "TextLabel", None, -1))
+          self.errMsgLabel = QtWidgets.QLabel(self.dockImageButton)
+          self.errMsgLabel.setGeometry(QtCore.QRect(0, 30, 500, 50))
+          self.errMsgLabel.setObjectName("errMsgLabel")
+          self.errMsgLabel.setText(QtWidgets.QApplication.translate("MainWindow", "TextLabel", None, -1))
           
           
           self.createRootBtn = QtWidgets.QPushButton(self.dockImageButton)
-          self.createRootBtn.setGeometry(QtCore.QRect(0, 50, 150, 50))
+          self.createRootBtn.setGeometry(QtCore.QRect(0, 100, 150, 50))
           self.createRootBtn.setObjectName("createRoot")
           self.createRootBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Root", None, -1))
           self.createRootBtn.clicked.connect(self.createRootCtrl)
@@ -273,10 +273,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
      def defineAllItemInRootCtrl(self):
           errMsg = "define all items in root ctrl"
           rootCtrlName = "rootCtrl"
-          boneList = []
+          boneList = [{ "name":rootCtrlName},]
           allMeshItem = []
           meshSlotList = []
-          skinDict = {}
+          skinDict = {"default":{}}
 
           allItemsInRootCtrl = cmds.listRelatives( rootCtrlName, c=True,ad=True )
           
@@ -322,9 +322,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           
           
           for i in allMeshItem:
-               skinData = cmds.getAttr('%s.spine_skinData'%i)
+               print 'allMeshItem',i
+               skinData = json.loads(cmds.getAttr('%s.spine_skinData'%i))
               # skinDict.update(skinData)
-               skinDict.update({"default":skinData})
+               skinDict["default"].update(skinData)
         #  exportFile = "C:/Users/alpha/Documents/GitHub/spineToolAdv/test_01.json" 
           #print errMsg,skinDict
           #print allSlotItem
@@ -410,10 +411,19 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
      def getAllMeshSlots(self,meshSlotList):
           slotList = []
           for i in meshSlotList:
-               slotName = cmds.getAttr('%s.spine_tag'%i)
+               slotName = cmds.getAttr('%s.slot_name'%i)
                boneName = cmds.getAttr('%s.slot_bone'%i)
                attachment = cmds.getAttr('%s.slot_attachment'%i)
-               slotBlend = cmds.getAttr('%s.slot_blend'%i)
+               slotBlendIndex = cmds.getAttr('%s.slot_blend'%i)
+               if slotBlendIndex == 0:
+                    slotBlend = 'normal'
+               elif slotBlendIndex ==1 :
+                    slotBlend = 'additive'
+               elif slotBlendIndex ==2 :
+                    slotBlend = 'multiply'
+               elif slotBlendIndex ==3 :
+                    slotBlend = 'screen'
+               print 'slotBlend',slotBlend
 
                slotList.append({"name":slotName,
                                 "bone":boneName,
@@ -672,8 +682,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           slotName = meshName
           errMsg ="Define Data"
           print dataForSpine
-          skinData = {slotName:{attachmentName:dataForSpine}}
-          
+          skinData = json.dumps({slotName:{attachmentName:dataForSpine}})
+
           cmds.setAttr('%s.spine_tag'%meshName,'spine_skin',type='string')
           cmds.setAttr('%s.spine_skinType'%meshName,'mesh',type='string')
 
@@ -910,7 +920,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           slotName = currentImage.split('.')[0]
           print (currentImage)
           if selectedImageCount ==0:
-              self.errMsgLabel.setText('no selected image')
+               self.errMsgLabel.setText('no selected image')
           else:
                self.errMsgLabel.setText(currentImage)
                imageSize = self.imageInfoTable.item(0,1).text()[1:-1].split(' ')
@@ -933,6 +943,13 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
      
           self.defineSlot(currentTarget)
           self.defineSkin(currentTarget)
+          
+          
+          
+          
+          
+          
+          
           
      def defineSlot(self,slot,boneName):
           '''
@@ -970,8 +987,13 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                
           except:
                pass
+          slotList = cmds.listRelatives( slot, c=True,ad=True,s=True)
+          if len(slotList) > 1:
+               self.errMsgLabel.setText('more than one shape in slot transform')
+          else:
+               slotName = slotList[0]
           cmds.setAttr('%s.spine_tag'%slot,'spine_slot',type='string')
-          cmds.setAttr('%s.slot_name'%slot,slot,type='string')
+          cmds.setAttr('%s.slot_name'%slot,slotName,type='string')
           cmds.setAttr('%s.slot_bone'%slot,boneName,type='string')
           getObj =  cmds.ls(slot,dag=1)[1]
           #print 'getObj',getObj
@@ -1382,7 +1404,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
      def defineExportData(self,boneList,skinDict,slotList):
           
-          exportFile = "C:/Users/alpha/Documents/GitHub/spineToolAdv/test_01.json"
+          exportFile = "C:/Temp/images/test_01.json"
           exportData = {'skeleton':{},
                          'bones':boneList,
                          'slots':slotList,
