@@ -1,0 +1,7 @@
+
+
+cmds.listHistory('mesh',pruneDagObjects=True,il=2)
+
+cmds.findDeformers('mesh')
+
+cmds.skinCluster('skinCluster',q=True,inf=True)
