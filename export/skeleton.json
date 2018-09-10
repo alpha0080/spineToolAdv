@@ -1,0 +1,55 @@
+{
+"skeleton": {
+	"hash": "ZCpWFhjjWI+5hT9BkzZnWFBUfco",
+	"spine": "3.6.53",
+	"width": 265,
+	"height": 268,
+	"images": "C:/Users/alpha/Documents/GitHub/spineToolAdv"
+},
+"bones": [
+	{ "name": "root" }
+],
+"slots": [
+	{ "name": "aaa", "bone": "root", "attachment": "SaberArtGoStage2" }
+],
+"skins": {
+	"default": {
+		"aaa": {
+			"SaberArtGoStage2": {
+				"type": "mesh",
+				"uvs": [ 0.54244, 0.1953, 0.52632, 0.08741, 0.54839, 0.02647, 0.60951, 0.00749, 0.69015, 0.01449, 0.73345, 0.06843, 0.74958, 0.14535, 0.75127, 0.21229, 0.70458, 0.27522, 0.56112, 0.24426 ],
+				"triangles": [ 3, 0, 1, 2, 3, 1, 7, 8, 9, 3, 5, 0, 4, 5, 3, 7, 9, 0, 6, 0, 5, 6, 7, 0 ],
+				"vertices": [ 50, 305, 31, 413, 57, 474, 129, 493, 224, 486, 275, 432, 294, 355, 296, 288, 241, 225, 72, 256 ],
+				"hull": 10,
+				"edges": [ 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18, 0, 18 ],
+				"width": 1178,
+				"height": 1001
+			}
+		}
+	}
+},
+"animations": {
+	"animation": {
+		"slots": {
+			"aaa": {
+				"attachment": [
+					{ "time": 0, "name": "SaberArtGoStage2" }
+				]
+			}
+		},
+		"deform": {
+			"default": {
+				"aaa": {
+					"SaberArtGoStage2": [
+						{ "time": 0 },
+						{
+							"time": 0.7,
+							"vertices": [ -73 ]
+						}
+					]
+				}
+			}
+		}
+	}
+}
+}

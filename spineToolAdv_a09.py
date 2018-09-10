@@ -27,7 +27,7 @@ except:
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1200, 950)
+        MainWindow.resize(1400, 950)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         MainWindow.setCentralWidget(self.centralwidget)
@@ -60,9 +60,9 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.defineImageInfoDock()
         self.defineImageButtonDock()
         self.definePreviewImageDock()
-        self.defineDockCamview()
+        self.defineDockSpineItemTree()
   
-     
+        #defineDockCamview
         
            
     def createDock(self):
@@ -98,15 +98,15 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockSpineMeshProgress)
 
 
-
-        self.dockCamview = QtWidgets.QDockWidget(self)
-        self.dockCamview.setObjectName("dockCamview")
-        self.dockCamview.setMinimumWidth(200)
-        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockCamview)
+#dockSpineItemTree dockCamview
+        self.dockSpineItemTree = QtWidgets.QDockWidget(self)
+        self.dockSpineItemTree.setObjectName("dockSpineItemTree")
+        self.dockSpineItemTree.setMinimumWidth(400)
+        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockSpineItemTree)
 
         self.splitDockWidget( self.dockWidgetImages, self.dockWidgetImagesInfo, QtCore.Qt.Horizontal)
         self.splitDockWidget( self.dockWidgetImagesInfo, self.dockSpineMeshProgress, QtCore.Qt.Horizontal)
-        self.splitDockWidget( self.dockSpineMeshProgress, self.dockCamview, QtCore.Qt.Horizontal)
+        self.splitDockWidget( self.dockSpineMeshProgress, self.dockSpineItemTree, QtCore.Qt.Horizontal)
 
         self.splitDockWidget( self.dockWidgetImages, self.previewImageDock, QtCore.Qt.Vertical)
         self.splitDockWidget( self.dockWidgetImagesInfo, self.dockImageButton, QtCore.Qt.Vertical)
@@ -157,61 +157,42 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                          }\
                          "
         buttonStyleB = "\
-                         QLineEdit {\
-                         height: 30px;\
-                         background-color:#111111;\
-                         border-radius :6px;\
-                         border-style:solid;\
-                         border-width:1px;\
-                         border-color:#000000;\
-                         text-align:center;\
-                         }\
-                         QComboBox {\
-                         height:30px;\
-                         background-color:#333333;\
-                         border-radius :3px;\
-                         border-style:solid;\
-                         border-width:1px;\
-                         border-color:#5E749C;\
-                         text-align:right;\
-                         }\
                          QPushButton {\
-                         background-color:#333333;\
-                         border-radius:3px;\
+                         background-color:#555555;\
+                         border-radius:8px;\
                          border-style:solid;\
                          border-width:1px;\
-                         border-color:#5E749C;\
+                         border-color:#555555;\
                          }\
                          QPushButton:hover{\
                          background-color:#883333;\
-                         border-radius:3px;\
+                         border-radius:8px;\
                          border-style:solid;\
                          border-width:1px;\
-                         border-color:#5E749C;\
+                         border-color:#883333;\
                          }\
                          QPushButton:pressed{\
                          background-color:#AAAA33;\
-                         border-radius:3px;\
+                         border-radius:8px;\
                          border-style:solid;\
                          border-width:1px;\
-                         border-color:#5E749C;\
+                         border-color:#AAAA33;\
                          }\
                          "        
-         
+        lineEditA = "\
+                         QLineEdit {\
+                         height: 30px;\
+                         background-color:#333333;\
+                         border-radius :6px;\
+                         border-style:solid;\
+                         border-width:1px;\
+                         border-color:#666666;\
+                         text-align:left;\
+                         }\
+                         "    
                          
                    
                                                                    
-        self.errMsgLabel = QtWidgets.QLabel(self.dockImageButton)
-        self.errMsgLabel.setGeometry(QtCore.QRect(0, 30, 500, 50))
-        self.errMsgLabel.setObjectName("errMsgLabel")
-        self.errMsgLabel.setText(QtWidgets.QApplication.translate("MainWindow", "TextLabel", None, -1))
-
-
-        self.createRootBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.createRootBtn.setGeometry(QtCore.QRect(0, 100, 150, 50))
-        self.createRootBtn.setObjectName("createRoot")
-        self.createRootBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Root", None, -1))
-        self.createRootBtn.clicked.connect(self.createRootCtrl)
 
 
 
@@ -316,7 +297,6 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.testCBtn.clicked.connect(self.defineDeformAnimation)
 
 
-        self.createRootBtn.setStyleSheet(buttonStyle)     
 
         self.createSlotBtn.setStyleSheet(buttonStyle)     
         self.createMeshBtn.setStyleSheet(buttonStyle)             
@@ -335,59 +315,267 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
         #### dockSpineMeshProgress BTN
+        
+        self.errMsgLabel = QtWidgets.QLabel(self.dockSpineMeshProgress)
+        self.errMsgLabel.setGeometry(QtCore.QRect(30, 10, 300, 50))
+        self.errMsgLabel.setObjectName("errMsgLabel")
+        self.errMsgLabel.setText(QtWidgets.QApplication.translate("MainWindow", "Error Message:", None, -1))
+        self.errMsgLabel.setStyleSheet(buttonStyleB)   
+             
+        self.errorMsgLEdit = QtWidgets.QLineEdit(self.dockSpineMeshProgress)
+        self.errorMsgLEdit.setGeometry(QtCore.QRect(30, 50,360, 30))
+        self.errorMsgLEdit.setObjectName("errorMsgLEdit")
+        self.errorMsgLEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.errorMsgLEdit.setText('error message')
+        self.errorMsgLEdit.setStyleSheet(lineEditA)     
+        
         self.createCharacterGrpBTn = QtWidgets.QPushButton(self.dockSpineMeshProgress)
-        self.createCharacterGrpBTn.setGeometry(QtCore.QRect(30, 50, 150,30))
+        self.createCharacterGrpBTn.setGeometry(QtCore.QRect(30, 100, 150,30))
         self.createCharacterGrpBTn.setObjectName("createCharacterGrp")
         self.createCharacterGrpBTn.setText(QtWidgets.QApplication.translate("MainWindow", "create Character Group", None, -1))
         self.createCharacterGrpBTn.clicked.connect(self.createCharacterGrp)
         self.createCharacterGrpBTn.setStyleSheet(buttonStyleB)     
 
-
+ 
         self.characterNameLEdit = QtWidgets.QLineEdit(self.dockSpineMeshProgress)
-        self.characterNameLEdit.setGeometry(QtCore.QRect(190, 50, 200, 30))
+        self.characterNameLEdit.setGeometry(QtCore.QRect(190, 100, 200, 30))
         self.characterNameLEdit.setObjectName("rootJointLineEdit")
         self.characterNameLEdit.setAlignment(QtCore.Qt.AlignCenter)
-        self.characterNameLEdit.setText('character Set Name')
-        self.characterNameLEdit.setStyleSheet(buttonStyleB)     
+        self.characterNameLEdit.setText('')
+        self.characterNameLEdit.setStyleSheet(lineEditA)     
+        
+        self.createRootBtn = QtWidgets.QPushButton(self.dockSpineMeshProgress)
+        self.createRootBtn.setGeometry(QtCore.QRect(30, 150, 150, 30))
+        self.createRootBtn.setObjectName("createRoot")
+        self.createRootBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Root", None, -1))
+        self.createRootBtn.clicked.connect(self.createRootCtrl)
+        self.createRootBtn.setStyleSheet(buttonStyleB)     
+
+ 
+        self.rootNameEdit = QtWidgets.QLineEdit(self.dockSpineMeshProgress)
+        self.rootNameEdit.setGeometry(QtCore.QRect(190, 150, 150, 30))
+        self.rootNameEdit.setObjectName("rootNameEdit")
+        self.rootNameEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.rootNameEdit.setText('')
+        self.rootNameEdit.setStyleSheet(lineEditA)           
+        
+        self.rootCtrlScaleEdit = QtWidgets.QLineEdit(self.dockSpineMeshProgress)
+        self.rootCtrlScaleEdit.setGeometry(QtCore.QRect(340,150, 50, 30))
+        self.rootCtrlScaleEdit.setObjectName("rootCtrlScaleEdit")
+        self.rootCtrlScaleEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.rootCtrlScaleEdit.setText('10.0')
+        self.rootCtrlScaleEdit.setStyleSheet(lineEditA)           
+        
+
 
 
         self.defineMeshBtn = QtWidgets.QPushButton(self.dockSpineMeshProgress)
-        self.defineMeshBtn.setGeometry(QtCore.QRect(30, 100, 150, 30))
+        self.defineMeshBtn.setGeometry(QtCore.QRect(30, 200, 150, 30))
         self.defineMeshBtn.setObjectName("defineMesh")
         self.defineMeshBtn.setText(QtWidgets.QApplication.translate("MainWindow", "define Mesh", None, -1))
         self.defineMeshBtn.clicked.connect(self.getSkinData)
         self.defineMeshBtn.setStyleSheet(buttonStyleB)     
 
+        self.setCharacterSetBTn = QtWidgets.QPushButton(self.dockSpineMeshProgress)
+        self.setCharacterSetBTn.setGeometry(QtCore.QRect(30, 450, 150, 30))
+        self.setCharacterSetBTn.setObjectName("setCharacterSetBTn")
+        self.setCharacterSetBTn.setText(QtWidgets.QApplication.translate("MainWindow", "select Character Set", None, -1))
+        self.setCharacterSetBTn.clicked.connect(self.setCharacterSetName)
+        self.setCharacterSetBTn.setStyleSheet(buttonStyleB)     
+        
+
+        self.exportSpineJsonBtn = QtWidgets.QPushButton(self.dockSpineMeshProgress)
+        self.exportSpineJsonBtn.setGeometry(QtCore.QRect(30, 750, 150, 30))
+        self.exportSpineJsonBtn.setObjectName("exportSpineJson")
+        self.exportSpineJsonBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Export Spine Json", None, -1))
+        self.exportSpineJsonBtn.clicked.connect(self.defineAllItemInRootCtrl)
+        self.exportSpineJsonBtn.setStyleSheet(buttonStyleB)     
+
+       
+        self.analyzeCharacterSet = QtWidgets.QPushButton(self.dockSpineMeshProgress)
+        self.analyzeCharacterSet.setGeometry(QtCore.QRect(30, 500, 150, 30))
+        self.analyzeCharacterSet.setObjectName("analyzeCharacterSet")
+        self.analyzeCharacterSet.setText(QtWidgets.QApplication.translate("MainWindow", "analyze Character Set", None, -1))
+        self.analyzeCharacterSet.clicked.connect(self.doAnalyzeCharacterSet)
+        self.analyzeCharacterSet.setStyleSheet(buttonStyleB)     
+        
+        
+        
+        
+        
+
+        self.setCharacterSetLineEdit = QtWidgets.QLineEdit(self.dockSpineMeshProgress)
+        self.setCharacterSetLineEdit.setGeometry(QtCore.QRect(190, 450, 200, 30))
+        self.setCharacterSetLineEdit.setObjectName("rootJointLineEdit")
+        self.setCharacterSetLineEdit.setText(QtWidgets.QApplication.translate("MainWindow", "Character Set Name", None, -1))
+        self.setCharacterSetLineEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.setCharacterSetLineEdit.setStyleSheet(lineEditA)     
 
 
+    def doAnalyzeCharacterSet(self):
+        #QTreeWidget::QTreeWidgetItem
+        treeItemA = "\
+                     QTreeWidget:item {\
+                     background-color:#333333;\
+                     color:#777777;\
+                     text-align:center;\
+                     }\
+                     QTreeWidgetItem {\
+                     background-color:#333333;\
+                     color:#FF7777;\
+                     text-align:center;\
+                     }\
+                     QPushButton:hover{\
+                     background-color:#883333;\
+                     border-radius:10px;\
+                     border-style:solid;\
+                     border-width:3px;\
+                     border-color:#5E749C;\
+                     }\
+                     QPushButton:pressed{\
+                     background-color:#AAAA33;\
+                     border-radius:10px;\
+                     border-style:solid;\
+                     border-width:3px;\
+                     border-color:#5E749C;\
+                     }\
+                     "
+        treeItemB = "\
+                     QTreeWidget:item:text {\
+                     background-color:#333333;\
+                     color:#FF7777;\
+                     text-align:center;\
+                     }\
+                     "     
+        characterSet = self.setCharacterSetLineEdit.text()
+        if len(characterSet) == 0:
+            self.errorMsgLEdit.setText('pls select One character set')
+            
+        else:
+            if cmds.getAttr('%s.spine_tag'%characterSet) == 'spine_characterSet':
+                #allTransform = cmds.listRelatives(c=True,typ='transform')
+                allMeshSlotList = []
+                allSkinNameList = []
+                allDeformerList = []
+                
+                
+                allTransformsList =  cmds.listRelatives(characterSet,c=True,p=False)
+                print "%s is spine character set"%characterSet,allTransformsList
+
+                slotCount = 0
+                for i in allTransformsList:
+                    meshCount = 0
+
+                    for j in cmds.listRelatives(i,c=True,p=False):
+                        
+                        try:
+                            if cmds.nodeType(j) =='mesh' and cmds.getAttr('%s.spine_skinType'%j) =='mesh':
+                               # print 'jjjjjjj',j
+                                allMeshSlotList.append(i)
+                                slotName = str(i)
+                                
+                                ### add slotName to tree
+                                newSlotItem = QtWidgets.QTreeWidgetItem(self.spineItemTree)
+                                self.spineItemTree.topLevelItem(slotCount).setText(0, QtWidgets.QApplication.translate("MainWindow", slotName, None, -1))
+                                
+                                
+                                ### add meshName to tree
+                                meshName = str(j)
+                                newMeshItem = QtWidgets.QTreeWidgetItem(newSlotItem)
+                                self.spineItemTree.topLevelItem(slotCount).child(meshCount).setText(0, QtWidgets.QApplication.translate("MainWindow",meshName, None, -1))
+                                newMeshItem.setForeground(0,QtGui.QBrush(QtGui.QColor(255,255, 100, 255)))
+                               # self.spineItemTree.topLevelItem(slotCount).child(meshCount).setText(0).setStyleSheet(treeItemB)
+                                  
+                                ### add attachmentName to tree
+                                attachmentName = str(cmds.getAttr('%s.spine_attachmentName'%meshName))
+                                newAttachmentItem = QtWidgets.QTreeWidgetItem(newMeshItem) 
+                                self.spineItemTree.topLevelItem(slotCount).child(meshCount).child(0).setText(0, QtWidgets.QApplication.translate("MainWindow",attachmentName, None, -1))
+                                newAttachmentItem.setForeground(0,QtGui.QBrush(QtGui.QColor(100,255, 255, 255)))
+                                
+                                
+                                
+                                slotCount = slotCount +1
+                                meshCount = meshCount +1
+                                allSkinNameList.append(j)
+                        except:
+                            pass
+                print allMeshSlotList
+                print allSkinNameList
+       # newSlotItem = QtWidgets.QTreeWidgetItem(self.spineItemTree)
+       # self.spineItemTree.topLevelItem(0).setText(0, QtWidgets.QApplication.translate("MainWindow", "a", None, -1))
+
+        #self.spineItemTree
+        #item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
+       # item_1 = QtWidgets.QTreeWidgetItem(item_0)
+       # item_2 = QtWidgets.QTreeWidgetItem(item_1)
+       # item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
+       # item_1 = QtWidgets.QTreeWidgetItem(item_0)
+      # self.treeWidget.setSortingEnabled(False)
+      #  self.treeWidget.topLevelItem(0).setText(0, QtWidgets.QApplication.translate("MainWindow", "a", None, -1))
+      #  self.treeWidget.topLevelItem(0).child(0).setText(0, QtWidgets.QApplication.translate("MainWindow", "a1", None, -1))
+      #  self.treeWidget.topLevelItem(0).child(0).child(0).setText(0, QtWidgets.QApplication.translate("MainWindow", "a1_2", None, -1))
+       # self.treeWidget.topLevelItem(1).setText(0, QtWidgets.QApplication.translate("MainWindow", "b", None, -1))
+       # self.treeWidget.topLevelItem(1).child(0).setText(0, QtWidgets.QApplication.translate("MainWindow", "b1", None, -1))
+       # newItem = QtGui.QTreeWidgetItem(self.spineItemTree)
+       # self.spineItemTree.topLevelItem(0).setText(0, QtWidgets.QApplication.translate("MainWindow", "a", None, -1))
+
+    def setCharacterSetName(self):
+        
+        currentSel = cmds.ls(sl=True,type = 'transform')
+        if len(currentSel) > 1:
+            self.errorMsgLEdit.setText('more than one Character Set selected')
+        elif len(currentSel) == 1:
+            set = currentSel[0]
+            try:
+                if cmds.getAttr('%s.spine_tag'%set) == "spine_characterSet":
+                     self.setCharacterSetLineEdit.setText(cmds.getAttr('%s.set_name'%set))
+                else:
+                     self.errorMsgLEdit.setText('%s is not character set'%set)   
+            except:
+                self.errorMsgLEdit.setText('pls select the character set that be exported')
+                self.setCharacterSetLineEdit.setText('Character Set Name')
+        print currentSel
+        
+        
+        
+        
+    
     def createCharacterGrp(self):
         errMsg = "create Empty Character Grp"
+        allTransform = cmds.ls(type='transform')
         characterSetName = self.characterNameLEdit.text()
-        nullGrp = cmds.createNode('transform')
-        cmds.select(nullGrp)
-        cmds.rename(nullGrp,characterSetName)
-        realGrpName = cmds.ls(sl=True)[0]
-        
-        print 'characterSet',realGrpName
-        cmds.addAttr(realGrpName, ln='spineCharacterSet', numberOfChildren=2, attributeType='compound' )
-        cmds.addAttr(realGrpName, ln='spine_tag', sn='stag' , dt="string", parent='spineCharacterSet'  )
-        cmds.addAttr(realGrpName, ln='set_name', sn='setname' , dt="string", parent='spineCharacterSet'  )
-        
-        cmds.setAttr('%s.set_name'%realGrpName,realGrpName,type='string')
-       
-        cmds.setAttr('%s.spine_tag'%realGrpName,'spine_characterSet',type='string')
-        
-        cmds.setAttr('%s.tx'%realGrpName,l=True,k=False)
-        cmds.setAttr('%s.ty'%realGrpName,l=True,k=False)
-        cmds.setAttr('%s.tz'%realGrpName,l=True,k=False)
-        cmds.setAttr('%s.sx'%realGrpName,l=True,k=False)
-        cmds.setAttr('%s.sy'%realGrpName,l=True,k=False)
-        cmds.setAttr('%s.sz'%realGrpName,l=True,k=False)
-        cmds.setAttr('%s.rx'%realGrpName,l=True,k=False)
-        cmds.setAttr('%s.ry'%realGrpName,l=True,k=False)
-        cmds.setAttr('%s.rz'%realGrpName,l=True,k=False)
-
-        print errMsg,characterSetName
+        print 'allTransform',allTransform
+        if len(characterSetName) == 0:
+            self.errorMsgLEdit.setText('pls type in Character Set Name')
+        elif characterSetName in allTransform:
+            self.errorMsgLEdit.setText('%s existed'%characterSetName)
+        else:
+            
+            nullGrp = cmds.createNode('transform')
+            cmds.select(nullGrp)
+            cmds.rename(nullGrp,characterSetName)
+            realGrpName = cmds.ls(sl=True)[0]
+            
+            print 'characterSet',realGrpName
+            cmds.addAttr(realGrpName, ln='spineCharacterSet', numberOfChildren=2, attributeType='compound' )
+            cmds.addAttr(realGrpName, ln='spine_tag', sn='stag' , dt="string", parent='spineCharacterSet' ,k=True )
+            cmds.addAttr(realGrpName, ln='set_name', sn='setname' , dt="string", parent='spineCharacterSet' ,k=True )
+            
+            cmds.setAttr('%s.set_name'%realGrpName,realGrpName,type='string')
+           
+            cmds.setAttr('%s.spine_tag'%realGrpName,'spine_characterSet',type='string')
+            
+            cmds.setAttr('%s.tx'%realGrpName,l=True,k=False)
+            cmds.setAttr('%s.ty'%realGrpName,l=True,k=False)
+            cmds.setAttr('%s.tz'%realGrpName,l=True,k=False)
+            cmds.setAttr('%s.sx'%realGrpName,l=True,k=False)
+            cmds.setAttr('%s.sy'%realGrpName,l=True,k=False)
+            cmds.setAttr('%s.sz'%realGrpName,l=True,k=False)
+            cmds.setAttr('%s.rx'%realGrpName,l=True,k=False)
+            cmds.setAttr('%s.ry'%realGrpName,l=True,k=False)
+            cmds.setAttr('%s.rz'%realGrpName,l=True,k=False)
+            self.errorMsgLEdit.setText('%s created '%characterSetName)
+        #print errMsg,characterSetName
         
         
         
@@ -397,22 +585,62 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           
     def createRootCtrl(self):
         errMsg = "create Root Ctrl"
-          
-        ctrlScale = 10
+        ctrlScale = float(self.rootCtrlScaleEdit.text())
         points = [(0,2*ctrlScale,0),(6*ctrlScale,2*ctrlScale,0),(6*ctrlScale,3*ctrlScale,0),(9*ctrlScale,0,0),(6*ctrlScale,-3*ctrlScale,0),(6*ctrlScale,-2*ctrlScale,0),(0,-2*ctrlScale,0),(-6*ctrlScale,-2*ctrlScale,0),(-6*ctrlScale,-3*ctrlScale,0),(-9*ctrlScale,0,0),(-6*ctrlScale,3*ctrlScale,0),(-6*ctrlScale,2*ctrlScale,0),(0,2*ctrlScale,0)]
+        allTransform =  cmds.ls(type="transform")
+        currentSet = cmds.ls(sl=True,type='transform')
+        rootName = self.rootNameEdit.text()
+        if len(currentSet) == 0:
+            self.errorMsgLEdit.setText('pls select Character Set')
+        elif len(currentSet) > 1:
+            self.errorMsgLEdit.setText('more than one character set be selected')
+        else:
+            try:
+                if cmds.getAttr("%s.spine_tag"%currentSet[0]) == 'spine_characterSet':
+                    
+                    if len(rootName) == 0:
+                        self.errorMsgLEdit.setText('pls type in root control Name')
+                    else:
+                        if rootName in allTransform:
+                            self.errorMsgLEdit.setText('%s is existed'%rootName)
+                        else:
+                            
+                    
+                           # self.errorMsgLEdit.setText('%s is selected'%currentSet[0])
+                            
+                           # print rootName 
+                            
+                            curve = cmds.curve(d=1,p=points,n = rootName )     
+                              
+                            cmds.addAttr(curve, ln='spineRootCtrl', numberOfChildren=4, attributeType='compound' )
+                            cmds.addAttr(curve, ln='spine_tag', sn='stag' , dt="string", parent='spineRootCtrl'  )
+                            cmds.addAttr(curve, ln='timeStart', sn='timeStart' , at="float", dv=0.0,parent='spineRootCtrl' ,k=True )
+                            cmds.addAttr(curve, ln='timeEnd', sn='timeEnd' , at="float", dv=120.0,parent='spineRootCtrl' ,k=True )
+                            
+  
+                            
+                            
+                            cmds.addAttr(curve, ln='spine_parentCharacterSet', sn='rootCtrl' , dt="string", parent='spineRootCtrl'  )
+                              
+                            cmds.setAttr('%s.spine_tag'%curve,'spine_ctrl',type='string')
+                            cmds.setAttr('%s.spine_parentCharacterSet'%curve,currentSet[0],type='string') 
+                          #  cmds.rename(curve,'rootCtrl')
+                        
+                            self.errorMsgLEdit.setText('Root %s created'%rootName)
+                    
+                else:
+                    self.errorMsgLEdit.setText('%s is not spine Character Set'%currentSet[0])
+            except:
+                self.errorMsgLEdit.setText('%s is not character set'%currentSet[0])
+               # self.errorMsgLEdit.setText('%s is not spine Character Set'%currentSet[0])
+                
+                
 
-        curve = cmds.curve(d=1,p=points)     
-          
-          
-        cmds.addAttr(curve, ln='spineRootCtrl', numberOfChildren=2, attributeType='compound' )
-        cmds.addAttr(curve, ln='spine_tag', sn='stag' , dt="string", parent='spineRootCtrl'  )
-
-        cmds.addAttr(curve, ln='spine_rootCtrl', sn='rootCtrl' , dt="string", parent='spineRootCtrl'  )
-          
-        cmds.setAttr('%s.spine_tag'%curve,'spine_ctrl',type='string')
-
-        cmds.rename(curve,'rootCtrl')
-     
+       # characterSet = 
+        '''      
+        
+        
+        '''
           
    
                
@@ -507,17 +735,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                    # print deltaPosionX,deltaPosionY
                 vertexPositionPreFrameList = vertexPositionCurrentFrameList
                 print 'vertexPositionPreFrameList',vertexPositionPreFrameList
-              #  meshDeformDict[skinName][slotName][attachmentName].append({attachmentName:{"time":f/30.0,"vertices":deltaVertexPositionPreFrameList}})
                 meshDeformDict[skinName][slotName][attachmentName].append({"time":f/30.0,"vertices":deltaVertexPositionPreFrameList})
-               # meshDeformDict[skinName].update({slotName:{attachmentName:[]}})
-
-               # meshDeformDict[slotName.append({})                
-        #print keyFrameList
-          #  print vertexList,
-            
-          #  for p in vertexList:
-               # print cmds.pointPosition(p)
-                              #  print cmds.pointPosition(p)
 
 
         return meshDeformDict
@@ -918,7 +1136,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def getSkinData(self): 
-        'meshName,borderEdges'
+        cmds.currentTime(0,e=True)
         meshName = cmds.ls(sl=True,dag=2,typ='mesh')[0]
         try:
             cmds.deleteAttr('%s.spine_skinData'%meshName)
@@ -1225,10 +1443,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         cmds.jointDisplayScale(currentValue)
 
 
-    def defineDockCamview(self):
+    def defineDockSpineItemTree(self):
         print ('define DockCameView')
 
-        self.spineItemTree = QtWidgets.QTreeWidget(self.dockCamview)
+        self.spineItemTree = QtWidgets.QTreeWidget(self.dockSpineItemTree)
         self.spineItemTree.setGeometry(QtCore.QRect(0, 50, 300, 800))
         self.spineItemTree.setDragEnabled(True)
         self.spineItemTree.setDragDropOverwriteMode(True)
@@ -1485,7 +1703,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def createCamview(self):
         # We have our Qt Layout where we want to insert, say, a Maya viewport
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.dockCamview)
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.dockSpineItemTree)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
 
