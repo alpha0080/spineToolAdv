@@ -752,22 +752,66 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     
     def getImageSourcesDir(self):
-        imagesRoot = "//mcd-3d/webServer/static/imageSources"
-        searchDepth = 5
+        #imagesRoot = "//mcd-3d/webServer/static/imageSources"
+        imagesRoot = "c:/temp/testimage"
+        searchDepth = 7
         self.spineItemTree.clear()
      #   print self.findChildDir(imagesRoot)
        # print os.listdir(imagesRoot)
-        searchLoopCount = 0
-        fullPathNameList = []
-        while searchLoopCount <5 :
-            if searchLoopCount == 0:
-                childDirList = self.findChildDir(imagesRoot)
-                print childDirList
-            else:    
-                for i in childDirList:
-                    childDirList = self.findChildDir(i)
-                    print childDirList
-            searchLoopCount = searchLoopCount+1
+        #searchLoopCount = 0
+        countI = 0
+        exceptList =['.mayaSwatches']
+        for i in self.findChildDir(imagesRoot):
+            print i        
+            ## define topLevelItem Dir
+            print os.listdir(i)
+            topLevelDirName = i.split(imagesRoot)[1].split('/')[1]
+            print 'topLevelDirName',topLevelDirName
+            if topLevelDirName in exceptList:
+                pass
+            else:
+                print countI
+                topLevelItem = QtWidgets.QTreeWidgetItem(self.spineItemTree)
+                self.spineItemTree.topLevelItem(countI).setText(0, QtWidgets.QApplication.translate("MainWindow",topLevelDirName, None, -1))
+                topLevelItem.setForeground(0,QtGui.QBrush(QtGui.QColor(250,250, 150, 255)))
+                countJ = 0
+                for j in self.findChildDir(i):
+                #    print j 
+                    secLevelItem = QtWidgets.QTreeWidgetItem(topLevelItem)
+                    secLevelDirName = j.split(i)[1].split('/')[1]
+
+                    self.spineItemTree.topLevelItem(countI).child(countJ).setText(0, QtWidgets.QApplication.translate("MainWindow",secLevelDirName, None, -1))
+                    secLevelItem.setForeground(0,QtGui.QBrush(QtGui.QColor(150,250, 150, 255)))
+
+                    countK = 0
+                    for k in self.findChildDir(j):
+                        thirdLevelItem = QtWidgets.QTreeWidgetItem(secLevelItem)
+                        thirdLeveItemName = k.split(j)[1].split('/')[1]
+                        self.spineItemTree.topLevelItem(countI).child(countJ).child(countK).setText(0, QtWidgets.QApplication.translate("MainWindow",thirdLeveItemName, None, -1))
+                        thirdLevelItem.setForeground(0,QtGui.QBrush(QtGui.QColor(200,200, 250, 255)))
+
+                        countK = countK + 1
+                        
+                    ## define secLevelItem Dir
+                   # for k in self.findChildDir(j):
+                    #    print k
+                    ## define secLevelItem Dir
+                    
+                    countJ = countJ +1
+    
+                    
+                countI = countI +1
+                    
+                                    
+               # print 'toplevel',childDirList
+            #else:    
+             #   print 'childDirList',childDirList
+
+              #  for i in childDirList:
+               #     childDirList = self.findChildDir(i)
+                    
+                #    print 'childLevel',i
+            #searchLoopCount = searchLoopCount+1
 
                     
                             # newIKGrpItem = QtWidgets.QTreeWidgetItem(newCharSetItem)
