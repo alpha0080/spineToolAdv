@@ -1,0 +1,13 @@
+
+skeleton2.png
+size: 2048,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+SaberArtGoStage2
+  rotate: false
+  xy: 2, 2
+  size: 1178, 1001
+  orig: 1178, 1001
+  offset: 0, 0
+  index: -1

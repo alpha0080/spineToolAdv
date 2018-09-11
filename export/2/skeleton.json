@@ -1,0 +1,26 @@
+{
+"skeleton": {
+	"hash": "fwzoPHnzH7sLSmFJWw9/VucxCd8",
+	"spine": "3.6.53",
+	"width": 0,
+	"height": 0,
+	"images": "C:/Users/alpha/Documents/GitHub/spineToolAdv"
+},
+"bones": [
+	{ "name": "rootb" },
+	{ "name": "gg", "parent": "rootb" }
+],
+"slots": [
+	{ "name": "dfdf", "bone": "gg", "attachment": "SaberArtGoStage2" }
+],
+"skins": {
+	"default": {
+		"dfdf": {
+			"SaberArtGoStage2": { "width": 1178, "height": 1001 }
+		}
+	}
+},
+"animations": {
+	"animation": {}
+}
+}
