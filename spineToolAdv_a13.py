@@ -16,7 +16,7 @@ import shiboken2
 import os,math,json
 import sys
 try:
-    sys.path.append("C:/Program Files/Pixar/RenderManProServer-22.0/lib/python2.7/Libs/ite-packages")
+    sys.path.append("C:/Program Files/Pixar/RenderManProServer-22.1/lib/python2.7/Libs/ite-packages")
     #sys.path.append("C:/Program Files/Pixar/RenderManProServer-21.7/lib/python2.7/Lib/site-packages")
 
     import ice
@@ -50,7 +50,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
           
           #initial data
-        self.folderDir = 'C:/Temp/images'  #'C:/Temp/testImage'
+        self.folderDir = '//mcd-3d/data3d/spine_imageSources'  #'C:/Temp/testImage'
           
           
         print ('2',self)
@@ -59,25 +59,34 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #  self.getImagesInFolder()
         self.defineImageInfoDock()
         self.defineImageButtonDock()
-        self.definePreviewImageDock()
-        self.defineDockSpineItemTree()
+       # self.definePreviewImageDock()
         self.initialSpineItemTree()
         #defineDockCamview
-        
+        self.createImageInfoTable()
            
     def createDock(self):
           
         self.dockWidgetImages = QtWidgets.QDockWidget(self)
         self.dockWidgetImages.setObjectName("dockWidget")
-        self.dockWidgetImages.setMinimumWidth(300)
+        self.dockWidgetImages.setMinimumWidth(280)
         self.dockWidgetImages.setMinimumHeight(600)
 
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockWidgetImages)
 
         self.previewImageDock = QtWidgets.QDockWidget(self)
         self.previewImageDock.setObjectName("previewImageDock")
-        self.previewImageDock.setMinimumWidth(300)
-        self.previewImageDock.setMinimumHeight(350)
+        self.previewImageDock.setMinimumWidth(290)
+        self.previewImageDock.setMinimumHeight(300)
+        
+        
+        self.workSpaceInfoDock = QtWidgets.QDockWidget(self)
+        self.workSpaceInfoDock.setObjectName("workSpaceInfoDock")
+        self.workSpaceInfoDock.setMinimumWidth(600)
+        self.workSpaceInfoDock.setMinimumHeight(200)
+        #self.workSpaceInfoDock.setMaximumHeight(200)
+        
+        
+        
         self.dockWidgetImagesInfo = QtWidgets.QDockWidget(self)
         self.dockWidgetImagesInfo.setObjectName("dockWidget")
         self.dockWidgetImagesInfo.setMinimumWidth(600)
@@ -89,7 +98,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.dockImageButton = QtWidgets.QDockWidget(self)
         self.dockImageButton.setObjectName("dockImageButton")
         self.dockImageButton.setMinimumWidth(300)
-        self.dockImageButton.setMinimumHeight(600)
+        self.dockImageButton.setMinimumHeight(300)
 
 
         self.dockSpineMeshProgress = QtWidgets.QDockWidget(self)
@@ -103,24 +112,62 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.dockExport.setMinimumWidth(400)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockExport)
 
-
+#dockWidgetImages workSpaceInfoDock dockSpineMeshProgress dockSpineItemTree
 
 #dockSpineItemTree dockCamview
         self.dockSpineItemTree = QtWidgets.QDockWidget(self)
         self.dockSpineItemTree.setObjectName("dockSpineItemTree")
-        self.dockSpineItemTree.setMinimumWidth(400)
+        self.dockSpineItemTree.setMinimumWidth(300)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockSpineItemTree)
 
-        self.splitDockWidget( self.dockWidgetImages, self.dockWidgetImagesInfo, QtCore.Qt.Horizontal)
-        self.splitDockWidget( self.dockWidgetImagesInfo, self.dockSpineMeshProgress, QtCore.Qt.Horizontal)
-        self.splitDockWidget( self.dockSpineMeshProgress, self.dockSpineItemTree, QtCore.Qt.Horizontal)
+        self.splitDockWidget( self.dockSpineItemTree, self.dockWidgetImages, QtCore.Qt.Horizontal)
+        self.splitDockWidget( self.dockWidgetImages, self.dockSpineMeshProgress, QtCore.Qt.Horizontal)
+        self.splitDockWidget( self.dockSpineMeshProgress, self.workSpaceInfoDock, QtCore.Qt.Horizontal)
 
         self.splitDockWidget( self.dockWidgetImages, self.previewImageDock, QtCore.Qt.Vertical)
+        self.splitDockWidget( self.workSpaceInfoDock, self.dockWidgetImagesInfo, QtCore.Qt.Vertical)
         self.splitDockWidget( self.dockWidgetImagesInfo, self.dockImageButton, QtCore.Qt.Vertical)
         self.splitDockWidget( self.dockSpineMeshProgress, self.dockExport, QtCore.Qt.Vertical)
 
-     
-     
+
+
+    def createImageInfoTable(self):
+        print('create image info table')
+        tableInfo =  "\
+                 QTableWidget {\
+                 font-size:12px;\
+                 background-color:#333333;\
+                 border-radius :8px;\
+                 border-style:solid;\
+                 border-width:1px;\
+                 border-color:#666666;\
+                 text-align:center;\
+                 }\
+                 "     
+        
+        
+        self.imageInfoTable = QtWidgets.QTableWidget(self.dockSpineItemTree)
+        self.imageInfoTable.setGeometry(QtCore.QRect(10, 610,280,330))
+        columnCount = 2
+        rowCount = 13
+        rowHeight =25
+        self.imageInfoTable.setObjectName("imageInfoTable")
+        self.imageInfoTable.setColumnCount(columnCount)
+        self.imageInfoTable.setRowCount(rowCount)
+        self.imageInfoTable.setColumnWidth(0, 110)
+        self.imageInfoTable.setColumnWidth(1, 170)
+        self.imageInfoTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.imageInfoTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+
+        self.imageInfoTable.horizontalHeader().setVisible(False)
+        self.imageInfoTable.verticalHeader().setVisible(False)
+        for i in range(0,rowCount):
+            self.imageInfoTable.setRowHeight(i, rowHeight)
+
+        self.imageInfoTable.setStyleSheet(tableInfo);
+
+
+                    
     def defineImageButtonDock(self):
           
         buttonStyle = "\
@@ -187,7 +234,42 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                          border-color:#AAAA33;\
                          }\
                          "     
+        buttonStyleC = "\
+                         QPushButton {\
+                         background-color:#333333;\
+                         color:#eeeeee;\
+                         font-size:14px;\
+                         border-radius:10px;\
+                         border-style:solid;\
+                         border-width:1px;\
+                         border-color:#aaaaaa;\
+                         }\
+                         QPushButton:hover{\
+                         background-color:#aaeeaa;\
+                         color:#111111;\
+                         border-radius:8px;\
+                         border-style:solid;\
+                         border-width:1px;\
+                         border-color:#aaeeaa;\
+                         }\
+                         QPushButton:pressed{\
+                         background-color:#aaeeaa;\
+                         border-radius:8px;\
+                         border-style:solid;\
+                         border-width:1px;\
+                         border-color:#aaeeaa;\
+                         }\
+                         QPushButton:checked{\
+                         background-color:#99aa99;\
+                         color:#111111;\
+                         border-radius:8px;\
+                         border-style:solid;\
+                         border-width:2px;\
+                         border-color:#99cc99;\
+                         }\
+                         "     
                          
+                                                                           
         buttonStyleLeft = "\
                          QPushButton {\
                          background-color:#778888;\
@@ -392,14 +474,108 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                          border-color:#666666;\
                          text-align:center;\
                          }\
-                         "                     
-           # #border-bottom-left-radius: 5px;
-            #border-top-right-radius: 5px;
-            #border-bottom-right-radius: 5px;
-            #border-top-left-radius: 
+                         "     
+                         
+        treeA =  "\
+                         QTreeWidget {\
+                         font-size:12px;\
+                         background-color:#505050;\
+                         border-radius :8px;\
+                         border-style:solid;\
+                         border-width:1px;\
+                         border-color:#666666;\
+                         text-align:center;\
+                         }\
+                         "                                                            
+            
+        tableA =  "\
+                         QTableWidget {\
+                         font-size:12px;\
+                         background-color:#333333;\
+                         border-radius :8px;\
+                         border-style:solid;\
+                         border-width:1px;\
+                         border-color:#666666;\
+                         text-align:center;\
+                         }\
+                         "          
+            
+
+            
+            
+        ###dockSpineItemTree    
+        
+        
+        
+        self.selectImageFolderBtn = QtWidgets.QPushButton(self.dockSpineItemTree)
+        self.selectImageFolderBtn.setGeometry(QtCore.QRect(10, 20, 80,30))
+        self.selectImageFolderBtn.setObjectName("selectImageFolderBtn")
+        self.selectImageFolderBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Database", None, -1))
+        self.selectImageFolderBtn.clicked.connect(self.getImageSourcesDir)
+        self.selectImageFolderBtn.setStyleSheet(buttonStyleC)     
+
+        self.selectImageFromDiskBTN = QtWidgets.QPushButton(self.dockSpineItemTree)
+        self.selectImageFromDiskBTN.setGeometry(QtCore.QRect(95, 20, 80,30))
+        self.selectImageFromDiskBTN.setObjectName("selectImageFromDisk")
+        self.selectImageFromDiskBTN.setText(QtWidgets.QApplication.translate("MainWindow", "Disk", None, -1))
+       # self.selectImageFromDiskBTN.clicked.connect(self.getImageSourcesDir)
+        self.selectImageFromDiskBTN.setStyleSheet(buttonStyleC)     
+    
+        self.selectSpineJobBtn = QtWidgets.QPushButton(self.dockSpineItemTree)
+        self.selectSpineJobBtn.setGeometry(QtCore.QRect(180, 20, 80,30))
+        self.selectSpineJobBtn.setObjectName("selectSpineJobBtn")
+        self.selectSpineJobBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Spine Job", None, -1))
+       # self.selectSpineJobBtn.clicked.connect(self.getImageSourcesDir)
+        self.selectSpineJobBtn.setStyleSheet(buttonStyleC)     
+              
+                      
+        self.spineItemTree = QtWidgets.QTreeWidget(self.dockSpineItemTree)
+        self.spineItemTree.setGeometry(QtCore.QRect(10, 60, 280, 550))
+        self.spineItemTree.setDragEnabled(True)
+        self.spineItemTree.setDragDropOverwriteMode(True)
+        self.spineItemTree.header().setVisible(False)
+
+        self.spineItemTree.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
+        self.spineItemTree.setObjectName("spineItemTree")
+        self.spineItemTree.setStyleSheet(treeA)     
+        self.spineItemTree.itemClicked.connect(self.defineDir)
+
+        ### previewImageDock
+        self.imagePreviewLabel = QtWidgets.QLabel(self.previewImageDock)
+        self.imagePreviewLabel.setGeometry(QtCore.QRect(5, 30, 280, 280))
+        self.imagePreviewLabel.setStyleSheet("background-color:#333333;\
+                                                  border-radius:10px;\
+                                                  border-style:solid;\
+                                                  border-width:1px;\
+                                                  border-color:#5E749C")
+        self.imagePreviewLabel.setText("")
+        self.imagePreviewLabel.setPixmap(QtGui.QPixmap())
+        self.imagePreviewLabel.setScaledContents(True)
+        self.imagePreviewLabel.setObjectName("imagePreview")
 
 
-        self.selectSpineWorkSpaceBtn = QtWidgets.QPushButton(self.dockImageButton)
+
+
+
+        ##### dockWidgetImages
+
+        self.imageListTable = QtWidgets.QTableWidget(self.dockWidgetImages)
+        self.imageListTable.clear()
+        self.imageListTable.setGeometry(QtCore.QRect(5, 60,280, 570))
+        self.imageListTable.setObjectName("tableWidget")
+
+        self.imageListTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.imageListTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.imageListTable.horizontalHeader().setVisible(False)
+        self.imageListTable.verticalHeader().setVisible(False)
+        self.imageListTable.setStyleSheet(tableA);
+
+
+
+
+
+        ##### workSpaceInfoDock
+        self.selectSpineWorkSpaceBtn = QtWidgets.QPushButton(self.workSpaceInfoDock)
         self.selectSpineWorkSpaceBtn.setGeometry(QtCore.QRect(10, 20, 110,30))
         self.selectSpineWorkSpaceBtn.setObjectName("selectSpineWorkSpaceBtn")
         self.selectSpineWorkSpaceBtn.setText(QtWidgets.QApplication.translate("MainWindow", "spine work space", None, -1))
@@ -407,7 +583,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.selectSpineWorkSpaceBtn.setStyleSheet(buttonStyleLeftB)     
 
  
-        self.spineWorkSpaceLEdit = QtWidgets.QLineEdit(self.dockImageButton)
+        self.spineWorkSpaceLEdit = QtWidgets.QLineEdit(self.workSpaceInfoDock)
         self.spineWorkSpaceLEdit.setGeometry(QtCore.QRect(120, 20, 450, 30))
         self.spineWorkSpaceLEdit.setObjectName("spineWorkSpaceLEdit")
         self.spineWorkSpaceLEdit.setAlignment(QtCore.Qt.AlignCenter)
@@ -538,11 +714,60 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #### dockSpineMeshProgress BTN
 
 
-        self.errMsgLabel = QtWidgets.QLabel(self.dockSpineMeshProgress)
-        self.errMsgLabel.setGeometry(QtCore.QRect(10, 30, 300, 50))
-        self.errMsgLabel.setObjectName("errMsgLabel")
-        self.errMsgLabel.setText(QtWidgets.QApplication.translate("MainWindow", "Error Message:", None, -1))
-        self.errMsgLabel.setStyleSheet(buttonStyleB)   
+        self.characterCreateBtn = QtWidgets.QPushButton(self.dockSpineMeshProgress)
+        self.characterCreateBtn.setGeometry(QtCore.QRect(10, 20, 80, 30))
+        self.characterCreateBtn.setObjectName("initialSpineRootBtn")
+        self.characterCreateBtn.setCheckable(True)
+        self.characterCreateBtn.setChecked(True)
+        self.characterCreateBtn.setFlat(False)
+        self.characterCreateBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Character", None, -1))
+       # self.characterCreateBtn.clicked.connect(self.defineSpineRootSkeleton)
+        self.characterCreateBtn.setStyleSheet(buttonStyleC)  
+
+        
+        self.defineSpineBoneBtn = QtWidgets.QPushButton(self.dockSpineMeshProgress)
+        self.defineSpineBoneBtn.setGeometry(QtCore.QRect(95, 20, 80, 30))
+        self.defineSpineBoneBtn.setObjectName("defineSpineBoneBtn")
+        self.defineSpineBoneBtn.setCheckable(True)
+        self.defineSpineBoneBtn.setChecked(False)
+        self.defineSpineBoneBtn.setFlat(False)
+        self.defineSpineBoneBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Bone", None, -1))
+       # self.characterCreateBtn.clicked.connect(self.defineSpineRootSkeleton)
+        self.defineSpineBoneBtn.setStyleSheet(buttonStyleC)          
+                
+                        
+        self.defineSpineMaskBtn = QtWidgets.QPushButton(self.dockSpineMeshProgress)
+        self.defineSpineMaskBtn.setGeometry(QtCore.QRect(180, 20, 80, 30))
+        self.defineSpineMaskBtn.setObjectName("defineSpineMaskBtn")
+        self.defineSpineMaskBtn.setCheckable(True)
+        self.defineSpineMaskBtn.setChecked(False)
+        self.defineSpineMaskBtn.setFlat(False)
+        self.defineSpineMaskBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Mask", None, -1))
+       # self.characterCreateBtn.clicked.connect(self.defineSpineRootSkeleton)
+        self.defineSpineMaskBtn.setStyleSheet(buttonStyleC)          
+        
+        
+        
+        
+        
+        self.exportSpineJsonCheckBtn = QtWidgets.QPushButton(self.dockSpineMeshProgress)
+        self.exportSpineJsonCheckBtn.setGeometry(QtCore.QRect(300, 20, 80, 30))
+        self.exportSpineJsonCheckBtn.setObjectName("exportSpineJsonCheckBtn")
+        self.exportSpineJsonCheckBtn.setCheckable(True)
+        self.exportSpineJsonCheckBtn.setChecked(False)
+        self.exportSpineJsonCheckBtn.setFlat(False)
+        self.exportSpineJsonCheckBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Export", None, -1))
+       # self.characterCreateBtn.clicked.connect(self.defineSpineRootSkeleton)
+        self.exportSpineJsonCheckBtn.setStyleSheet(buttonStyleC)          
+        
+        
+
+        self.errorMsgLEdit = QtWidgets.QLineEdit(self.dockSpineMeshProgress)
+        self.errorMsgLEdit.setGeometry(QtCore.QRect(10, 55,370, 60))
+        self.errorMsgLEdit.setObjectName("errorMsgLEdit")
+        self.errorMsgLEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.errorMsgLEdit.setText('')
+        self.errorMsgLEdit.setStyleSheet(errMsgA)     
              
 
         
@@ -551,8 +776,9 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.defineSpineCharacterGrpBox.setObjectName("defineSpineCharacterGrpBox")
         self.defineSpineCharacterGrpBox.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
         self.defineSpineCharacterGrpBox.setStyleSheet(QGroupBoxA)     
-        
+        self.defineSpineCharacterGrpBox.setVisible(True)
 
+ 
         self.initialSpineRootBtn = QtWidgets.QPushButton(self.defineSpineCharacterGrpBox)
         self.initialSpineRootBtn.setGeometry(QtCore.QRect(10, 20, 150, 30))
         self.initialSpineRootBtn.setObjectName("initialSpineRootBtn")
@@ -747,14 +973,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.selectExportFileBTnLEdit.setStyleSheet(lineEditRightB)     
           
         ##### btn in dockWidgetImages
-        self.selectImageFolderBtn = QtWidgets.QPushButton(self.dockWidgetImages)
-        self.selectImageFolderBtn.setGeometry(QtCore.QRect(10, 20, 110,30))
-        self.selectImageFolderBtn.setObjectName("selectImageFolderBtn")
-        self.selectImageFolderBtn.setText(QtWidgets.QApplication.translate("MainWindow", "select Image Type", None, -1))
-        self.selectImageFolderBtn.clicked.connect(self.getImageSourcesDir)
-        self.selectImageFolderBtn.setStyleSheet(buttonStyleB)     
 
-    
     def getImageSourcesDir(self):
         imagesRoot = "//mcd-3d/data3d/spine_imageSources/effects"
         #imagesRoot = "c:/temp/testimage"
@@ -779,6 +998,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
               #  print countI
                 topLevelItem = QtWidgets.QTreeWidgetItem(self.spineItemTree)
                 self.spineItemTree.topLevelItem(countI).setText(0, QtWidgets.QApplication.translate("MainWindow",topLevelDirName, None, -1))
+                self.spineItemTree.topLevelItem(countI).setText(1, QtWidgets.QApplication.translate("MainWindow",i, None, -1))
+
                 topLevelItem.setForeground(0,QtGui.QBrush(QtGui.QColor(250,250, 150, 255)))
                 countJ = 0
                 for j in self.findChildDir(i):
@@ -788,6 +1009,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     secLevelDirName = j.split(i)[1].split('/')[1] + '   ('+ countSecLevelItems +')'
 
                     self.spineItemTree.topLevelItem(countI).child(countJ).setText(0, QtWidgets.QApplication.translate("MainWindow",secLevelDirName, None, -1))
+                    self.spineItemTree.topLevelItem(countI).child(countJ).setText(1, QtWidgets.QApplication.translate("MainWindow",j, None, -1))
+
                     secLevelItem.setForeground(0,QtGui.QBrush(QtGui.QColor(150,250, 150, 255)))
 
                     countK = 0
@@ -796,6 +1019,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                         thirdLevelItem = QtWidgets.QTreeWidgetItem(secLevelItem)
                         thirdLeveItemName = k.split(j)[1].split('/')[1] + '   ('+ countThirdLevelItems +')'
                         self.spineItemTree.topLevelItem(countI).child(countJ).child(countK).setText(0, QtWidgets.QApplication.translate("MainWindow",thirdLeveItemName, None, -1))
+                        self.spineItemTree.topLevelItem(countI).child(countJ).child(countK).setText(1, QtWidgets.QApplication.translate("MainWindow",k, None, -1))
                         thirdLevelItem.setForeground(0,QtGui.QBrush(QtGui.QColor(100,200, 255, 255)))
                         
                         countL = 0
@@ -805,6 +1029,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                             forthLevelItem = QtWidgets.QTreeWidgetItem(thirdLevelItem)
                             forthLevelItemName = l.split(k)[1].split('/')[1]+ '   ('+ countFourLevelItems +')'
                             self.spineItemTree.topLevelItem(countI).child(countJ).child(countK).child(countL).setText(0, QtWidgets.QApplication.translate("MainWindow",forthLevelItemName, None, -1))
+                            self.spineItemTree.topLevelItem(countI).child(countJ).child(countK).child(countL).setText(1, QtWidgets.QApplication.translate("MainWindow",l, None, -1))
                             forthLevelItem.setForeground(0,QtGui.QBrush(QtGui.QColor(150,150, 200, 255)))
                             
                             
@@ -861,6 +1086,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             if cmds.getAttr('spine_RootSkeleton.spine_tag') == "spine_RootSkeleton":
                 newSpineRootItem = QtWidgets.QTreeWidgetItem(self.spineItemTree)
                 self.spineItemTree.topLevelItem(0).setText(0, QtWidgets.QApplication.translate("MainWindow", "spine_RootSkeleton", None, -1))
+                
                 allTransformInRoot = cmds.listRelatives("spine_RootSkeleton",c=True,p=False,type="transform")
                 newSpineRootItem.setExpanded(True)
 
@@ -896,6 +1122,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                                     newSlotItem = QtWidgets.QTreeWidgetItem(newCharSetItem)
                                     slotName = str(j)
                                     self.spineItemTree.topLevelItem(0).child(i).child(itemInCharSetCount).setText(0, QtWidgets.QApplication.translate("MainWindow",slotName, None, -1))
+
                                     newSlotItem.setForeground(0,QtGui.QBrush(QtGui.QColor(200,255, 200, 255)))
 
                                     newSlotItem.setExpanded(True)
@@ -2098,19 +2325,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         cmds.jointDisplayScale(currentValue)
 
 
-    def defineDockSpineItemTree(self):
-        print ('define DockCameView')
 
-        self.spineItemTree = QtWidgets.QTreeWidget(self.dockSpineItemTree)
-        self.spineItemTree.setGeometry(QtCore.QRect(0, 50, 300, 800))
-        self.spineItemTree.setDragEnabled(True)
-        self.spineItemTree.setDragDropOverwriteMode(True)
-        self.spineItemTree.header().setVisible(False)
-
-        self.spineItemTree.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
-        self.spineItemTree.setObjectName("spineItemTree")
-
-     
      
      
     def defineCreateBGBtn(self):
@@ -2181,9 +2396,9 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         slotName = currentImage.split('.')[0]
         print (currentImage)
         if selectedImageCount ==0:
-            self.errMsgLabel.setText('no selected image')
+            self.errorMsgLEdit.setText('no selected image')
         else:
-            self.errMsgLabel.setText(currentImage)
+            self.errorMsgLEdit.setText(currentImage)
             imageSize = self.imageInfoTable.item(10,1).text()[1:-1].split(' ')
             fileName = self.imageInfoTable.item(2,1).text()
 
@@ -2298,8 +2513,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
              
                    
     def assignSurfaceShader(self,imageName,object,fileName):  #imageName  as slot name
-        print ('fileName',fileName)
+      #  print 
        # slotShaderName =  imageName + '_surfaceShader'
+        imageName = imageName.split('/')[-1]
+        print ('fileName',fileName,imageName)
+
         cmds.select(cl=True)
         slotShaderName =  imageName + '_shader'
 
@@ -2341,15 +2559,82 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         
    
-          
-          
-     
+    def defineDir(self):
+        print 'aaaa'
+        currentFolder = self.spineItemTree.currentItem().text(1)
+        print currentFolder
+        files = os.listdir(currentFolder)
+        imagesAllow = ['png','jpg','PNG','JPG']
+        images = filter(lambda x: x.split('.')[-1] in imagesAllow, files)
+        print 'images',images
+        #self.createImageTable(images,50,currentFolder)
+       # print self.imageListTable
+        self.imageListTable.setRowCount(0)
+        self.imageListTable.setColumnCount(0)
+       # self.createImageTable(images,50,currentFolder)
+        
+       # self.createImageInfoTable()
+        imagesCount = len(images)
+        columnCount = 5
+        columnWidth = 50
+        rowCount = int(math.ceil(float(len(images))/float(columnCount)))
+        rowHeight = columnWidth
+        print 'imagesCount',imagesCount,rowCount
+
+        self.imageListTable.setGeometry(QtCore.QRect(5, 60,(columnCount*columnWidth+30), 525+30))
+
+        self.imageListTable.setObjectName("tableWidget")
+        self.imageListTable.setColumnCount(columnCount)
+        self.imageListTable.setRowCount(rowCount)
+        self.imageListTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.imageListTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.imageListTable.horizontalHeader().setVisible(False)
+        self.imageListTable.verticalHeader().setVisible(False)
+        #  self.imageListTable.setColumnWidth(0, 60)
+       #   self.imageListTable.setColumnWidth(1, 60)
+        for i in range(0,columnCount):
+            self.imageListTable.setColumnWidth(i, columnWidth)
+               
+        for i in range(0,rowCount):
+            self.imageListTable.setRowHeight(i, columnWidth)
+
+               
+        for i in range (0,imagesCount):
+
+            item = QtWidgets.QTableWidgetItem()
+            itemName = images[i]
+           # print 'itemName',itemName
+            imageUrl =currentFolder +'/'+ itemName
+            #print 'imageUrl',imageUrl
+            text = str(imageUrl)
+            iconFile =QtGui.QIcon(imageUrl)
+            row = math.floor(float(i)/float(columnCount))
+            column = i%columnCount
+            #   print images[i]
+            self.imageListTable.setIconSize(QtCore.QSize(columnWidth,columnWidth))
+
+            self.imageListTable.setItem(row,column,item)
+
+            self.imageListTable.item(row, column).setIcon(iconFile)
+            self.imageListTable.item(row, column).setText(QtWidgets.QApplication.translate("MainWindow",text, None,-1))
+            
+
+                                                 
+        self.imageListTable.itemClicked.connect(lambda x:self.imageInfo(currentFolder))
+
+                                                                                               
+        #self.imageListTable.itemClicked.connect(self.imageInfo)
+        
     def defineImageInfoDock(self):
         #folderDir = "C:/Users/alpha/Documents/GitHub/mayaTool/pipelineTool/UI"
-
+        #.currentIndex()
+        
         images = self.getImagesInFolder()
-        self.createImageTable(images,50)
-        self.createImageInfoTable()
+        print 'images',images
+        imagesDir  = 'C:/Temp/images'#"//mcd-3d/data3d/spine_imageSources/"
+       # self.createImageTable(images,50,imagesDir)
+       # self.createImageInfoTable()
+        #print self.spineItemTree
         #self.createImagePreviewTable()
 
 
@@ -2383,51 +2668,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
        
     def getImagesInFolder(self):
             "define image folder"
-            files = os.listdir(self.folderDir)
+            
+            files = os.listdir("c:/temp/images")
             imagesAllow = ['png','jpg','PNG','JPG']
             imageFiles = filter(lambda x: x.split('.')[-1] in imagesAllow, files)
             return imageFiles          
-
-    def createImageInfoTable(self):
-        print('create image info table')
-        self.imageInfoTable = QtWidgets.QTableWidget(self.dockWidgetImagesInfo)
-        self.imageInfoTable.setGeometry(QtCore.QRect(10, 50,550,330))
-        columnCount = 2
-        rowCount = 11
-        rowHeight =30
-        self.imageInfoTable.setObjectName("imageInfoTable")
-        self.imageInfoTable.setColumnCount(columnCount)
-        self.imageInfoTable.setRowCount(rowCount)
-        self.imageInfoTable.setColumnWidth(0, 200)
-        self.imageInfoTable.setColumnWidth(1, 350)
-        self.imageInfoTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.imageInfoTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-
-        self.imageInfoTable.horizontalHeader().setVisible(False)
-        self.imageInfoTable.verticalHeader().setVisible(False)
-        for i in range(0,rowCount):
-            self.imageInfoTable.setRowHeight(i, rowHeight)
-
-     
-    def definePreviewImageDock(self):
-        self.createPreviewPannel()
-          
-          
-
-    def createPreviewPannel(self):
-         # imageUrl = self.folderDir + '/' + self.imageListTable.currentItem().text()
-        self.imagePreviewLabel = QtWidgets.QLabel(self.previewImageDock)
-        self.imagePreviewLabel.setGeometry(QtCore.QRect(10, 50, 280, 280))
-        self.imagePreviewLabel.setStyleSheet("background-color:#333333;\
-                                                  border-radius:10px;\
-                                                  border-style:solid;\
-                                                  border-width:3px;\
-                                                  border-color:#5E749C")
-        self.imagePreviewLabel.setText("")
-        self.imagePreviewLabel.setPixmap(QtGui.QPixmap())
-        self.imagePreviewLabel.setScaledContents(True)
-        self.imagePreviewLabel.setObjectName("imagePreview")
-
 
 
           
@@ -2450,12 +2695,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             itemName = imageKey[i]
             itemValue = imageMetaData[itemName]
             ## self.imageInfoTable.item(row, column).setIcon(iconFile)
+          
             self.imageInfoTable.item(i, 1).setText(QtWidgets.QApplication.translate("MainWindow",'%s'%itemValue, None,-1))
 
-            self.imageInfoTable.setStyleSheet(";\
-                                             font-size:16px;\
-                                             ");
-                                             
+
           ## define preview image table item
          
           
@@ -2463,86 +2706,26 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           
           
           
-    def createImageTable(self,images,iconWidth):
-        self.imageListTable = QtWidgets.QTableWidget(self.dockWidgetImages)
-        imagesCount = len(images)
-        columnCount = 5
-        columnWidth = iconWidth
-        rowCount = int(math.ceil(float(len(images))/float(columnCount)))
-        rowHeight = columnWidth
-
-        self.imageListTable.setGeometry(QtCore.QRect(10, 70,(columnCount*columnWidth+30), 500+30))
-
-        self.imageListTable.setObjectName("tableWidget")
-        self.imageListTable.setColumnCount(columnCount)
-        self.imageListTable.setRowCount(rowCount)
-        self.imageListTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-        self.imageListTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-        self.imageListTable.horizontalHeader().setVisible(False)
-        self.imageListTable.verticalHeader().setVisible(False)
-        #  self.imageListTable.setColumnWidth(0, 60)
-       #   self.imageListTable.setColumnWidth(1, 60)
-        for i in range(0,columnCount):
-            self.imageListTable.setColumnWidth(i, columnWidth)
-               
-        for i in range(0,rowCount):
-            self.imageListTable.setRowHeight(i, columnWidth)
-
-               
-        for i in range (0,imagesCount):
-
-            item = QtWidgets.QTableWidgetItem()
-            itemName = images[i]
-            imageUrl = self.folderDir +'/'+ itemName
-            iconFile =QtGui.QIcon(imageUrl)
-            row = math.floor(float(i)/float(columnCount))
-            column = i%columnCount
-            #   print images[i]
-            self.imageListTable.setIconSize(QtCore.QSize(columnWidth,columnWidth))
-
-            self.imageListTable.setItem(row,column,item)
-
-            self.imageListTable.item(row, column).setIcon(iconFile)
-            self.imageListTable.item(row, column).setText(QtWidgets.QApplication.translate("MainWindow",'%s'%itemName, None,-1))
-
-        self.imageListTable.setStyleSheet(" border: 1px solid #5E749C;\
-                                             color:white;\
-                                             text-align: top;\
-                                             padding: 4px;\
-                                             border-radius: 7px;\
-                                             position: absolute;\
-                                             border-bottom-left-radius: 7px;\
-                                             width: 15px");
-                                             
-
-                                                                                               
-        self.imageListTable.itemClicked.connect(self.imageInfo)
 
           
-          
-          
 
-    def imageInfo(self):
+    def imageInfo(self,imagesDir):
          # print 'asss'
           
-         # print self.imageListTable.currentItem().text()
-          
-        imageUrl = self.folderDir + '/' + self.imageListTable.currentItem().text()
-          #print imageUrl
+        #print 'imagesDir',imagesDir
+        imageUrl = self.imageListTable.currentItem().text()
+       # imageUrl = imagesDir + '/' + self.imageListTable.currentItem().text()
+       # imageUrl = self.folderDir + '/' + self.imageListTable.currentItem().text()
+
+       # print 'imageUrl',imageUrl
           
         image = ice.Load(imageUrl)
         imageMetaData = image.GetMetaData()
-         # print imageMetaData.keys(),len(imageMetaData.keys())
 
         self.defineImageTableData(imageMetaData)
         self.imagePreviewLabel.setPixmap(QtGui.QPixmap(imageUrl))
 
-         # item = QtWidgets.QTableWidgetItem()
-        #  self.imagePreviewTable.setItem(0,0,item)
-         # iconFile =QtGui.QIcon(imageUrl)
-        #  self.imagePreviewTable.setIconSize(QtCore.QSize(270,270))
-        #  self.imagePreviewTable.item(0, 0).setIcon(iconFile)
-#
+
 
     def run(self):
         print ("export json")

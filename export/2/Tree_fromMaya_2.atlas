@@ -1,0 +1,20 @@
+
+Tree_fromMaya_2.png
+size: 256,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+line_a
+  rotate: false
+  xy: 66, 264
+  size: 95, 512
+  orig: 95, 512
+  offset: 0, 0
+  index: -1
+ring
+  rotate: false
+  xy: 2, 2
+  size: 62, 774
+  orig: 62, 774
+  offset: 0, 0
+  index: -1
