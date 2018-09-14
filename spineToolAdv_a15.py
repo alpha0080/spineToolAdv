@@ -727,16 +727,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 
-        self.createBoneBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.createBoneBtn.setGeometry(QtCore.QRect(170, 240, 150, 50))
-        self.createBoneBtn.setObjectName("createBone")
-        self.createBoneBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Bone", None, -1))
-        self.createBoneBtn.clicked.connect(self.createBone)
 
 
         self.createBGBtn = QtWidgets.QPushButton(self.dockImageButton)
         self.createBGBtn.setGeometry(QtCore.QRect(0, 310, 150, 50))
-        self.createBGBtn.setObjectName("createBone")
+        self.createBGBtn.setObjectName("createBGBtn")
         self.createBGBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Define BG", None, -1))
         self.createBGBtn.clicked.connect(self.defineCreateBGBtn)
 
@@ -810,7 +805,6 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.createClippingBtn.setStyleSheet(buttonStyle)             
 
 
-        self.createBoneBtn.setStyleSheet(buttonStyle)
         self.createBGBtn.setStyleSheet(buttonStyle)
         self.setRootBoneJointBtn.setStyleSheet(buttonStyle)             
         self.setRootLineEdit.setStyleSheet(buttonStyle)             
@@ -964,11 +958,31 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
 
         self.createSlotBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
-        self.createSlotBtn.setGeometry(QtCore.QRect(10, 10, 150, 30))
+        self.createSlotBtn.setGeometry(QtCore.QRect(10, 10, 120, 30))
         self.createSlotBtn.setObjectName("createSlot")
         self.createSlotBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Slot", None, -1))
         self.createSlotBtn.clicked.connect(self.createSlot)              
         self.createSlotBtn.setStyleSheet(buttonStyleB)   
+        
+
+        
+        self.createBoneBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
+        self.createBoneBtn.setGeometry(QtCore.QRect(10, 50, 120, 30))
+        self.createBoneBtn.setObjectName("createBoneBtn")
+        self.createBoneBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Clean Bone", None, -1))
+        self.createBoneBtn.clicked.connect(self.createCleanBone)
+        self.createBoneBtn.setStyleSheet(buttonStyleLeftB)     
+
+ 
+        self.createBoneNameLEdit = QtWidgets.QLineEdit(self.defineSpineSlotBoneGrpBox)
+        self.createBoneNameLEdit.setGeometry(QtCore.QRect(130, 50, 180, 30))
+        self.createBoneNameLEdit.setObjectName("createBoneNameLEdit")
+        self.createBoneNameLEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.createBoneNameLEdit.setText('')
+        self.createBoneNameLEdit.setStyleSheet(lineEditRightB)     
+        
+        
+        
         
         self.testDBtn = QtWidgets.QPushButton(self.dockImageButton)
         self.testDBtn.setGeometry(QtCore.QRect(10, 300, 100, 30))
@@ -1124,7 +1138,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
        # self.imageListTable.clear()
 
         self.initialSpineItemTree()
-        
+        self.defineAllSlotInSpine()
 
             
         
@@ -1501,6 +1515,19 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
        # print 'allCharacterSetList',allCharacterSetList
        # print 'allMeshSlotList',allMeshSlotList
         #print 'allSkinNameList',allSkinNameList
+        
+    def defineAllSlotInSpine(self):
+        print "defineAllSlotInSpine" 
+        
+        existedCharacterSetsInSpineRoot  = self.spineItemTree.topLevelItem(0).childCount()
+        print existedCharacterSetsInSpineRoot
+        
+        
+        
+        
+        
+        
+        
     def defineSpineImagesTable(self,imageDir):    
         print "defineSpineImagesTable"
         currentFolder = imageDir#.encode('utf-8')
@@ -2673,12 +2700,42 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         cmds.setAttr('%s.scaleX'%slotPlane,bgWidth)
         cmds.setAttr('%s.scaleZ'%slotPlane,bgHeight)
 
-
+    def createCleanBone(self):
+        print "createCleanBone"
+        parentBoneList = cmds.ls(sl=True,type = 'transform')
+        if len(parentBoneList) == 0:
+            self.errorMsgLEdit.setText('pls select parent bone')
+        elif len(parentBoneList) > 1:
+            self.errorMsgLEdit.setText('more than one bone selected')
+        elif len(parentBoneList) == 1:
+            parentBone = str(parentBoneList[0])
+            if len(self.createBoneNameLEdit.text()) ==0:
+                self.errorMsgLEdit.setText('name the bone')
+            else:
+                boneName =  self.createBoneNameLEdit.text()
+                allBoneList = cmds.ls(type='joint')
+                print 'allBoneList',boneName,allBoneList
+                if boneName in allBoneList:
+                    self.errorMsgLEdit.setText('got the same joint name')
+                else:
+                    
+                    print 'parentBone',parentBone
+                    bone = str(self.createBone(boneName))
+                   # cmds.setAttr('%s.bone_parent'%bone,parentBone,type='string')
+          
+                   # cmds.parent(bone,parentBone)
+                   # cmds.select(parentBone)
+                
      
-    def createBone(self):
+    def createBone(self,boneName):
         print "createBone" #createBoneBtn
+       # parentBone = cmds.ls(sl=True,type = 'transform')
+        
+                     # if cmds.getAttr('%s.spine_tag'%parentBone[0]) == "spine_RootSkeleton" or cmds.getAttr('%s.spine_tag'%parentBone[0]) == "spine_bone":
+
+        
         #boneNum = 1
-        boneName = 'bone_'+'{:04d}'.format(0)
+        #boneName = 'bone_'+'{:04d}'.format(0)
         boneAttr = {'bone_name':"string ",
                     "bone_length":"float",
                     "bone_transform":"enum",
@@ -2698,28 +2755,42 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         bone = cmds.joint(p=(0,0,0),n=boneName)
           #print (bone)
           #attrCount = len(boneAttr.keys())
-        cmds.addAttr(bone, ln='spineBone', numberOfChildren=16, attributeType='compound' )
-        cmds.addAttr(bone, ln='spine_tag', sn='stag' , dt="string", parent='spineBone'  )
-
+        cmds.addAttr(bone, ln='spineBone', numberOfChildren=23, attributeType='compound' )
+        cmds.addAttr(bone, ln='spine_tag', sn='stag' , dt="string", parent='spineBone'  ) #1
+        
         cmds.addAttr(bone, ln='bone_name', sn='name' , dt="string", parent='spineBone'  )
         cmds.addAttr(bone, ln='bone_parent', sn='parent' , dt="string", parent='spineBone'  )
         cmds.addAttr(bone, ln='bone_slot', sn='slot' , dt="string", parent='spineBone'  )
-        cmds.addAttr(bone, ln='bone_length', sn='length' , at="float", dv=0,parent='spineBone' ,k=True )
-        cmds.addAttr(bone, ln='bone_transform', sn='transform' , at="enum",en="normal:onlyTranslation:noRotationOrReflection:noScale:noScaleOrReflection", parent='spineBone' ,k=True )
-        cmds.addAttr(bone, ln='bone_x', sn='x' , at="float", dv=0,parent='spineBone' ,k=True )
-        cmds.addAttr(bone, ln='bone_y', sn='y' , at="float", dv=0,parent='spineBone' ,k=True )
-        cmds.addAttr(bone, ln='bone_rotation', sn='rotation' , at="float", dv=0,parent='spineBone' ,k=True )
-        cmds.addAttr(bone, ln='bone_scaleX',  at="float", dv=0,parent='spineBone' ,k=True )
-        cmds.addAttr(bone, ln='bone_scaleY',  at="float", dv=0,parent='spineBone' ,k=True )
-        cmds.addAttr(bone, ln='bone_shearX', sn='shearX' , at="float", dv=0,parent='spineBone' ,k=True )
-        cmds.addAttr(bone, ln='bone_shearY', sn='shearY' , at="float", dv=0,parent='spineBone' ,k=True )
-        cmds.addAttr(bone, ln='bone_inheritScale', sn='inheritScale' , at="bool", dv=1,parent='spineBone' ,k=True )
-        cmds.addAttr(bone, ln='bone_inheritRotation', sn='inheritRotation' , at="bool", dv=1,parent='spineBone' ,k=True )
-        cmds.addAttr(bone, longName='bone_color', usedAsColor=True, attributeType='float3',parent='spineBone' ,k=True )
-        cmds.addAttr(bone, longName='bone_red', attributeType='float', parent='bone_color',k=True )
-        cmds.addAttr(bone, longName='bone_green', attributeType='float', parent='bone_color',k=True )
-        cmds.addAttr(bone, longName='bone_blue', attributeType='float', parent='bone_color',k=True )
+        cmds.addAttr(bone, ln='bone_length', sn='length' , at="float", dv=0,parent='spineBone' ,k=False ) #5
+        cmds.addAttr(bone, ln='bone_transform', sn='transform' , at="enum",en="normal:onlyTranslation:noRotationOrReflection:noScale:noScaleOrReflection", parent='spineBone' ,k=False )
+        cmds.addAttr(bone, ln='bone_x', sn='x' , at="float", dv=0,parent='spineBone' ,k=False )
+        cmds.addAttr(bone, ln='bone_y', sn='y' , at="float", dv=0,parent='spineBone' ,k=False )
+        cmds.addAttr(bone, ln='bone_rotation', sn='rotation' , at="float", dv=0,parent='spineBone' ,k=False )
+        cmds.addAttr(bone, ln='bone_scaleX',  at="float", dv=0,parent='spineBone' ,k=False )#10
+        cmds.addAttr(bone, ln='bone_scaleY',  at="float", dv=0,parent='spineBone' ,k=False )
+        cmds.addAttr(bone, ln='bone_shearX', sn='shearX' , at="float", dv=0,parent='spineBone' ,k=False )
+        cmds.addAttr(bone, ln='bone_shearY', sn='shearY' , at="float", dv=0,parent='spineBone' ,k=False )
+        cmds.addAttr(bone, ln='bone_inheritScale', sn='inheritScale' , at="bool", dv=1,parent='spineBone' ,k=False )
+        cmds.addAttr(bone, ln='bone_inheritRotation', sn='inheritRotation' , at="bool", dv=1,parent='spineBone' ,k=False )
+        
+        cmds.addAttr(bone, ln='slot_width', sn='s_w', parent='spineBone',k=False   )#16
+        cmds.addAttr(bone, ln='slot_height', sn='s_h', parent='spineBone',k=False   )
+            
+        cmds.addAttr(bone, ln='slot_color', usedAsColor=True, attributeType='float3',parent='spineBone' ,k=True )
+        cmds.addAttr(bone, ln='slot_red', attributeType='float',dv=1.0, parent='slot_color',k=True )
+        cmds.addAttr(bone, ln='slot_green', attributeType='float',dv=1.0, parent='slot_color',k=True )
+        cmds.addAttr(bone, ln='slot_blue', attributeType='float',dv=1.0, parent='slot_color',k=True )
+        
+        cmds.addAttr(bone, ln='slot_alpha', attributeType='float',dv=1.0, parent='spineBone',k=True )
+        cmds.addAttr(bone, ln='slot_fade', attributeType='float',dv=1.0, parent='spineBone',k=True )
 
+        cmds.addAttr(bone, ln='slot_dark', usedAsColor=True, attributeType='float3',parent='spineBone' ,k=False )
+        cmds.addAttr(bone, ln='slot_darkRed', attributeType='float', parent='slot_dark',k=False )
+        cmds.addAttr(bone, ln='slot_darkGreen', attributeType='float', parent='slot_dark',k=False )
+        cmds.addAttr(bone, ln='slot_darkBlue', attributeType='float', parent='slot_dark',k=False )                
+        cmds.addAttr(bone, ln='slot_attachment', sn='s_att' , dt="string", parent='spineBone',k=False  )
+        cmds.addAttr(bone, ln='slot_blend', sn='s_blend' , at="enum",en="normal:additive:multiply:screen", parent='spineBone' ,k=True )
+        
 
         ## add Spine Tag
         cmds.setAttr('%s.spine_tag'%bone,'spine_bone',type='string')
@@ -2757,23 +2828,44 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
                         imageW = int(imageSize[0])
                         imageH = int(imageSize[1])
-                        slotPlane = cmds.polyPlane(n='%s_#'%slotName,sx=1,sy=1)[0]
+                        slotPlane = str(cmds.polyPlane(n='%s_#'%slotName,sx=1,sy=1)[0])
                         cmds.setAttr('%s.rotateX'%slotPlane,90)
                         cmds.setAttr('%s.scaleX'%slotPlane,imageW)
                         cmds.setAttr('%s.scaleZ'%slotPlane,imageH)
+                        
+
                         self.assignSurfaceShader(slotName,slotPlane,fileName)
                         
                         ###create bone for slot
-                        bone = self.createBone()
-                        print 'bone',bone
-                        print 'slotPlane',slotPlane
-                        newBoneName = "bone_%s"%slotPlane
-                        cmds.setAttr('%s.bone_name'%bone,newBoneName,type='string')
-                        cmds.rename(bone,newBoneName)
-                        self.defineSlot(slotPlane,newBoneName)
-                        #cmds.parent(slotPlane,bone)d
-                       # cmds.parent(bone,)
+                        boneName = "bone_%s"%slotPlane
+
+                        self.createBone(boneName)
+                        print 'bone',boneName
+                        print 'slotPlane',slotPlane,imageW,imageH
+                       # cmds.setAttr('%s.bone_name'%boneName,newBoneName,type='string')
+                        cmds.setAttr('%s.bone_parent'%boneName,parentBone[0],type='string')
+                        cmds.setAttr('%s.bone_slot'%boneName,slotPlane,type='string')
+                        cmds.setAttr('%s.slot_width'%boneName,imageW)
+                        cmds.setAttr('%s.slot_height'%boneName,imageH)
+                       # attachmentFile = cmds.getAttr('%s.slot_attachment'%slotPlane)
+                       # print 'attachmentFile',attachmentFile 
+                       # cmds.setAttr('%s.slot_attachment'%bone,attachmentFile,type='string')
+
+                      #  print 
+      
+                        #cmds.rename(bone,newBoneName)
+                        self.defineSlot(slotPlane,boneName)
+                        attachmentFile = str(cmds.getAttr('%s.slot_attachment'%slotPlane))
+                        print 'attachmentFile',attachmentFile 
+                        cmds.setAttr('%s.slot_attachment'%boneName,attachmentFile,type='string')
+                        cmds.parent(slotPlane,boneName)
+                        cmds.parent(boneName,parentBone[0])
+
+                        cmds.setAttr('%s.slot_width'%slotPlane,imageW)
+                        cmds.setAttr('%s.slot_height'%slotPlane,imageH)
                         
+                       # cmds.parent(bone,)
+                        cmds.select(parentBone[0])
                     else:
                         self.errorMsgLEdit.setText('selected Bone is uncorrect')
                 except:
@@ -2799,10 +2891,13 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print "defineSlot",slot,boneName
 
         try:
-            cmds.addAttr(slot, ln='spineSlot', numberOfChildren=8, attributeType='compound' )
+            cmds.addAttr(slot, ln='spineSlot', numberOfChildren=10, attributeType='compound' )
             cmds.addAttr(slot, ln='spine_tag', sn='stag' , dt="string", parent='spineSlot'  )
             cmds.addAttr(slot, ln='slot_name', sn='s_name' , dt="string", parent='spineSlot'  )
             cmds.addAttr(slot, ln='slot_bone', sn='s_bone' , dt="string", parent='spineSlot'  )
+            cmds.addAttr(slot, ln='slot_width', sn='s_w', parent='spineSlot'  )
+            cmds.addAttr(slot, ln='slot_height', sn='s_h', parent='spineSlot'  )
+            
             cmds.addAttr(slot, ln='slot_color', usedAsColor=True, attributeType='float3',parent='spineSlot' ,k=True )
             cmds.addAttr(slot, ln='slot_red', attributeType='float',dv=1.0, parent='slot_color',k=True )
             cmds.addAttr(slot, ln='slot_green', attributeType='float',dv=1.0, parent='slot_color',k=True )
@@ -2844,6 +2939,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         fileInSlot = currentFile.split("/")[-1][0:-4]
           #print 'fileInSlot',fileInSlot
         cmds.setAttr('%s.slot_attachment'%slot,fileInSlot,type='string')
+        
                                           
     def defineSkin(self,slot):
         print "defineSkin"
