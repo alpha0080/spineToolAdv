@@ -61,10 +61,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.defineImageInfoDock()
         self.defineImageButtonDock()
         self.initialWorkSpace()
-
-       # self.definePreviewImageDock()
+        
+       # self.setToSpineJobTree()
         try:
             self.initialSpineItemTree()
+            self.defineAllSlotInSpine()
         except:
             pass
         #defineDockCamview
@@ -107,6 +108,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.selectImageFolderBtn.setChecked(False)
             self.selectImageFromDiskBTN.setChecked(False)
             self.selectSpineJobBtn.setChecked(True)
+        #self.defineAllSlotInSpine()
           #  self.imageListTable.clear()
            
     def createDock(self):
@@ -149,6 +151,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.dockSpineMeshProgress = QtWidgets.QDockWidget(self)
         self.dockSpineMeshProgress.setObjectName("dockMeshProgress")
         self.dockSpineMeshProgress.setMinimumWidth(400)
+        self.dockSpineMeshProgress.setMinimumHeight(100)
+
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockSpineMeshProgress)
 
 
@@ -769,7 +773,9 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.horizontalSlider.setProperty("value", 10)
         self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
         self.horizontalSlider.setObjectName("horizontalSlider")
-        self.horizontalSlider.valueChanged.connect(self.jointSizeValueChange)
+       # self.horizontalSlider.valueChanged.connect(self.jointSizeValueChange)
+      #  self.horizontalSlider.setStyleSheet(lineEditA)
+        
 
         self.setRootBoneJointBtn = QtWidgets.QPushButton(self.dockImageButton)
         self.setRootBoneJointBtn.setGeometry(QtCore.QRect(0, 450, 150, 50))
@@ -879,7 +885,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         
         self.defineSpineCharacterGrpBox = QtWidgets.QGroupBox(self.dockSpineMeshProgress)
-        self.defineSpineCharacterGrpBox.setGeometry(QtCore.QRect(10, 120, 370, 350))
+        self.defineSpineCharacterGrpBox.setGeometry(QtCore.QRect(10, 120, 370, 230))
         self.defineSpineCharacterGrpBox.setObjectName("defineSpineCharacterGrpBox")
         self.defineSpineCharacterGrpBox.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
         self.defineSpineCharacterGrpBox.setStyleSheet(QGroupBoxA)     
@@ -912,7 +918,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
  
         self.characterNameLEdit = QtWidgets.QLineEdit(self.defineSpineCharacterGrpBox)
-        self.characterNameLEdit.setGeometry(QtCore.QRect(160, 60, 180, 30))
+        self.characterNameLEdit.setGeometry(QtCore.QRect(160, 60, 200, 30))
         self.characterNameLEdit.setObjectName("rootJointLineEdit")
         self.characterNameLEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.characterNameLEdit.setText('')
@@ -934,7 +940,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.rootNameEdit.setStyleSheet(lineEditRightBMiddle)           
         
         self.rootCtrlScaleEdit = QtWidgets.QLineEdit(self.defineSpineCharacterGrpBox)
-        self.rootCtrlScaleEdit.setGeometry(QtCore.QRect(300,100, 40, 30))
+        self.rootCtrlScaleEdit.setGeometry(QtCore.QRect(300,100, 60, 30))
         self.rootCtrlScaleEdit.setObjectName("rootCtrlScaleEdit")
         self.rootCtrlScaleEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.rootCtrlScaleEdit.setText('10.0')
@@ -942,17 +948,33 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
 
 
+        self.createImagePlaneBtn = QtWidgets.QPushButton(self.defineSpineCharacterGrpBox)
+        self.createImagePlaneBtn.setGeometry(QtCore.QRect(30, 140, 130,30))
+        self.createImagePlaneBtn.setObjectName("createImagePlaneBtn")
+        self.createImagePlaneBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Image Plane", None, -1))
+        self.createImagePlaneBtn.clicked.connect(self.createImagePlane)
+        self.createImagePlaneBtn.setStyleSheet(buttonStyleLeftB)     
+
+ 
+        self.imageSourceLEdit = QtWidgets.QLineEdit(self.defineSpineCharacterGrpBox)
+        self.imageSourceLEdit.setGeometry(QtCore.QRect(160, 140, 200, 30))
+        self.imageSourceLEdit.setObjectName("imageSourceLEdit")
+        self.imageSourceLEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.imageSourceLEdit.setText('')
+        self.imageSourceLEdit.setStyleSheet(lineEditRightB)     
+        
+
 
         self.defineMeshBtn = QtWidgets.QPushButton(self.defineSpineCharacterGrpBox)
-        self.defineMeshBtn.setGeometry(QtCore.QRect(30, 150, 150, 30))
+        self.defineMeshBtn.setGeometry(QtCore.QRect(30, 180, 330, 30))
         self.defineMeshBtn.setObjectName("defineMesh")
         self.defineMeshBtn.setText(QtWidgets.QApplication.translate("MainWindow", "define Mesh", None, -1))
         self.defineMeshBtn.clicked.connect(self.getSkinData)
         self.defineMeshBtn.setStyleSheet(buttonStyleB)     
         
         ###### defineSpineSlotBoneGrpBox
-        self.defineSpineSlotBoneGrpBox = QtWidgets.QGroupBox(self.dockWidgetImagesInfo )
-        self.defineSpineSlotBoneGrpBox.setGeometry(QtCore.QRect(10, 10, 370, 350))
+        self.defineSpineSlotBoneGrpBox = QtWidgets.QGroupBox(self.dockSpineMeshProgress )
+        self.defineSpineSlotBoneGrpBox.setGeometry(QtCore.QRect(10, 355, 370, 150))
         self.defineSpineSlotBoneGrpBox.setObjectName("defineSpineCharacterGrpBox")
         self.defineSpineSlotBoneGrpBox.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
         self.defineSpineSlotBoneGrpBox.setStyleSheet(QGroupBoxA)     
@@ -961,7 +983,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
 
         self.createSlotBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
-        self.createSlotBtn.setGeometry(QtCore.QRect(10, 10, 120, 30))
+        self.createSlotBtn.setGeometry(QtCore.QRect(30, 50, 330, 30))
         self.createSlotBtn.setObjectName("createSlot")
         self.createSlotBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Slot", None, -1))
         self.createSlotBtn.clicked.connect(self.createSlot)              
@@ -970,7 +992,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         
         self.createBoneBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
-        self.createBoneBtn.setGeometry(QtCore.QRect(10, 50, 120, 30))
+        self.createBoneBtn.setGeometry(QtCore.QRect(30, 10, 120, 30))
         self.createBoneBtn.setObjectName("createBoneBtn")
         self.createBoneBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Clean Bone", None, -1))
         self.createBoneBtn.clicked.connect(self.createCleanBone)
@@ -978,13 +1000,438 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
  
         self.createBoneNameLEdit = QtWidgets.QLineEdit(self.defineSpineSlotBoneGrpBox)
-        self.createBoneNameLEdit.setGeometry(QtCore.QRect(130, 50, 180, 30))
+        self.createBoneNameLEdit.setGeometry(QtCore.QRect(150, 10, 210, 30))
         self.createBoneNameLEdit.setObjectName("createBoneNameLEdit")
         self.createBoneNameLEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.createBoneNameLEdit.setText('')
+        
         self.createBoneNameLEdit.setStyleSheet(lineEditRightB)     
         
         
+     
+        self.slotAmountLabel = QtWidgets.QLabel(self.defineSpineSlotBoneGrpBox)
+        self.slotAmountLabel.setGeometry(QtCore.QRect(35, 70, 500, 50))
+        self.slotAmountLabel.setObjectName("slotAmountLabel")
+        self.slotAmountLabel.setText(QtWidgets.QApplication.translate("MainWindow", "slot amount", None, -1))
+        
+        self.amountSliderNumLEdit = QtWidgets.QLineEdit(self.defineSpineSlotBoneGrpBox)
+        self.amountSliderNumLEdit.setGeometry(QtCore.QRect(30, 110, 60, 30))
+        self.amountSliderNumLEdit.setObjectName("amountSliderNumLEdit")
+        self.amountSliderNumLEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.amountSliderNumLEdit.setText('1')
+        self.amountSliderNumLEdit.textChanged.connect(self.slotAmountEditChange)
+        self.amountSliderNumLEdit.setStyleSheet(lineEditA)            
+        
+   
+        self.amountSlotSlider = QtWidgets.QSlider(self.defineSpineSlotBoneGrpBox)
+        self.amountSlotSlider.setGeometry(QtCore.QRect(100, 110, 250, 30))
+        self.amountSlotSlider.setMinimum(1)
+        self.amountSlotSlider.setMaximum(300)
+        self.amountSlotSlider.setProperty("value", 1)
+        self.amountSlotSlider.setOrientation(QtCore.Qt.Horizontal)
+        self.amountSlotSlider.setObjectName("amountSlotSlider")
+        self.amountSlotSlider.valueChanged.connect(self.slotAmountSliderChange)
+      #  self.amountSlotSlider.setStyleSheet(lineEditA)
+
+    #### define dynamic slots
+        self.dynamicSlotGrp = QtWidgets.QGroupBox(self.dockSpineMeshProgress )
+        self.dynamicSlotGrp.setGeometry(QtCore.QRect(10,510, 370, 300))
+        self.dynamicSlotGrp.setObjectName("dynamicSlotGrp")
+        self.dynamicSlotGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
+        self.dynamicSlotGrp.setStyleSheet(QGroupBoxA)     
+        self.dynamicSlotGrp.setVisible(True)
+     
+        
+        
+        radioBtnStyleA =  "\
+                 QRadioButton {\
+                 text-align:center;\
+                 color:#aaaaaa;\
+                 }\
+                 "     
+        optionLabelA  = "\
+                         QLabel {\
+                         font-size:%s;\
+                         color:#bbbbbb;\
+                         text-align:right;\
+                         }\
+                         "%(str(self.fontScale*12)+'px')    
+        optionEditA  = "\
+                         QLineEdit {\
+                         font-size:%s;\
+                         background-color:#333333;\
+                         color:#aaaaaa;\
+                         border-radius:3px;\
+                         border-style:solid;\
+                         border-color:#777777;\
+                         text-align:center;\
+                         };\
+                         QLineEdit::hover{\
+                         font-size:%s;\
+                         background-color:#993333;\
+                         color:#aaaaaa;\
+                         border-radius:3px;\
+                         border-style:solid;\
+                         border-color:#777777;\
+                         text-align:center;\
+                         };\
+                         QLineEdit:read-only {\
+                         font-size:%s;\
+                         background-color:#777777;\
+                         color:#333333;\
+                         border-radius:3px;\
+                         border-style:solid;\
+                         border-color:#777777;\
+                         text-align:center;\
+                         }\
+                         "%((str(self.fontScale*12)+'px'),(str(self.fontScale*12)+'px'),(str(self.fontScale*12)+'px'))
+
+        
+        self.slotDynaStartFrame = QtWidgets.QLabel(self.dynamicSlotGrp)
+        self.slotDynaStartFrame.setGeometry(QtCore.QRect(20, 10, 60, 20))
+        self.slotDynaStartFrame.setObjectName("slotDynaStartFrame")
+        self.slotDynaStartFrame.setText(QtWidgets.QApplication.translate("MainWindow", "Start Frame", None, -1))  
+        self.slotDynaStartFrame.setStyleSheet(optionLabelA)   
+        
+        self.lineEdit_shapeStartFrame = QtWidgets.QLineEdit(self.dynamicSlotGrp)
+        self.lineEdit_shapeStartFrame.setGeometry(QtCore.QRect(90, 10, 40, 20))
+        self.lineEdit_shapeStartFrame.setObjectName("lineEdit_shapeStartFrame")       
+        self.lineEdit_shapeStartFrame.setStyleSheet(optionEditA)   
+        
+        
+        self.slotDynaEndFrame = QtWidgets.QLabel(self.dynamicSlotGrp)
+        self.slotDynaEndFrame.setGeometry(QtCore.QRect(140, 10, 60, 20))
+        self.slotDynaEndFrame.setObjectName("slotDynaEndFrame")
+        self.slotDynaEndFrame.setText(QtWidgets.QApplication.translate("MainWindow", "End Frame", None, -1))  
+        self.slotDynaEndFrame.setStyleSheet(optionLabelA)   
+
+        self.lineEdit_shapeEndFrame = QtWidgets.QLineEdit(self.dynamicSlotGrp)
+        self.lineEdit_shapeEndFrame.setGeometry(QtCore.QRect(210, 10, 40, 20))
+        self.lineEdit_shapeEndFrame.setObjectName("lineEdit_shapeEndFrame")
+        self.lineEdit_shapeEndFrame.setStyleSheet(optionEditA)   
+
+        self.checkBox_offsetRandom = QtWidgets.QCheckBox(self.dynamicSlotGrp)
+        self.checkBox_offsetRandom.setGeometry(QtCore.QRect(270, 10, 73, 20))
+        self.checkBox_offsetRandom.setChecked(True)
+        self.checkBox_offsetRandom.setObjectName("checkBox_offsetRandom_2")
+        self.checkBox_offsetRandom.setText(QtWidgets.QApplication.translate("MainWindow", "random", None, -1))
+        self.checkBox_offsetRandom.setStyleSheet(optionEditA)   
+
+
+
+
+
+        #### dyna Raditional
+        self.radioButton_createRad = QtWidgets.QRadioButton(self.dynamicSlotGrp)
+        self.radioButton_createRad.setGeometry(QtCore.QRect(20, 40, 70, 20))
+        self.radioButton_createRad.setChecked(True)
+        self.radioButton_createRad.setObjectName("radioButton_createRad")
+        self.radioButton_createRad.setText(QtWidgets.QApplication.translate("MainWindow", "Radiation", None, -1))
+        self.radioButton_createRad.setStyleSheet(radioBtnStyleA)     
+        
+        self.RValueLabel = QtWidgets.QLabel(self.dynamicSlotGrp)
+        self.RValueLabel.setGeometry(QtCore.QRect(100, 40, 30, 20))
+        self.RValueLabel.setObjectName("RValueLabel")
+        self.RValueLabel.setText(QtWidgets.QApplication.translate("MainWindow", "R:", None, -1))
+        self.RValueLabel.setStyleSheet(optionLabelA)   
+        
+        self.lineEdit_RadiusA = QtWidgets.QLineEdit(self.dynamicSlotGrp)
+        self.lineEdit_RadiusA.setEnabled(True)
+        self.lineEdit_RadiusA.setGeometry(QtCore.QRect(115, 40, 40, 20))
+        self.lineEdit_RadiusA.setText(QtWidgets.QApplication.translate("MainWindow", "500", None, -1))
+        self.lineEdit_RadiusA.setObjectName("lineEdit_RadiusA") 
+        self.lineEdit_RadiusA.setStyleSheet(optionEditA)   
+
+        #### dyna Square
+        self.radioButton_createSquare = QtWidgets.QRadioButton(self.dynamicSlotGrp)
+        self.radioButton_createSquare.setGeometry(QtCore.QRect(20, 70, 70, 20))
+        self.radioButton_createSquare.setObjectName("radioButton_createSquare")  
+        self.radioButton_createSquare.setText(QtWidgets.QApplication.translate("MainWindow", "Square", None, -1))
+        self.radioButton_createSquare.setStyleSheet(radioBtnStyleA)        
+         
+        self.lineEdit_widthSquare = QtWidgets.QLineEdit(self.dynamicSlotGrp)
+        self.lineEdit_widthSquare.setEnabled(False)
+        self.lineEdit_widthSquare.setGeometry(QtCore.QRect(115, 70, 40, 20))
+        self.lineEdit_widthSquare.setText(QtWidgets.QApplication.translate("MainWindow", "500", None, -1))
+        self.lineEdit_widthSquare.setObjectName("lineEdit_widthSquare")
+        self.lineEdit_widthSquare.setStyleSheet(optionEditA)   
+        
+        self.label_WidthSquare = QtWidgets.QLabel(self.dynamicSlotGrp)
+        self.label_WidthSquare.setGeometry(QtCore.QRect(100, 70, 30, 20))
+        self.label_WidthSquare.setObjectName("label_WidthSquare")
+        self.label_WidthSquare.setText(QtWidgets.QApplication.translate("MainWindow", "W:", None, -1))
+        self.label_WidthSquare.setStyleSheet(optionLabelA)   
+
+        self.lineEdit_HeightA = QtWidgets.QLineEdit(self.dynamicSlotGrp)
+        self.lineEdit_HeightA.setEnabled(False)
+        self.lineEdit_HeightA.setGeometry(QtCore.QRect(175,70, 40, 20))
+        self.lineEdit_HeightA.setText(QtWidgets.QApplication.translate("MainWindow", "500", None, -1))
+        self.lineEdit_HeightA.setObjectName("lineEdit_HeightA")                  
+        self.lineEdit_HeightA.setStyleSheet(optionEditA)   
+        
+
+        self.label_HeighthSquare = QtWidgets.QLabel(self.dynamicSlotGrp)
+        self.label_HeighthSquare.setGeometry(QtCore.QRect(160, 70, 30, 20))
+        self.label_HeighthSquare.setObjectName("label_HeighthSquare")                    
+        self.label_HeighthSquare.setText(QtWidgets.QApplication.translate("MainWindow", "H:", None, -1))
+        self.label_HeighthSquare.setStyleSheet(optionLabelA)                      
+                        
+        self.checkBox_squareFillIn = QtWidgets.QCheckBox(self.dynamicSlotGrp)
+        self.checkBox_squareFillIn.setGeometry(QtCore.QRect(270, 70, 70, 20))
+        self.checkBox_squareFillIn.setChecked(False)
+        self.checkBox_squareFillIn.setObjectName("checkBox_squareFillIn")   
+        self.checkBox_squareFillIn.setText(QtWidgets.QApplication.translate("MainWindow", "Fill in", None, -1))
+        self.checkBox_squareFillIn.setStyleSheet(optionEditA)   
+ 
+                          
+           
+    ### set dyna sector
+            
+        self.radioButton_createSector = QtWidgets.QRadioButton(self.dynamicSlotGrp)
+        self.radioButton_createSector.setGeometry(QtCore.QRect(20, 100, 70, 20))
+        self.radioButton_createSector.setObjectName("radioButton_createSector")
+        self.radioButton_createSector.setText(QtWidgets.QApplication.translate("MainWindow", "Sector", None, -1))
+        self.radioButton_createSector.setStyleSheet(radioBtnStyleA)        
+
+                                                                                                              
+        self.label_dynaSectorDegree = QtWidgets.QLabel(self.dynamicSlotGrp)
+        self.label_dynaSectorDegree.setGeometry(QtCore.QRect(100, 100, 30, 20))
+        self.label_dynaSectorDegree.setObjectName("label_dynaSectorDegree")                                                
+        self.label_dynaSectorDegree.setText(QtWidgets.QApplication.translate("MainWindow", "D:", None, -1))
+        self.label_dynaSectorDegree.setStyleSheet(optionLabelA)                      
+                                                                     
+        self.lineEdit_AngleA_start = QtWidgets.QLineEdit(self.dynamicSlotGrp)
+        self.lineEdit_AngleA_start.setEnabled(False)
+        self.lineEdit_AngleA_start.setGeometry(QtCore.QRect(115, 100, 40, 20))
+        self.lineEdit_AngleA_start.setText(QtWidgets.QApplication.translate("MainWindow", "-90", None, -1))
+        self.lineEdit_AngleA_start.setObjectName("lineEdit_AngleA_start")
+        self.lineEdit_AngleA_start.setStyleSheet(optionEditA)   
+
+        self.lineEdit_AngleA_end = QtWidgets.QLineEdit(self.dynamicSlotGrp)
+        self.lineEdit_AngleA_end.setEnabled(False)
+        self.lineEdit_AngleA_end.setGeometry(QtCore.QRect(175, 100, 40, 20))
+        self.lineEdit_AngleA_end.setText(QtWidgets.QApplication.translate("MainWindow", "90", None, -1))
+        self.lineEdit_AngleA_end.setObjectName("lineEdit_AngleA_end")    
+        self.lineEdit_AngleA_end.setStyleSheet(optionEditA)   
+
+
+    #### set dyna direction
+        self.radioButton_createDirection = QtWidgets.QRadioButton(self.dynamicSlotGrp)
+        self.radioButton_createDirection.setGeometry(QtCore.QRect(20, 130, 70, 20))
+        self.radioButton_createDirection.setObjectName("radioButton_createDirection")
+        
+        self.radioButton_createDirection.setText(QtWidgets.QApplication.translate("MainWindow", "Direction", None, -1))
+        self.radioButton_createDirection.setStyleSheet(radioBtnStyleA)        
+
+        self.label_dynDirectionX = QtWidgets.QLabel(self.dynamicSlotGrp)
+        self.label_dynDirectionX.setGeometry(QtCore.QRect(100, 130, 30, 20))
+        self.label_dynDirectionX.setObjectName("label_dynDirectionX")
+        self.label_dynDirectionX.setText(QtWidgets.QApplication.translate("MainWindow", "X:", None, -1))
+        self.label_dynDirectionX.setStyleSheet(optionLabelA)    
+        
+                          
+        self.lineEdit_DirectionX = QtWidgets.QLineEdit(self.dynamicSlotGrp)
+        self.lineEdit_DirectionX.setEnabled(False)
+        self.lineEdit_DirectionX.setGeometry(QtCore.QRect(115, 130, 40, 20))
+        self.lineEdit_DirectionX.setObjectName("lineEdit_DirectionX")    
+        self.lineEdit_DirectionX.setText(QtWidgets.QApplication.translate("MainWindow", "500", None, -1))                                                       
+        self.lineEdit_DirectionX.setStyleSheet(optionEditA)   
+
+        self.label_dynDirectionY = QtWidgets.QLabel(self.dynamicSlotGrp)
+        self.label_dynDirectionY.setGeometry(QtCore.QRect(160, 130, 30, 20))
+        self.label_dynDirectionY.setObjectName("label_dynDirectionY")
+        self.label_dynDirectionY.setText(QtWidgets.QApplication.translate("MainWindow", "Y:", None, -1))
+        self.label_dynDirectionY.setStyleSheet(optionLabelA)    
+        
+        self.lineEdit_DirectionY = QtWidgets.QLineEdit(self.dynamicSlotGrp)
+        self.lineEdit_DirectionY.setEnabled(False)
+        self.lineEdit_DirectionY.setGeometry(QtCore.QRect(175, 130, 40, 20))
+        self.lineEdit_DirectionY.setObjectName("lineEdit_HeightB")
+        self.lineEdit_DirectionY.setText(QtWidgets.QApplication.translate("MainWindow", "500", None, -1))  
+        self.lineEdit_DirectionY.setStyleSheet(optionEditA)   
+        
+        self.label_dynDirectionD = QtWidgets.QLabel(self.dynamicSlotGrp)
+        self.label_dynDirectionD.setGeometry(QtCore.QRect(220, 130, 30, 20))
+        self.label_dynDirectionD.setObjectName("label_dynDirectionD")     
+        self.label_dynDirectionD.setText(QtWidgets.QApplication.translate("MainWindow", "D:", None, -1))
+        self.label_dynDirectionD.setStyleSheet(optionLabelA)    
+        
+       
+        self.lineEdit_directionDegree = QtWidgets.QLineEdit(self.dynamicSlotGrp)
+        self.lineEdit_directionDegree.setEnabled(False)
+        self.lineEdit_directionDegree.setGeometry(QtCore.QRect(240, 130, 40, 20))
+        self.lineEdit_directionDegree.setObjectName("lineEdit_directionDegree") 
+        self.lineEdit_directionDegree.setStyleSheet(optionEditA)   
+        self.lineEdit_directionDegree.setText(QtWidgets.QApplication.translate("MainWindow", "0", None, -1))
+        self.lineEdit_directionDegree.setStyleSheet(optionEditA)   
+
+        
+        
+        self.label_dynDirectionS= QtWidgets.QLabel(self.dynamicSlotGrp)
+        self.label_dynDirectionS.setGeometry(QtCore.QRect(285, 130, 30, 20))
+        self.label_dynDirectionS.setObjectName("label_dynDirectionS")
+        self.label_dynDirectionS.setText(QtWidgets.QApplication.translate("MainWindow", "S:", None, -1))
+        
+        self.lineEdit_directionSpread = QtWidgets.QLineEdit(self.dynamicSlotGrp)
+        self.lineEdit_directionSpread.setEnabled(False)
+        self.lineEdit_directionSpread.setGeometry(QtCore.QRect(300, 130, 40, 20))
+        self.lineEdit_directionSpread.setObjectName("lineEdit_directionSpread")
+        self.lineEdit_directionSpread.setText(QtWidgets.QApplication.translate("MainWindow", "0", None, -1))
+        self.lineEdit_directionSpread.setStyleSheet(optionEditA)   
+
+        
+
+        self.label_sf_13 = QtWidgets.QLabel(self.dynamicSlotGrp)
+        self.label_sf_13.setGeometry(QtCore.QRect(20, 20, 61, 25))
+        self.label_sf_13.setObjectName("label_sf_13")
+
+        self.label_ef_4 = QtWidgets.QLabel(self.dynamicSlotGrp)
+        self.label_ef_4.setGeometry(QtCore.QRect(140, 20, 71, 25))
+        self.label_ef_4.setObjectName("label_ef_4")
+
+    #### dyna set follow curve
+        self.radioButton_createFollowCurve = QtWidgets.QRadioButton(self.dynamicSlotGrp)
+        self.radioButton_createFollowCurve.setGeometry(QtCore.QRect(20, 160, 110, 20))
+        self.radioButton_createFollowCurve.setObjectName("radioButton_createFollowCurve")
+        self.radioButton_createFollowCurve.setText(QtWidgets.QApplication.translate("MainWindow", "Follow Curve", None, -1))
+        self.radioButton_createFollowCurve.setStyleSheet(radioBtnStyleA)        
+
+
+        self.lineEdit_selectCurve = QtWidgets.QLineEdit(self.dynamicSlotGrp)
+        self.lineEdit_selectCurve.setEnabled(False)
+        self.lineEdit_selectCurve.setGeometry(QtCore.QRect(120, 160, 220, 20))
+        self.lineEdit_selectCurve.setObjectName("lineEdit_selectCurve")
+        self.lineEdit_selectCurve.setText(QtWidgets.QApplication.translate("MainWindow", "select curve", None, -1))
+        self.lineEdit_selectCurve.setStyleSheet(optionEditA)   
+
+
+        self.toolButton_selectCurve = QtWidgets.QToolButton(self.dynamicSlotGrp)
+        self.toolButton_selectCurve.setEnabled(False)
+        self.toolButton_selectCurve.setGeometry(QtCore.QRect(340, 160, 20, 20))
+        self.toolButton_selectCurve.setObjectName("toolButton_selectCurve")
+        self.toolButton_selectCurve.setText(QtWidgets.QApplication.translate("MainWindow", "...", None, -1))
+
+
+
+
+
+
+
+
+
+
+        self.radioButton_createFromImageWeight = QtWidgets.QRadioButton(self.dynamicSlotGrp)
+        self.radioButton_createFromImageWeight.setGeometry(QtCore.QRect(20, 310, 91, 16))
+        self.radioButton_createFromImageWeight.setObjectName("radioButton_createFromImageWeight")
+        self.lineEdit_selectMotionFIle = QtWidgets.QLineEdit(self.dynamicSlotGrp)
+        self.lineEdit_selectMotionFIle.setEnabled(False)
+        self.lineEdit_selectMotionFIle.setGeometry(QtCore.QRect(115, 310, 222, 16))
+        self.lineEdit_selectMotionFIle.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.lineEdit_selectMotionFIle.setObjectName("lineEdit_selectMotionFIle")
+        self.toolButton_selectMotionFile = QtWidgets.QToolButton(self.dynamicSlotGrp)
+        self.toolButton_selectMotionFile.setGeometry(QtCore.QRect(340, 310, 22, 18))
+        self.toolButton_selectMotionFile.setObjectName("toolButton_selectMotionFile")
+
+
+
+        self.groupBox_keysOption = QtWidgets.QGroupBox(self.dynamicSlotGrp)
+        self.groupBox_keysOption.setGeometry(QtCore.QRect(30, 200, 331, 91))
+        self.groupBox_keysOption.setTitle("")
+        self.groupBox_keysOption.setObjectName("groupBox_keysOption")
+    
+    
+        self.horizontalSlider_powA = QtWidgets.QSlider(self.groupBox_keysOption)
+        self.horizontalSlider_powA.setGeometry(QtCore.QRect(110, 60, 211, 16))
+        self.horizontalSlider_powA.setMinimum(1)
+        self.horizontalSlider_powA.setMaximum(100)
+        self.horizontalSlider_powA.setProperty("value", 10)
+        self.horizontalSlider_powA.setOrientation(QtCore.Qt.Horizontal)
+        self.horizontalSlider_powA.setObjectName("horizontalSlider_powA")
+        self.label_ef_14 = QtWidgets.QLabel(self.groupBox_keysOption)
+        self.label_ef_14.setGeometry(QtCore.QRect(20, 10, 25, 16))
+        self.label_ef_14.setObjectName("label_ef_14")
+        self.label_ef_15 = QtWidgets.QLabel(self.groupBox_keysOption)
+        self.label_ef_15.setGeometry(QtCore.QRect(20, 35, 41, 16))
+        self.label_ef_15.setObjectName("label_ef_15")
+        self.horizontalSlider_NoiseA = QtWidgets.QSlider(self.groupBox_keysOption)
+        self.horizontalSlider_NoiseA.setGeometry(QtCore.QRect(110, 35, 211, 16))
+        self.horizontalSlider_NoiseA.setMinimum(0)
+        self.horizontalSlider_NoiseA.setMaximum(500)
+        self.horizontalSlider_NoiseA.setProperty("value", 0)
+        self.horizontalSlider_NoiseA.setOrientation(QtCore.Qt.Horizontal)
+        self.horizontalSlider_NoiseA.setObjectName("horizontalSlider_NoiseA")
+        self.lineEdit_pow = QtWidgets.QLineEdit(self.groupBox_keysOption)
+        self.lineEdit_pow.setEnabled(False)
+        self.lineEdit_pow.setGeometry(QtCore.QRect(60, 60, 40, 16))
+        self.lineEdit_pow.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.lineEdit_pow.setObjectName("lineEdit_pow")
+        self.label_ef_16 = QtWidgets.QLabel(self.groupBox_keysOption)
+        self.label_ef_16.setGeometry(QtCore.QRect(20, 60, 41, 16))
+        self.label_ef_16.setObjectName("label_ef_16")
+        self.lineEdit_keysA = QtWidgets.QLineEdit(self.groupBox_keysOption)
+        self.lineEdit_keysA.setEnabled(False)
+        self.lineEdit_keysA.setGeometry(QtCore.QRect(60, 10, 40, 16))
+        self.lineEdit_keysA.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.lineEdit_keysA.setObjectName("lineEdit_keysA")
+        self.horizontalSlider_keysA = QtWidgets.QSlider(self.groupBox_keysOption)
+        self.horizontalSlider_keysA.setGeometry(QtCore.QRect(110, 10, 211, 16))
+        self.horizontalSlider_keysA.setMinimum(2)
+        self.horizontalSlider_keysA.setMaximum(50)
+        self.horizontalSlider_keysA.setOrientation(QtCore.Qt.Horizontal)
+        self.horizontalSlider_keysA.setObjectName("horizontalSlider_keysA")
+        self.lineEdit_NoiseA = QtWidgets.QLineEdit(self.groupBox_keysOption)
+        self.lineEdit_NoiseA.setEnabled(False)
+        self.lineEdit_NoiseA.setGeometry(QtCore.QRect(60, 35, 40, 16))
+        self.lineEdit_NoiseA.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.lineEdit_NoiseA.setObjectName("lineEdit_NoiseA")
+
+        '''
+        self.label_sf = QtWidgets.QLabel(self.tab_2)
+        self.label_sf.setGeometry(QtCore.QRect(10, 2, 111, 25))
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(11)
+        self.label_sf.setFont(font)
+        self.label_sf.setObjectName("label_sf")
+        
+        self.pushButton_modifyName_2 = QtWidgets.QPushButton(self.tab_2)
+        self.pushButton_modifyName_2.setEnabled(False)
+        self.pushButton_modifyName_2.setGeometry(QtCore.QRect(230, 670, 181, 25))
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        self.pushButton_modifyName_2.setFont(font)
+        self.pushButton_modifyName_2.setObjectName("pushButton_modifyName_2")
+        self.horizontalSlider_numberJoints = QtWidgets.QSlider(self.tab_2)
+        self.horizontalSlider_numberJoints.setGeometry(QtCore.QRect(80, 50, 231, 25))
+        self.horizontalSlider_numberJoints.setMinimum(1)
+        self.horizontalSlider_numberJoints.setMaximum(300)
+        self.horizontalSlider_numberJoints.setOrientation(QtCore.Qt.Horizontal)
+        self.horizontalSlider_numberJoints.setObjectName("horizontalSlider_numberJoints")
+        self.pushButton_createJoint = QtWidgets.QPushButton(self.tab_2)
+        self.pushButton_createJoint.setGeometry(QtCore.QRect(328, 50, 75, 25))
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        self.pushButton_createJoint.setFont(font)
+        self.pushButton_createJoint.setObjectName("pushButton_createJoint")
+        self.toolButton_dynReset = QtWidgets.QToolButton(self.tab_2)
+        self.toolButton_dynReset.setEnabled(True)
+        self.toolButton_dynReset.setGeometry(QtCore.QRect(360, 240, 41, 16))
+        '''
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
         
         
         self.testDBtn = QtWidgets.QPushButton(self.dockImageButton)
@@ -1015,16 +1462,16 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setCharacterSetBTn.setStyleSheet(buttonStyleB)     
         
 
-        self.exportSpineJsonBtn = QtWidgets.QPushButton(self.dockSpineMeshProgress)
-        self.exportSpineJsonBtn.setGeometry(QtCore.QRect(10, 750, 150, 30))
+        self.exportSpineJsonBtn = QtWidgets.QPushButton(self.dockImageButton)
+        self.exportSpineJsonBtn.setGeometry(QtCore.QRect(10, 250, 150, 30))
         self.exportSpineJsonBtn.setObjectName("exportSpineJson")
         self.exportSpineJsonBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Export Spine Json", None, -1))
         self.exportSpineJsonBtn.clicked.connect(self.defineAllItemInRootCtrl)
         self.exportSpineJsonBtn.setStyleSheet(buttonStyleB)     
 
        
-        self.analyzeCharacterSet = QtWidgets.QPushButton(self.dockSpineMeshProgress)
-        self.analyzeCharacterSet.setGeometry(QtCore.QRect(10, 500, 150, 30))
+        self.analyzeCharacterSet = QtWidgets.QPushButton(self.dockImageButton)
+        self.analyzeCharacterSet.setGeometry(QtCore.QRect(10, 100, 150, 30))
         self.analyzeCharacterSet.setObjectName("analyzeCharacterSet")
         self.analyzeCharacterSet.setText(QtWidgets.QApplication.translate("MainWindow", "analyze Character Set", None, -1))
         self.analyzeCharacterSet.clicked.connect(self.doAnalyzeCharacterSet)
@@ -1112,7 +1559,24 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.selectExportFileBTnLEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.selectExportFileBTnLEdit.setText('')
         self.selectExportFileBTnLEdit.setStyleSheet(lineEditRightB)     
+
           
+                    
+    def slotAmountEditChange(self):                       
+        inputEditValue = self.amountSliderNumLEdit.text()
+        self.amountSlotSlider.setValue(int(inputEditValue))                                                                        
+                        
+                                                  
+        ##### change slots amount
+    def slotAmountSliderChange(self):
+        inputSliderValue = self.amountSlotSlider.value()        
+        self.amountSliderNumLEdit.setText(str(inputSliderValue))                                                   
+                                                                                          
+                                                                                                    
+                                                                                                              
+                                                                                                                        
+                                                                                                                                  
+                                                                                                                                                                                                                           
         ##### btn in dockWidgetImages
     
     def openSelectedFolder(self):
@@ -1524,39 +1988,119 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         existedCharacterSetsInSpineRoot  = self.spineItemTree.topLevelItem(0).childCount()
         #print existedCharacterSetsInSpineRoot
-        slotsTopGrp = QtWidgets.QTreeWidgetItem(self.spineItemTree.topLevelItem(0)) 
-        self.spineItemTree.topLevelItem(0).child(existedCharacterSetsInSpineRoot).setText(0, QtWidgets.QApplication.translate("MainWindow","slots", None, -1))
-        slotsTopGrp.setForeground(0,QtGui.QBrush(QtGui.QColor(100,255, 100, 255)))
-        
-        allJoints = cmds.listRelatives('spine_RootSkeleton',c=True,type='joint',f=True,ad=True)
+        slotsTopGrpItem = QtWidgets.QTreeWidgetItem(self.spineItemTree.topLevelItem(0)) 
+        self.spineItemTree.topLevelItem(0).child(existedCharacterSetsInSpineRoot).setText(0, QtWidgets.QApplication.translate("MainWindow","slots/bones", None, -1))
+        slotsTopGrpItem.setForeground(0,QtGui.QBrush(QtGui.QColor(100,255, 100, 255)))
+        slotsTopGrpItem.setExpanded(True)   
+        allJoints = cmds.listRelatives('spine_RootSkeleton',c=True,f=True,ad=True)
         allSpineBoneList = []
         for i in allJoints:
-            if cmds.getAttr('%s.spine_tag'%i) == 'spine_bone':
-                allSpineBoneList.append(i)
-
-        for i in allSpineBoneList:
-          #  print i,
-            depth = len(i.split('|'))
-           # print i,depth,i.split('|')
-          ##  for j in range(1,depth):
-        #        parentItem = slotsTopGrp
-            secItemName = i.split('|')[2]
-            secCount = 0
             try:
-                print QtWidgets.QTreeWidgetItem(secItemName).parent()
-                print 'a'
+                if cmds.getAttr('%s.spine_tag'%i) == 'spine_bone' or cmds.getAttr('%s.spine_tag'%i) == 'spine_slot':
+                    allSpineBoneList.append(i)
+                   # try:
+                   #     if if cmds.getAttr('%s.spine_tag'%i) == 'spine_bone'
             except:
-                print 'b'
                 pass
-            if len(secItemName) > 0:
-                #item = QtWidgets.QTreeWidgetItem(slotsTopGrp) 
-                print  QtWidgets.QTreeWidgetItem('spine_RootSkeleton')#text(-1) #self.spineItemTree.item('spine_RootSkeleton')
-                print 'secItemName',secItemName
-               # slotsTopGrp.child(secCount)
-                secCount = secCount +1
-            else:
-                pass
+                
+        childCountInThirdLV = self.spineItemTree.topLevelItem(0).child(existedCharacterSetsInSpineRoot).childCount()
+        thridLVItems = self.defineslotTreeLevel(slotsTopGrpItem,allSpineBoneList,2)
+        print thridLVItems
+        for i in thridLVItems:
+
+            allItemListHave3rdLevel =  filter(lambda x: len(x.split('|')) >3 ,allSpineBoneList)
+            addItemList3rd = filter(lambda x: x.split('|')[2] ==  i.text(0) ,allItemListHave3rdLevel)
+            
+            fourthLVItems = self.defineslotTreeLevel(i,addItemList3rd,3)
+            
+            for j in fourthLVItems:
+                allItemListHave4thLevel =  filter(lambda x: len(x.split('|')) >4 ,allSpineBoneList)
+                addItemList4th = filter(lambda x: x.split('|')[3] ==  j.text(0) ,allItemListHave4thLevel)
+                fiveLVItems = self.defineslotTreeLevel(j,addItemList4th,4)
+                
+                for k in fiveLVItems:
+                    allItemListHave5thLevel =  filter(lambda x: len(x.split('|')) >5 ,allSpineBoneList)
+                    addItemList5th = filter(lambda x: x.split('|')[4] ==  k.text(0) ,allItemListHave5thLevel)
+                    sixLVItems = self.defineslotTreeLevel(k,addItemList5th,5)
+                    
+                    
+                    for l in sixLVItems:
+                        allItemListHave6thLevel =  filter(lambda x: len(x.split('|')) >6 ,allSpineBoneList)
+                        addItemList6th = filter(lambda x: x.split('|')[5] ==  l.text(0) ,allItemListHave6thLevel)
+                        sevenLVItems = self.defineslotTreeLevel(l,addItemList6th,6)
+                        
+                        for m in sevenLVItems:
+                            allItemListHave7thLevel =  filter(lambda x: len(x.split('|')) >7 ,allSpineBoneList)
+                            addItemList7th = filter(lambda x: x.split('|')[6] ==  m.text(0) ,allItemListHave7thLevel)
+                            eightLVItems = self.defineslotTreeLevel(m,addItemList7th,7)
+                            
+                            for n in eightLVItems:
+                                allItemListHave8thLevel =  filter(lambda x: len(x.split('|')) >8 ,allSpineBoneList)
+                                addItemList8th = filter(lambda x: x.split('|')[7] ==  n.text(0) ,allItemListHave8thLevel)
+                                nineLVItems = self.defineslotTreeLevel(n,addItemList8th,8)
+                                    
+                                for o in nineLVItems:
+                                    allItemListHave9thLevel =  filter(lambda x: len(x.split('|')) >9 ,allSpineBoneList)
+                                    addItemList9th = filter(lambda x: x.split('|')[8] ==  o.text(0) ,allItemListHave9thLevel)
+                                    tenLVItems = self.defineslotTreeLevel(o,addItemList9th,9)
+                                            
+                            
+                            
+                                                      
+                        
+
+    def defineslotTreeLevel(self,parentItem,itemAddList,depthLevel):
         
+        
+       # print 'childCount',childCount,itemAddList
+        itemExisted = []
+        #### check exist item in parentItem
+        existItemInParent = parentItem.childCount()
+        for i in range(0,existItemInParent):
+            if parentItem.child(i).text(0) in itemExisted:
+                pass
+            else:
+                itemExisted.append(parentItem.child(i).text(0))
+                
+        addItemList = []
+        for i in itemAddList:
+            try:
+                if i.split('|')[depthLevel] in addItemList:
+                    pass
+                else:
+                    addItemList.append(str(i.split('|')[depthLevel]))
+            except:
+                pass
+          
+        realAddItemList = []
+        for i in addItemList:
+            if i in itemExisted:
+                pass
+            else:
+                realAddItemList.append(i)
+                
+        childItem = []
+        for i in range(0,len(realAddItemList)):
+            newItem = QtWidgets.QTreeWidgetItem() 
+            itemName = addItemList[i]
+           # print 'itemName',itemName
+            newItem.setText(0, QtWidgets.QApplication.translate("MainWindow",itemName, None, -1))
+            parentItem.addChild(newItem)
+            childItem.append(newItem)    
+            try:
+                if cmds.getAttr('%s.spine_tag'%itemName) == 'spine_bone':
+                    newItem.setForeground(0,QtGui.QBrush(QtGui.QColor(100,200,100)))
+                elif cmds.getAttr('%s.spine_tag'%itemName) == 'spine_slot':
+                    newItem.setForeground(0,QtGui.QBrush(QtGui.QColor(100,200,200)))
+
+            except:
+                pass
+            #newItem.setForeground(0,QtGui.QBrush(QtGui.QColor(int(itemColor))))
+
+            newItem.setExpanded(True)   
+
+        return childItem
+
     def defineSpineImagesTable(self,imageDir):    
         print "defineSpineImagesTable"
         currentFolder = imageDir#.encode('utf-8')
@@ -3247,17 +3791,19 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           
           
           
-          
+    def createImagePlane(self):
+        print self.currentImageFullName
           
 
           
 
     def imageInfo(self,imagesDir):
-        print 'imageInfo'
+        print 'imageInfo2'
         #print 'imageName',self.imageListTable.currentItem().icon()#.iconName()
         #imageUrl = self.imageListTable.currentItem().text()
         imageUrl = imagesDir + '/' + str(self.imageListTable.currentItem().text())
-        
+        self.currentImageFullName  = imageUrl
+        self.imageSourceLEdit.setText(str(self.imageListTable.currentItem().text()))
        # imageUrl = self.folderDir + '/' + self.imageListTable.currentItem().text()
 
        # print 'imageUrl',imageUrl
