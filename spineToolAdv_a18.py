@@ -52,8 +52,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           #initial data
        # self.folderDir = '//mcd-3d/data3d/spine_imageSources'  #'C:/Temp/testImage'
         self.imagesFilter = ['jpg','JPG','png','PNG']
-          
-        print ('2',self)
+       # self.currentOptionSelectState = [0,0,0,0,0,0,0,0,0,0]  
+       # print ('2',self)
         self.createDock()
          # self.createImageTable()
         #  self.getImagesInFolder()
@@ -129,7 +129,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.workSpaceInfoDock = QtWidgets.QDockWidget(self)
         self.workSpaceInfoDock.setObjectName("workSpaceInfoDock")
         self.workSpaceInfoDock.setMinimumWidth(550)
-        self.workSpaceInfoDock.setMinimumHeight(140)
+        self.workSpaceInfoDock.setMinimumHeight(240)
         #self.workSpaceInfoDock.setMaximumHeight(200)
         
         
@@ -137,7 +137,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.dockWidgetImagesInfo = QtWidgets.QDockWidget(self)
         self.dockWidgetImagesInfo.setObjectName("dockWidget")
         self.dockWidgetImagesInfo.setMinimumWidth(550)
-        self.dockWidgetImagesInfo.setMinimumHeight(570)
+        self.dockWidgetImagesInfo.setMinimumHeight(630)
         #  self.dockWidgetImagesInfo.setMaximumHeight(330)
 
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockWidgetImagesInfo)
@@ -145,21 +145,21 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.dockImageButton = QtWidgets.QDockWidget(self)
         self.dockImageButton.setObjectName("dockImageButton")
         self.dockImageButton.setMinimumWidth(300)
-        self.dockImageButton.setMinimumHeight(300)
+        self.dockImageButton.setMinimumHeight(150)
 
 
         self.dockSpineMeshProgress = QtWidgets.QDockWidget(self)
         self.dockSpineMeshProgress.setObjectName("dockMeshProgress")
         self.dockSpineMeshProgress.setMinimumWidth(400)
-        self.dockSpineMeshProgress.setMinimumHeight(200)
+        self.dockSpineMeshProgress.setMinimumHeight(100)
 
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockSpineMeshProgress)
 
 
-        self.dockExport = QtWidgets.QDockWidget(self)
-        self.dockExport.setObjectName("dockExport")
-        self.dockExport.setMinimumWidth(400)
-        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockExport)
+       # self.dockExport = QtWidgets.QDockWidget(self)
+       # self.dockExport.setObjectName("dockExport")
+      #  self.dockExport.setMinimumWidth(400)
+      #  self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockExport)
 
 #dockWidgetImages workSpaceInfoDock dockSpineMeshProgress dockSpineItemTree
 
@@ -176,7 +176,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.splitDockWidget( self.dockWidgetImages, self.previewImageDock, QtCore.Qt.Vertical)
         self.splitDockWidget( self.workSpaceInfoDock, self.dockWidgetImagesInfo, QtCore.Qt.Vertical)
         self.splitDockWidget( self.dockWidgetImagesInfo, self.dockImageButton, QtCore.Qt.Vertical)
-        self.splitDockWidget( self.dockSpineMeshProgress, self.dockExport, QtCore.Qt.Vertical)
+      #  self.splitDockWidget( self.dockSpineMeshProgress, self.dockExport, QtCore.Qt.Vertical)
 
 
 
@@ -284,7 +284,37 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                          border-width:1px;\
                          border-color:#AAAA33;\
                          }\
-                         "%(str(self.fontScale*12)+'px')                
+                         "%(str(self.fontScale*12)+'px')   
+                         
+        buttonStyleBLeft = "\
+                         QPushButton {\
+                         font-size:%s;\
+                         background-color:#778888;\
+                         border-top-left-radius:8px;\
+                         border-bottom-left-radius: 8px;\
+                         border-style:solid;\
+                         border-width:1px;\
+                         border-color:#555555;\
+                         }\
+                         QPushButton:hover{\
+                         background-color:#883333;\
+                         border-radius:8px;\
+                         border-style:solid;\
+                         border-width:1px;\
+                         border-color:#883333;\
+                         }\
+                         QPushButton:pressed{\
+                         background-color:#AAAA33;\
+                         border-radius:8px;\
+                         border-style:solid;\
+                         border-width:1px;\
+                         border-color:#AAAA33;\
+                         }\
+                         "%(str(self.fontScale*12)+'px')                                      
+                                                   
+                                                                
+                                                                             
+                                                                                                       
         buttonStyleC = "\
                          QPushButton {\
                          background-color:#333333;\
@@ -319,8 +349,80 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                          border-color:#99cc99;\
                          }\
                          "%(str(self.fontScale*12)+'px')             
-                         
-                                                                           
+
+        buttonStyleCMiddle = "\
+                         QPushButton {\
+                         background-color:#333333;\
+                         color:#777777;\
+                         font-size:%s;\
+                         border-radius:0px;\
+                         border-style:solid;\
+                         border-right-width:1px;\
+                         border-color:#555555;\
+                         }\
+                         QPushButton:hover{\
+                         background-color:#aaeeaa;\
+                         color:#777777;\
+                         border-radius:0px;\
+                         border-style:solid;\
+                         border-right-width:1px;\
+                         border-color:#555555;\
+                         }\
+                         QPushButton:pressed{\
+                         background-color:#aaeeaa;\
+                         border-radius:0px;\
+                         border-style:solid;\
+                         border-right-width:1px;\
+                         border-color:#555555;\
+                         }\
+                         QPushButton:checked{\
+                         background-color:#99aa99;\
+                         color:#777777;\
+                         border-radius:0px;\
+                         border-style:solid;\
+                         border-right-width:1px;\
+                         border-color:#555555;\
+                         }\
+                         "%(str(self.fontScale*12)+'px')                                                      
+
+        buttonStyleCRight = "\
+                         QPushButton {\
+                         background-color:#333333;\
+                         color:#777777;\
+                         font-size:%s;\
+                         border-top-right-radius: 10px;\
+                         border-bottom-right-radius: 10px;\
+                         border-style:solid;\
+                         border-width:0px;\
+                         border-color:#aaaaaa;\
+                         }\
+                         QPushButton:hover{\
+                         background-color:#aaeeaa;\
+                         color:#777777;\
+                         border-top-right-radius: 10px;\
+                         border-bottom-right-radius: 10px;\
+                         border-style:solid;\
+                         border-width:0px;\
+                         border-color:#aaeeaa;\
+                         }\
+                         QPushButton:pressed{\
+                         background-color:#aaeeaa;\
+                         border-top-right-radius: 10px;\
+                         border-bottom-right-radius: 10px;\
+                         border-style:solid;\
+                         border-width:0px;\
+                         border-color:#aaeeaa;\
+                         }\
+                         QPushButton:checked{\
+                         background-color:#99aa99;\
+                         color:#777777;\
+                         border-top-right-radius: 10px;\
+                         border-bottom-right-radius: 10px;\
+                         border-style:solid;\
+                         border-width:0px;\
+                         border-color:#99cc99;\
+                         }\
+                         "%(str(self.fontScale*12)+'px')                                                                                
         buttonStyleLeft = "\
                          QPushButton {\
                          background-color:#778888;\
@@ -444,11 +546,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                          font-size:%s;\
                          color:#777777;\
                          background-color:#333333;\
+                         text-align:center;\
                          border-radius: 8px;\
                          border-style:solid;\
                          border-width:0px;\
                          border-color:#333333;\
-                         text-align:left;\
                          }\
                          "%(str(self.fontScale*12)+'px')    
                                                                                                                         
@@ -621,8 +723,12 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         
         #### define keyframe tool 
+        
+
+        
+        
         self.keyFrameToolGrp = QtWidgets.QGroupBox(self.dockWidgetImagesInfo)
-        self.keyFrameToolGrp.setGeometry(QtCore.QRect(10, 20, 530, 230))
+        self.keyFrameToolGrp.setGeometry(QtCore.QRect(10, 20, 530, 210))
         self.keyFrameToolGrp.setObjectName("keyFrameToolGrp")
         self.keyFrameToolGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
         self.keyFrameToolGrp.setStyleSheet(QGroupBoxA)     
@@ -769,26 +875,200 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.loopTimes.setStyleSheet(lineEditRightBDark)           
                        
                                                
-  
-        ###### Random Frame keys     
+        ##### fillet select
+        self.filletSelectGrp = QtWidgets.QGroupBox(self.dockWidgetImagesInfo)
+        self.filletSelectGrp.setGeometry(QtCore.QRect(10, 490, 530, 130))
+        self.filletSelectGrp.setObjectName("filletSelectGrp")
+        self.filletSelectGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
+        self.filletSelectGrp.setStyleSheet(QGroupBoxA)     
+        self.filletSelectGrp.setVisible(True)
         
-                
-       
+        
+        self.defineSelectObjBtn = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.defineSelectObjBtn.setGeometry(QtCore.QRect(10, 10, 100, 30))
+        self.defineSelectObjBtn.setObjectName("defineSelectObjBtn")
+        self.defineSelectObjBtn.setText(QtWidgets.QApplication.translate("MainWindow", "select Slots", None, -1))
+        self.defineSelectObjBtn.clicked.connect(self.getSelectSlotBone)
+        self.defineSelectObjBtn.setStyleSheet(buttonStyleLeftB)     
 
-                                        
-                                                        
-                                                                        
-                                                                                        
-                                                                                                                        
+ 
+        self.showAllSelectedObjLedit = QtWidgets.QLineEdit(self.filletSelectGrp)
+        self.showAllSelectedObjLedit.setGeometry(QtCore.QRect(110, 10, 400, 30))
+        self.showAllSelectedObjLedit.setObjectName("showAllSelectedObjLedit")
+        self.showAllSelectedObjLedit.setAlignment(QtCore.Qt.AlignCenter)
+        self.showAllSelectedObjLedit.setText('')
+        self.showAllSelectedObjLedit.setStyleSheet(lineEditRightBDark)          
+        
+ 
+        self.renameAllSelectBtn = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.renameAllSelectBtn.setGeometry(QtCore.QRect(10, 50, 100, 30))
+        self.renameAllSelectBtn.setObjectName("renameAllSelectBtn")
+        self.renameAllSelectBtn.setText(QtWidgets.QApplication.translate("MainWindow", "rename selected", None, -1))
+        self.renameAllSelectBtn.clicked.connect(self.renameSelectedBone)
+        self.renameAllSelectBtn.setStyleSheet(buttonStyleLeftB)     
+
+ 
+        self.newNameSelectedLEdit = QtWidgets.QLineEdit(self.filletSelectGrp)
+        self.newNameSelectedLEdit.setGeometry(QtCore.QRect(110, 50, 400, 30))
+        self.newNameSelectedLEdit.setObjectName("newNameSelectedLEdit")
+        self.newNameSelectedLEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.newNameSelectedLEdit.setText('')
+        self.newNameSelectedLEdit.setStyleSheet(lineEditRightBDark)          
+                
+        self.optionalSelctBt = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.optionalSelctBt.setGeometry(QtCore.QRect(10, 90, 100, 30))
+        self.optionalSelctBt.setObjectName("optionalSelctBt")
+        self.optionalSelctBt.setText(QtWidgets.QApplication.translate("MainWindow", "optional Select", None, -1))
+        #self.optionalSelctBt.clicked.connect(self.createRootCtrl)
+        self.optionalSelctBt.setStyleSheet(buttonStyleBLeft)                     
+  
+        self.fillet_odd_btn = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.fillet_odd_btn.setGeometry(QtCore.QRect(110, 90, 40, 30))
+        self.fillet_odd_btn.setObjectName("fillet_odd_btn")
+        self.fillet_odd_btn.setCheckable(True)
+        self.fillet_odd_btn.setChecked(False)
+        self.fillet_odd_btn.setText(QtWidgets.QApplication.translate("MainWindow", "#odd", None, -1))
+        self.fillet_odd_btn.clicked.connect(self.optionalSelect)
+        self.fillet_odd_btn.setStyleSheet(buttonStyleCMiddle)     
+  
+        self.fillet_even_btn = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.fillet_even_btn.setGeometry(QtCore.QRect(150, 90, 40, 30))
+        self.fillet_even_btn.setObjectName("fillet_even_btn")
+        self.fillet_even_btn.setCheckable(True)
+        self.fillet_even_btn.setChecked(False)  
+
+        self.fillet_even_btn.setText(QtWidgets.QApplication.translate("MainWindow", "#even", None, -1))
+        self.fillet_even_btn.clicked.connect(self.optionalSelect)
+
+        #self.fillet_even_btn.clicked.connect(self.doAnalyzeCharacterSet)
+        self.fillet_even_btn.setStyleSheet(buttonStyleCMiddle)     
+        
+        self.fillet_n1_btn = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.fillet_n1_btn.setGeometry(QtCore.QRect(190, 90, 30, 30))
+        self.fillet_n1_btn.setObjectName("fillet_n1_btn")
+        self.fillet_n1_btn.setCheckable(True)
+        self.fillet_n1_btn.setChecked(False)  
+        self.fillet_n1_btn.setText(QtWidgets.QApplication.translate("MainWindow", "#1", None, -1))
+        self.fillet_n1_btn.clicked.connect(self.optionalSelect)
+        self.fillet_n1_btn.setStyleSheet(buttonStyleCMiddle)     
+         
+        self.fillet_n2_btn = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.fillet_n2_btn.setGeometry(QtCore.QRect(220, 90, 30, 30))
+        self.fillet_n2_btn.setObjectName("fillet_n2_btn")
+        self.fillet_n2_btn.setCheckable(True)
+        self.fillet_n2_btn.setChecked(False)  
+        self.fillet_n2_btn.setText(QtWidgets.QApplication.translate("MainWindow", "#2", None, -1))
+        self.fillet_n2_btn.clicked.connect(self.optionalSelect)
+        self.fillet_n2_btn.setStyleSheet(buttonStyleCMiddle)      
+        self.fillet_n3_btn = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.fillet_n3_btn.setGeometry(QtCore.QRect(250, 90, 30, 30))
+        self.fillet_n3_btn.setObjectName("fillet_n3_btn")
+        self.fillet_n3_btn.setCheckable(True)
+        self.fillet_n3_btn.setChecked(False)  
+        self.fillet_n3_btn.setText(QtWidgets.QApplication.translate("MainWindow", "#3", None, -1))
+        self.fillet_n3_btn.clicked.connect(self.optionalSelect)
+        self.fillet_n3_btn.setStyleSheet(buttonStyleCMiddle)                   
+                    
+        self.fillet_n4_btn = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.fillet_n4_btn.setGeometry(QtCore.QRect(280, 90, 30, 30))
+        self.fillet_n4_btn.setObjectName("fillet_n4_btn")
+        self.fillet_n4_btn.setCheckable(True)
+        self.fillet_n4_btn.setChecked(False)  
+        self.fillet_n4_btn.setText(QtWidgets.QApplication.translate("MainWindow", "#4", None, -1))
+        self.fillet_n4_btn.clicked.connect(self.optionalSelect)
+        self.fillet_n4_btn.setStyleSheet(buttonStyleCMiddle)                   
+        
+                                     
+        self.fillet_n5_btn = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.fillet_n5_btn.setGeometry(QtCore.QRect(310, 90, 30, 30))
+        self.fillet_n5_btn.setObjectName("fillet_n5_btn")
+        self.fillet_n5_btn.setCheckable(True)
+        self.fillet_n5_btn.setChecked(False)  
+        self.fillet_n5_btn.setText(QtWidgets.QApplication.translate("MainWindow", "#5", None, -1))
+        self.fillet_n5_btn.clicked.connect(self.optionalSelect)
+        self.fillet_n5_btn.setStyleSheet(buttonStyleCMiddle)                   
+                                                                            
+        self.fillet_n6_btn = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.fillet_n6_btn.setGeometry(QtCore.QRect(340, 90, 30, 30))
+        self.fillet_n6_btn.setObjectName("fillet_n6_btn")
+        self.fillet_n6_btn.setCheckable(True)
+        self.fillet_n6_btn.setChecked(False)  
+        self.fillet_n6_btn.setText(QtWidgets.QApplication.translate("MainWindow", "#6", None, -1))
+        self.fillet_n6_btn.clicked.connect(self.optionalSelect)
+        self.fillet_n6_btn.setStyleSheet(buttonStyleCMiddle)                                          
+                                            
+        self.fillet_n7_btn = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.fillet_n7_btn.setGeometry(QtCore.QRect(370, 90, 30, 30))
+        self.fillet_n7_btn.setObjectName("fillet_n7_btn")
+        self.fillet_n7_btn.setCheckable(True)
+        self.fillet_n7_btn.setChecked(False)  
+        self.fillet_n7_btn.setText(QtWidgets.QApplication.translate("MainWindow", "#7", None, -1))
+        self.fillet_n7_btn.clicked.connect(self.optionalSelect)
+        self.fillet_n7_btn.setStyleSheet(buttonStyleCMiddle)       
+                                            
+        self.fillet_n8_btn = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.fillet_n8_btn.setGeometry(QtCore.QRect(400, 90, 30, 30))
+        self.fillet_n8_btn.setObjectName("fillet_n8_btn")
+        self.fillet_n8_btn.setCheckable(True)
+        self.fillet_n8_btn.setChecked(False)  
+        self.fillet_n8_btn.setText(QtWidgets.QApplication.translate("MainWindow", "#8", None, -1))
+        self.fillet_n8_btn.clicked.connect(self.optionalSelect)
+        self.fillet_n8_btn.setStyleSheet(buttonStyleCMiddle)   
+        
+                                            
+        self.fillet_n9_btn = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.fillet_n9_btn.setGeometry(QtCore.QRect(430, 90, 30, 30))
+        self.fillet_n9_btn.setObjectName("fillet_n9_btn")
+        self.fillet_n9_btn.setCheckable(True)
+        self.fillet_n9_btn.setChecked(False)  
+        self.fillet_n9_btn.setText(QtWidgets.QApplication.translate("MainWindow", "#9", None, -1))
+        self.fillet_n9_btn.clicked.connect(self.optionalSelect)
+        self.fillet_n9_btn.setStyleSheet(buttonStyleCMiddle)   
+        
+                                            
+        self.fillet_n0_btn = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.fillet_n0_btn.setGeometry(QtCore.QRect(460, 90, 30, 30))
+        self.fillet_n0_btn.setObjectName("fillet_n0_btn")
+        self.fillet_n0_btn.setCheckable(True)
+        self.fillet_n0_btn.setChecked(False)  
+        self.fillet_n0_btn.setText(QtWidgets.QApplication.translate("MainWindow", "#0", None, -1))
+        self.fillet_n0_btn.clicked.connect(self.optionalSelect)
+        self.fillet_n0_btn.setStyleSheet(buttonStyleCRight)                                                                                                                                               
+                                              
+                                                                                                                                                                                                                                                                                                                                                                                                                     
+        ###### Random Frame keys     
+                                                                                                                      
         self.randomFrameKeyGrp = QtWidgets.QGroupBox(self.dockWidgetImagesInfo)
-        self.randomFrameKeyGrp.setGeometry(QtCore.QRect(10, 260, 530, 260))
+        self.randomFrameKeyGrp.setGeometry(QtCore.QRect(10, 235, 530, 250))
         self.randomFrameKeyGrp.setObjectName("randomFrameKeyGrp")
         self.randomFrameKeyGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
         self.randomFrameKeyGrp.setStyleSheet(QGroupBoxA)     
         self.randomFrameKeyGrp.setVisible(True)
-                                                                      
+                  
+       
+        self.setModAllFrameBTN = QtWidgets.QPushButton(self.randomFrameKeyGrp)
+        self.setModAllFrameBTN.setGeometry(QtCore.QRect(10, 10, 50, 30))
+        self.setModAllFrameBTN.setObjectName("setModAllFrameBTN")
+        self.setModAllFrameBTN.setText(QtWidgets.QApplication.translate("MainWindow", "All", None, -1))
+        self.setModAllFrameBTN.clicked.connect(self.doAnalyzeCharacterSet)
+        self.setModAllFrameBTN.setStyleSheet(buttonStyleB)     
+        
+        self.setModFirstFrameBTN = QtWidgets.QPushButton(self.randomFrameKeyGrp)
+        self.setModFirstFrameBTN.setGeometry(QtCore.QRect(65, 10, 50, 30))
+        self.setModFirstFrameBTN.setObjectName("setModFirstFrameBTN")
+        self.setModFirstFrameBTN.setText(QtWidgets.QApplication.translate("MainWindow", "first", None, -1))
+        self.setModFirstFrameBTN.clicked.connect(self.doAnalyzeCharacterSet)
+        self.setModFirstFrameBTN.setStyleSheet(buttonStyleB)   
+              
+        self.setModLastFrameBTN = QtWidgets.QPushButton(self.randomFrameKeyGrp)
+        self.setModLastFrameBTN.setGeometry(QtCore.QRect(120, 10, 50, 30))
+        self.setModLastFrameBTN.setObjectName("setModLastFrameBTN")
+        self.setModLastFrameBTN.setText(QtWidgets.QApplication.translate("MainWindow", "last", None, -1))
+        self.setModLastFrameBTN.clicked.connect(self.doAnalyzeCharacterSet)
+        self.setModLastFrameBTN.setStyleSheet(buttonStyleB) 
+                                                                                                                    
         self.modFrameIndxLEdt = QtWidgets.QLineEdit(self.randomFrameKeyGrp)
-        self.modFrameIndxLEdt.setGeometry(QtCore.QRect(10,10, 500, 30))
+        self.modFrameIndxLEdt.setGeometry(QtCore.QRect(180,10, 330, 30))
         self.modFrameIndxLEdt.setObjectName("modFrameIndxLEdt")
         self.modFrameIndxLEdt.setText(QtWidgets.QApplication.translate("MainWindow", "all", None, -1))
         self.modFrameIndxLEdt.setStyleSheet(lineEditBDark)     
@@ -1179,7 +1459,19 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
         ##### workSpaceInfoDock
-        self.selectSpineWorkSpaceBtn = QtWidgets.QPushButton(self.workSpaceInfoDock)
+        
+        
+        self.environmentSetGrp = QtWidgets.QGroupBox(self.workSpaceInfoDock)
+        self.environmentSetGrp.setGeometry(QtCore.QRect(10, 20, 530, 215))
+        self.environmentSetGrp.setObjectName("environmentSetGrp")
+        self.environmentSetGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
+        self.environmentSetGrp.setStyleSheet(QGroupBoxA)     
+        self.environmentSetGrp.setVisible(True)
+        
+        
+        
+        
+        self.selectSpineWorkSpaceBtn = QtWidgets.QPushButton(self.environmentSetGrp)
         self.selectSpineWorkSpaceBtn.setGeometry(QtCore.QRect(10, 20, 110,30))
         self.selectSpineWorkSpaceBtn.setObjectName("selectSpineWorkSpaceBtn")
         self.selectSpineWorkSpaceBtn.setText(QtWidgets.QApplication.translate("MainWindow", "work space", None, -1))
@@ -1187,7 +1479,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.selectSpineWorkSpaceBtn.setStyleSheet(buttonStyleLeftB)     
 
  
-        self.spineWorkSpaceLEdit = QtWidgets.QLineEdit(self.workSpaceInfoDock)
+        self.spineWorkSpaceLEdit = QtWidgets.QLineEdit(self.environmentSetGrp)
         self.spineWorkSpaceLEdit.setGeometry(QtCore.QRect(120, 20, 400, 30))
         self.spineWorkSpaceLEdit.setObjectName("spineWorkSpaceLEdit")
         self.spineWorkSpaceLEdit.setAlignment(QtCore.Qt.AlignCenter)
@@ -1195,7 +1487,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.spineWorkSpaceLEdit.setStyleSheet(lineEditRightB)     
         
         
-        self.selectImageDitBtn = QtWidgets.QPushButton(self.workSpaceInfoDock)
+        self.selectImageDitBtn = QtWidgets.QPushButton(self.environmentSetGrp)
         self.selectImageDitBtn.setGeometry(QtCore.QRect(10, 60, 110,30))
         self.selectImageDitBtn.setObjectName("selectImageDitBtn")
         self.selectImageDitBtn.setText(QtWidgets.QApplication.translate("MainWindow", "images Folder", None, -1))
@@ -1203,14 +1495,14 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.selectImageDitBtn.setStyleSheet(buttonStyleLeftB)     
 
  
-        self.spineImagesSpaceLEdit = QtWidgets.QLineEdit(self.workSpaceInfoDock)
+        self.spineImagesSpaceLEdit = QtWidgets.QLineEdit(self.environmentSetGrp)
         self.spineImagesSpaceLEdit.setGeometry(QtCore.QRect(120, 60, 400, 30))
         self.spineImagesSpaceLEdit.setObjectName("spineImagesSpaceLEdit")
         self.spineImagesSpaceLEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.spineImagesSpaceLEdit.setText('')
         self.spineImagesSpaceLEdit.setStyleSheet(lineEditRightB)     
         
-        self.selectExportFolderBtn = QtWidgets.QPushButton(self.workSpaceInfoDock)
+        self.selectExportFolderBtn = QtWidgets.QPushButton(self.environmentSetGrp)
         self.selectExportFolderBtn.setGeometry(QtCore.QRect(10, 100, 110,30))
         self.selectExportFolderBtn.setObjectName("selectExportFolderBtn")
         self.selectExportFolderBtn.setText(QtWidgets.QApplication.translate("MainWindow", "export Folder", None, -1))
@@ -1218,7 +1510,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.selectExportFolderBtn.setStyleSheet(buttonStyleLeftB)     
 
  
-        self.spineExportSpaceLEdit = QtWidgets.QLineEdit(self.workSpaceInfoDock)
+        self.spineExportSpaceLEdit = QtWidgets.QLineEdit(self.environmentSetGrp)
         self.spineExportSpaceLEdit.setGeometry(QtCore.QRect(120, 100, 400, 30))
         self.spineExportSpaceLEdit.setObjectName("spineExportSpaceLEdit")
         self.spineExportSpaceLEdit.setAlignment(QtCore.Qt.AlignCenter)
@@ -1228,33 +1520,16 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 
-        self.createMeshBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.createMeshBtn.setGeometry(QtCore.QRect(170, 170, 150, 50))
-        self.createMeshBtn.setObjectName("createMesh")
-        self.createMeshBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Mesh", None, -1))
-        self.createMeshBtn.clicked.connect(self.definecreateMesh)
-
-        self.createClippingBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.createClippingBtn.setGeometry(QtCore.QRect(340, 170, 150, 50))
-        self.createClippingBtn.setObjectName("createClipping")
-        self.createClippingBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Clip", None, -1))
-        #self.createClippingBtn.clicked.connect(self.definecreateSlotBtn)
-
-
-
-
-
-
-
-        self.createBGBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.createBGBtn.setGeometry(QtCore.QRect(0, 310, 150, 50))
+        self.createBGBtn = QtWidgets.QPushButton(self.environmentSetGrp)
+        self.createBGBtn.setGeometry(QtCore.QRect(10, 140, 110, 30))
         self.createBGBtn.setObjectName("createBGBtn")
         self.createBGBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Define BG", None, -1))
         self.createBGBtn.clicked.connect(self.defineCreateBGBtn)
+        self.createBGBtn.setStyleSheet(buttonStyleLeftB)
 
 
-        self.createBG_comboBox = QtWidgets.QComboBox(self.dockImageButton)
-        self.createBG_comboBox.setGeometry(QtCore.QRect(160, 310, 300, 50))
+        self.createBG_comboBox = QtWidgets.QComboBox(self.environmentSetGrp)
+        self.createBG_comboBox.setGeometry(QtCore.QRect(120, 140, 400, 30))
         self.createBG_comboBox.setObjectName("comboBox")
         itemNameList = ["100x100","200x200","250x250","300x300","400x400",
                          "512x512","600x600","800x800","1000x1000","1024x1024",
@@ -1264,74 +1539,43 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.createBG_comboBox.setItemText(i, QtWidgets.QApplication.translate("MainWindow", itemNameList[i], None, -1))
 
         self.createBG_comboBox.setCurrentIndex(13)
+        self.createBG_comboBox.setStyleSheet(lineEditRightB)
           
           
-        self.jointSizeLabel = QtWidgets.QLabel(self.dockImageButton)
-        self.jointSizeLabel.setGeometry(QtCore.QRect(5, 380, 500, 50))
+        self.jointSizeLabel = QtWidgets.QLabel(self.environmentSetGrp)
+        self.jointSizeLabel.setGeometry(QtCore.QRect(30, 180, 500, 30))
         self.jointSizeLabel.setObjectName("jointSizeLabel")
         self.jointSizeLabel.setText(QtWidgets.QApplication.translate("MainWindow", "joint size", None, -1))
 
-        self.jointSizeValueLabel = QtWidgets.QLabel(self.dockImageButton)
-        self.jointSizeValueLabel.setGeometry(QtCore.QRect(100, 380, 500, 50))
+        self.jointSizeValueLabel = QtWidgets.QLabel(self.environmentSetGrp)
+        self.jointSizeValueLabel.setGeometry(QtCore.QRect(100, 180, 500, 30))
         self.jointSizeValueLabel.setObjectName("jointSizeLabel")
         self.jointSizeValueLabel.setText(QtWidgets.QApplication.translate("MainWindow", "10", None, -1))
 
-        self.horizontalSlider = QtWidgets.QSlider(self.dockImageButton)
-        self.horizontalSlider.setGeometry(QtCore.QRect(150, 380, 300, 50))
+        self.horizontalSlider = QtWidgets.QSlider(self.environmentSetGrp)
+        self.horizontalSlider.setGeometry(QtCore.QRect(150, 180, 300, 30))
         self.horizontalSlider.setMinimum(1)
         self.horizontalSlider.setMaximum(100)
         self.horizontalSlider.setProperty("value", 10)
         self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
         self.horizontalSlider.setObjectName("horizontalSlider")
-       # self.horizontalSlider.valueChanged.connect(self.jointSizeValueChange)
-      #  self.horizontalSlider.setStyleSheet(lineEditA)
-        
-
-        self.setRootBoneJointBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.setRootBoneJointBtn.setGeometry(QtCore.QRect(0, 450, 150, 50))
-        self.setRootBoneJointBtn.setObjectName("setRootBoneBtn")
-        self.setRootBoneJointBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Set Root", None, -1))
-        self.setRootBoneJointBtn.clicked.connect(self.defineRootBone)
 
 
-        self.setRootLineEdit = QtWidgets.QLineEdit(self.dockImageButton)
-        self.setRootLineEdit.setGeometry(QtCore.QRect(170, 450, 300, 50))
-        self.setRootLineEdit.setObjectName("rootJointLineEdit")
-        self.setRootLineEdit.setAlignment(QtCore.Qt.AlignCenter)
+
+
 
         ##
-        self.testABtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.testABtn.setGeometry(QtCore.QRect(0, 520, 150, 50))
-        self.testABtn.setObjectName("setRootBoneBtn")
-        self.testABtn.setText(QtWidgets.QApplication.translate("MainWindow", "testA", None, -1))
-        self.testABtn.clicked.connect(self.run)
-
-        self.testBBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.testBBtn.setGeometry(QtCore.QRect(170, 520, 150, 50))
-        self.testBBtn.setObjectName("testb")
-        self.testBBtn.setText(QtWidgets.QApplication.translate("MainWindow", "testB", None, -1))
-        self.testBBtn.clicked.connect(self.defineAllItemInRootCtrl)
-
-        self.testCBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.testCBtn.setGeometry(QtCore.QRect(340, 520, 150, 50))
-        self.testCBtn.setObjectName("testc")
-        self.testCBtn.setText(QtWidgets.QApplication.translate("MainWindow", "testC", None, -1))
-        self.testCBtn.clicked.connect(self.defineDeformAnimation)
 
 
 
-        self.createMeshBtn.setStyleSheet(buttonStyle)             
-        self.createClippingBtn.setStyleSheet(buttonStyle)             
+       # self.createMeshBtn.setStyleSheet(buttonStyle)             
+       # self.createClippingBtn.setStyleSheet(buttonStyle)             
 
 
-        self.createBGBtn.setStyleSheet(buttonStyle)
-        self.setRootBoneJointBtn.setStyleSheet(buttonStyle)             
-        self.setRootLineEdit.setStyleSheet(buttonStyle)             
-        self.testABtn.setStyleSheet(buttonStyle)             
-        self.testBBtn.setStyleSheet(buttonStyle)             
-        self.testCBtn.setStyleSheet(buttonStyle)             
+        #self.testABtn.setStyleSheet(buttonStyle)             
+        #self.testBBtn.setStyleSheet(buttonStyle)             
+        #self.testCBtn.setStyleSheet(buttonStyle)             
 
-        self.createBG_comboBox.setStyleSheet(buttonStyle)
 
 
         #### dockSpineMeshProgress BTN
@@ -1911,160 +2155,65 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.horizontalSlider_keysA.setObjectName("horizontalSlider_keysA")
         
 
+        #### extra Grp
+        self.extraToolGrp = QtWidgets.QGroupBox(self.dockSpineMeshProgress)
+        self.extraToolGrp.setGeometry(QtCore.QRect(10, 835, 370, 200))
+        self.extraToolGrp.setTitle("")
+        self.extraToolGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
 
-        '''
-        self.label_sf = QtWidgets.QLabel(self.tab_2)
-        self.label_sf.setGeometry(QtCore.QRect(10, 2, 111, 25))
-        font = QtGui.QFont()
-        font.setFamily("Calibri")
-        font.setPointSize(11)
-        self.label_sf.setFont(font)
-        self.label_sf.setObjectName("label_sf")
-        
-        self.pushButton_modifyName_2 = QtWidgets.QPushButton(self.tab_2)
-        self.pushButton_modifyName_2.setEnabled(False)
-        self.pushButton_modifyName_2.setGeometry(QtCore.QRect(230, 670, 181, 25))
-        font = QtGui.QFont()
-        font.setFamily("Calibri")
-        self.pushButton_modifyName_2.setFont(font)
-        self.pushButton_modifyName_2.setObjectName("pushButton_modifyName_2")
-        self.horizontalSlider_numberJoints = QtWidgets.QSlider(self.tab_2)
-        self.horizontalSlider_numberJoints.setGeometry(QtCore.QRect(80, 50, 231, 25))
-        self.horizontalSlider_numberJoints.setMinimum(1)
-        self.horizontalSlider_numberJoints.setMaximum(300)
-        self.horizontalSlider_numberJoints.setOrientation(QtCore.Qt.Horizontal)
-        self.horizontalSlider_numberJoints.setObjectName("horizontalSlider_numberJoints")
-        self.pushButton_createJoint = QtWidgets.QPushButton(self.tab_2)
-        self.pushButton_createJoint.setGeometry(QtCore.QRect(328, 50, 75, 25))
-        font = QtGui.QFont()
-        font.setFamily("Calibri")
-        self.pushButton_createJoint.setFont(font)
-        self.pushButton_createJoint.setObjectName("pushButton_createJoint")
-        self.toolButton_dynReset = QtWidgets.QToolButton(self.tab_2)
-        self.toolButton_dynReset.setEnabled(True)
-        self.toolButton_dynReset.setGeometry(QtCore.QRect(360, 240, 41, 16))
-        '''
-    
-    
-    
-    
+        self.extraToolGrp.setObjectName("extraToolGrp") 
+        self.extraToolGrp.setStyleSheet(QGroupBoxA)     
+        self.extraToolGrp.setVisible(True)
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-        
-        self.testDBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.testDBtn.setGeometry(QtCore.QRect(10, 300, 100, 30))
-        self.testDBtn.setObjectName("testDBtn")
-        self.testDBtn.setText(QtWidgets.QApplication.translate("MainWindow", "testD", None, -1))
-        self.testDBtn.clicked.connect(self.testD)
-        self.testDBtn.setStyleSheet(buttonStyleB)             
-        
-        
-        
-        
-        
-        self.exportLabel = QtWidgets.QLabel(self.dockExport)
-        self.exportLabel.setGeometry(QtCore.QRect(10, 0, 300, 50))
-        self.exportLabel.setObjectName("exportLabel")
-        self.exportLabel.setText(QtWidgets.QApplication.translate("MainWindow", "Export", None, -1))
-        self.exportLabel.setStyleSheet(buttonStyleB)   
-             
-        
-        
-
-        self.setCharacterSetBTn = QtWidgets.QPushButton(self.dockImageButton)
-        self.setCharacterSetBTn.setGeometry(QtCore.QRect(10, 450, 150, 30))
-        self.setCharacterSetBTn.setObjectName("setCharacterSetBTn")
-        self.setCharacterSetBTn.setText(QtWidgets.QApplication.translate("MainWindow", "select Character Set", None, -1))
-        self.setCharacterSetBTn.clicked.connect(self.setCharacterSetName)
-        self.setCharacterSetBTn.setStyleSheet(buttonStyleB)     
-        
-
-        self.exportSpineJsonBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.exportSpineJsonBtn.setGeometry(QtCore.QRect(10, 250, 150, 30))
-        self.exportSpineJsonBtn.setObjectName("exportSpineJson")
-        self.exportSpineJsonBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Export Spine Json", None, -1))
-        self.exportSpineJsonBtn.clicked.connect(self.defineAllItemInRootCtrl)
-        self.exportSpineJsonBtn.setStyleSheet(buttonStyleB)     
-
-       
-        self.analyzeCharacterSet = QtWidgets.QPushButton(self.dockImageButton)
-        self.analyzeCharacterSet.setGeometry(QtCore.QRect(10, 100, 150, 30))
-        self.analyzeCharacterSet.setObjectName("analyzeCharacterSet")
-        self.analyzeCharacterSet.setText(QtWidgets.QApplication.translate("MainWindow", "analyze Character Set", None, -1))
-        self.analyzeCharacterSet.clicked.connect(self.doAnalyzeCharacterSet)
-        self.analyzeCharacterSet.setStyleSheet(buttonStyleB)     
-        
-        
-        
-        
-        
-
-        self.setCharacterSetLineEdit = QtWidgets.QLineEdit(self.dockImageButton)
-        self.setCharacterSetLineEdit.setGeometry(QtCore.QRect(170, 450, 200, 30))
-        self.setCharacterSetLineEdit.setObjectName("rootJointLineEdit")
-        self.setCharacterSetLineEdit.setText(QtWidgets.QApplication.translate("MainWindow", "Character Set Name", None, -1))
-        self.setCharacterSetLineEdit.setAlignment(QtCore.Qt.AlignCenter)
-        self.setCharacterSetLineEdit.setStyleSheet(lineEditA)     
-
-        self.startFrameLabel = QtWidgets.QLabel(self.dockExport)
-        self.startFrameLabel.setGeometry(QtCore.QRect(10, 50, 70, 30))
+        self.startFrameLabel = QtWidgets.QLabel(self.extraToolGrp)
+        self.startFrameLabel.setGeometry(QtCore.QRect(10, 10, 70, 30))
         self.startFrameLabel.setObjectName("startFrameLabel")
         self.startFrameLabel.setText(QtWidgets.QApplication.translate("MainWindow", " Start Frame", None, -1))
         self.startFrameLabel.setStyleSheet(labelA)  
 
 
-        self.timeStartLEdit = QtWidgets.QLineEdit(self.dockExport)
-        self.timeStartLEdit.setGeometry(QtCore.QRect(80, 50, 60, 30))
+        self.timeStartLEdit = QtWidgets.QLineEdit(self.extraToolGrp)
+        self.timeStartLEdit.setGeometry(QtCore.QRect(80, 10, 50, 30))
         self.timeStartLEdit.setObjectName("timeStartLEdit")
         self.timeStartLEdit.setText(QtWidgets.QApplication.translate("MainWindow", "0.0", None, -1))
         self.timeStartLEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.timeStartLEdit.setStyleSheet(lineEditCMiddle)     
 
-        self.endFrameLabel = QtWidgets.QLabel(self.dockExport)
-        self.endFrameLabel.setGeometry(QtCore.QRect(140, 50, 70, 30))
+        self.endFrameLabel = QtWidgets.QLabel(self.extraToolGrp)
+        self.endFrameLabel.setGeometry(QtCore.QRect(130, 10, 70, 30))
         self.endFrameLabel.setObjectName("endFrameLabel")
         self.endFrameLabel.setText(QtWidgets.QApplication.translate("MainWindow", "  End Frame", None, -1))
         self.endFrameLabel.setStyleSheet(labelAMiddle)  
 
 
-        self.timeEndLEdit = QtWidgets.QLineEdit(self.dockExport)
-        self.timeEndLEdit.setGeometry(QtCore.QRect(210, 50, 60, 30))
+        self.timeEndLEdit = QtWidgets.QLineEdit(self.extraToolGrp)
+        self.timeEndLEdit.setGeometry(QtCore.QRect(200, 10, 60, 30))
         self.timeEndLEdit.setObjectName("timeEndLEdit")
         self.timeEndLEdit.setText(QtWidgets.QApplication.translate("MainWindow", "120.0", None, -1))
         self.timeEndLEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.timeEndLEdit.setStyleSheet(lineEditCMiddle)   
         
-        self.fpsLabel = QtWidgets.QLabel(self.dockExport)
-        self.fpsLabel.setGeometry(QtCore.QRect(270, 50, 50, 30))
+        self.fpsLabel = QtWidgets.QLabel(self.extraToolGrp)
+        self.fpsLabel.setGeometry(QtCore.QRect(260, 10, 50, 30))
         self.fpsLabel.setObjectName("fpsLabel")
         self.fpsLabel.setText(QtWidgets.QApplication.translate("MainWindow", "  FPS", None, -1))
         self.fpsLabel.setStyleSheet(labelAMiddle)  
           
-        self.fpsLEdit = QtWidgets.QLineEdit(self.dockExport)
-        self.fpsLEdit.setGeometry(QtCore.QRect(320, 50, 50, 30))
+        self.fpsLEdit = QtWidgets.QLineEdit(self.extraToolGrp)
+        self.fpsLEdit.setGeometry(QtCore.QRect(310, 10, 50, 30))
         self.fpsLEdit.setObjectName("fpsLEdit")
         self.fpsLEdit.setText(QtWidgets.QApplication.translate("MainWindow", "30.0", None, -1))
         self.fpsLEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.fpsLEdit.setStyleSheet(lineEditC)               
   
-        self.exportSpineRootLabel = QtWidgets.QLabel(self.dockExport)
-        self.exportSpineRootLabel.setGeometry(QtCore.QRect(10, 100, 110, 30))
+        self.exportSpineRootLabel = QtWidgets.QLabel(self.extraToolGrp)
+        self.exportSpineRootLabel.setGeometry(QtCore.QRect(10, 50, 110, 30))
         self.exportSpineRootLabel.setObjectName("exportSpineRootLabel")
         self.exportSpineRootLabel.setText(QtWidgets.QApplication.translate("MainWindow", " export Spine Root", None, -1))
         self.exportSpineRootLabel.setStyleSheet(labelA)  
                
-        self.exportSpineRootLabelLEdit = QtWidgets.QLineEdit(self.dockExport)
-        self.exportSpineRootLabelLEdit.setGeometry(QtCore.QRect(120, 100, 250, 30))
+        self.exportSpineRootLabelLEdit = QtWidgets.QLineEdit(self.extraToolGrp)
+        self.exportSpineRootLabelLEdit.setGeometry(QtCore.QRect(120, 50, 240, 30))
         self.exportSpineRootLabelLEdit.setObjectName("exportSpineRootLabelLEdit")
         self.exportSpineRootLabelLEdit.setText(QtWidgets.QApplication.translate("MainWindow", "spine_RootSkeleton", None, -1))
         self.exportSpineRootLabelLEdit.setAlignment(QtCore.Qt.AlignCenter)
@@ -2072,23 +2221,127 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
  
                                                           
         
-        self.selectExportFileBTn = QtWidgets.QPushButton(self.dockExport)
-        self.selectExportFileBTn.setGeometry(QtCore.QRect(10, 150, 110,30))
+        self.selectExportFileBTn = QtWidgets.QPushButton(self.extraToolGrp)
+        self.selectExportFileBTn.setGeometry(QtCore.QRect(10, 90, 110,30))
         self.selectExportFileBTn.setObjectName("selectExportFileBTn")
         self.selectExportFileBTn.setText(QtWidgets.QApplication.translate("MainWindow", "file name", None, -1))
         self.selectExportFileBTn.clicked.connect(self.defineExportFileName)
         self.selectExportFileBTn.setStyleSheet(buttonStyleLeftB)     
 
  
-        self.selectExportFileBTnLEdit = QtWidgets.QLineEdit(self.dockExport)
-        self.selectExportFileBTnLEdit.setGeometry(QtCore.QRect(120, 150, 250, 30))
+        self.selectExportFileBTnLEdit = QtWidgets.QLineEdit(self.extraToolGrp)
+        self.selectExportFileBTnLEdit.setGeometry(QtCore.QRect(120, 90, 240, 30))
         self.selectExportFileBTnLEdit.setObjectName("rootJointLineEdit")
         self.selectExportFileBTnLEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.selectExportFileBTnLEdit.setText('')
         self.selectExportFileBTnLEdit.setStyleSheet(lineEditRightB)     
 
-          
-                    
+              
+
+    
+    
+    
+        
+
+    
+
+
+        
+
+        self.exportSpineJsonBtn = QtWidgets.QPushButton(self.dockImageButton)
+        self.exportSpineJsonBtn.setGeometry(QtCore.QRect(150, 20, 130, 30))
+        self.exportSpineJsonBtn.setObjectName("exportSpineJson")
+        self.exportSpineJsonBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Export Spine Json", None, -1))
+        self.exportSpineJsonBtn.clicked.connect(self.defineAllItemInRootCtrl)
+        self.exportSpineJsonBtn.setStyleSheet(buttonStyleB)     
+
+       
+        self.analyzeCharacterSet = QtWidgets.QPushButton(self.dockImageButton)
+        self.analyzeCharacterSet.setGeometry(QtCore.QRect(10, 20, 130, 30))
+        self.analyzeCharacterSet.setObjectName("analyzeCharacterSet")
+        self.analyzeCharacterSet.setText(QtWidgets.QApplication.translate("MainWindow", "analyze Character Set", None, -1))
+        self.analyzeCharacterSet.clicked.connect(self.doAnalyzeCharacterSet)
+        self.analyzeCharacterSet.setStyleSheet(buttonStyleB)     
+        
+        
+        
+        self.setCharacterSetBTn = QtWidgets.QPushButton(self.dockImageButton)
+        self.setCharacterSetBTn.setGeometry(QtCore.QRect(10, 60, 130, 30))
+        self.setCharacterSetBTn.setObjectName("setCharacterSetBTn")
+        self.setCharacterSetBTn.setText(QtWidgets.QApplication.translate("MainWindow", "select Character Set", None, -1))
+        self.setCharacterSetBTn.clicked.connect(self.setCharacterSetName)
+        self.setCharacterSetBTn.setStyleSheet(buttonStyleB)             
+        
+
+        self.setCharacterSetLineEdit = QtWidgets.QLineEdit(self.dockImageButton)
+        self.setCharacterSetLineEdit.setGeometry(QtCore.QRect(150, 60, 130, 30))
+        self.setCharacterSetLineEdit.setObjectName("rootJointLineEdit")
+        self.setCharacterSetLineEdit.setText(QtWidgets.QApplication.translate("MainWindow", "Character Set Name", None, -1))
+        self.setCharacterSetLineEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.setCharacterSetLineEdit.setStyleSheet(lineEditA)     
+
+
+
+        self.createMeshBtn = QtWidgets.QPushButton(self.dockImageButton)
+        self.createMeshBtn.setGeometry(QtCore.QRect(290, 20, 100, 30))
+        self.createMeshBtn.setObjectName("createMesh")
+        self.createMeshBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Mesh", None, -1))
+        self.createMeshBtn.clicked.connect(self.definecreateMesh)
+        self.createMeshBtn.setStyleSheet(buttonStyleB)             
+
+        self.createClippingBtn = QtWidgets.QPushButton(self.dockImageButton)
+        self.createClippingBtn.setGeometry(QtCore.QRect(400, 20, 100, 30))
+        self.createClippingBtn.setObjectName("createClipping")
+        self.createClippingBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Clip", None, -1))
+        #self.createClippingBtn.clicked.connect(self.definecreateSlotBtn)
+        self.createClippingBtn.setStyleSheet(buttonStyleB)             
+
+
+
+        
+
+        self.setRootBoneJointBtn = QtWidgets.QPushButton(self.dockImageButton)
+        self.setRootBoneJointBtn.setGeometry(QtCore.QRect(290, 60, 100, 30))
+        self.setRootBoneJointBtn.setObjectName("setRootBoneBtn")
+        self.setRootBoneJointBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Set Root", None, -1))
+        self.setRootBoneJointBtn.clicked.connect(self.defineRootBone)
+        self.setRootBoneJointBtn.setStyleSheet(buttonStyleB)             
+
+
+        self.setRootLineEdit = QtWidgets.QLineEdit(self.dockImageButton)
+        self.setRootLineEdit.setGeometry(QtCore.QRect(400, 60, 100, 30))
+        self.setRootLineEdit.setObjectName("rootJointLineEdit")
+        self.setRootLineEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.setRootLineEdit.setStyleSheet(lineEditA)             
+     
+        self.testABtn = QtWidgets.QPushButton(self.dockImageButton)
+        self.testABtn.setGeometry(QtCore.QRect(10, 100, 130, 30))
+        self.testABtn.setObjectName("setRootBoneBtn")
+        self.testABtn.setText(QtWidgets.QApplication.translate("MainWindow", "testA", None, -1))
+        self.testABtn.clicked.connect(self.run)
+        self.testABtn.setStyleSheet(buttonStyleB)             
+
+        self.testBBtn = QtWidgets.QPushButton(self.dockImageButton)
+        self.testBBtn.setGeometry(QtCore.QRect(150, 100, 130, 30))
+        self.testBBtn.setObjectName("testb")
+        self.testBBtn.setText(QtWidgets.QApplication.translate("MainWindow", "testB", None, -1))
+        self.testBBtn.clicked.connect(self.defineAllItemInRootCtrl)
+        self.testBBtn.setStyleSheet(buttonStyleB)             
+
+        self.testCBtn = QtWidgets.QPushButton(self.dockImageButton)
+        self.testCBtn.setGeometry(QtCore.QRect(290, 100, 100, 30))
+        self.testCBtn.setObjectName("testc")
+        self.testCBtn.setText(QtWidgets.QApplication.translate("MainWindow", "testC", None, -1))
+        self.testCBtn.clicked.connect(self.defineDeformAnimation)
+        self.testCBtn.setStyleSheet(buttonStyleB)             
+         
+        self.testDBtn = QtWidgets.QPushButton(self.dockImageButton)
+        self.testDBtn.setGeometry(QtCore.QRect(400, 100, 100, 30))
+        self.testDBtn.setObjectName("testDBtn")
+        self.testDBtn.setText(QtWidgets.QApplication.translate("MainWindow", "testD", None, -1))
+        self.testDBtn.clicked.connect(self.testD)
+        self.testDBtn.setStyleSheet(buttonStyleB)             
+                          
     def slotAmountEditChange(self):                       
         inputEditValue = self.amountSliderNumLEdit.text()
         self.amountSlotSlider.setValue(int(inputEditValue))                                                                        
@@ -3361,8 +3614,113 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                                 "blend":slotBlend})  #additive
         return slotList
   
-          
+    def getSelectSlotBone(self):
+        print "getSelectSlotBone"
+        allSelectorBone = cmds.ls(sl=True,type='joint')
+        self.currentSelectBone = []
+        for i in allSelectorBone:
+            if cmds.getAttr('%s.spine_tag'%i) == "spine_bone":
+                self.currentSelectBone.append(i)
+        self.showAllSelectedObjLedit.setText(str(self.currentSelectBone))
+        #cmds.
+        
+    def renameSelectedBone(self):
+        print "renameSelectedBone"
+        newName = self.newNameSelectedLEdit.text()
+       # print newName,self.currentSelectBone
+        fileCount = len(self.currentSelectBone)
+        try:
+            for i in range(0,fileCount):
+               # print #'{:04d}'.format(i)
+                newBoneName = str(newName+'_'+'{:04d}'.format(i))
+                newSlotName = str(newName+'_S_'+'{:04d}'.format(i))
+                newShapeName = str(newName+'_S_Shape_'+'{:04d}'.format(i))
+                bone = self.currentSelectBone[i]
+                slot = cmds.listRelatives(bone,c=True,type ='transform')[0]
+                shape = cmds.listRelatives(slot,c=True,type ='mesh')[0]
+               # print bone,slot,shape,newBoneName,newSlotName,newShapeName
+                cmds.setAttr('%s.bone_name'%bone,newBoneName,type='string')
+                cmds.setAttr('%s.bone_slot'%bone,newSlotName,type='string')
+                cmds.rename('%s'%bone,'%s'%newBoneName)
+                cmds.rename('%s'%slot,'%s'%newSlotName)
+                cmds.rename('%s'%shape,'%s'%newShapeName)
+        except:
+            pass
+        self.getSelectSlotBone()
+           # for j in self.currentSelectBone:
+               # print i
+        #cmds.listRelatives('star_A02_5',c=True,type = 'mesh')
+    
+    def optionalSelect(self):
+            # print 'optionalSelect'     #1,2,3,4,5,6,7,8,9,0
+        #self.currentOptionSelectState = [0,0,0,0,0,0,0,0,0,0]
+        currentOptionSelectState = []
+        if self.fillet_odd_btn.isChecked() == True:
+            currentOptionSelectState.append("1")
+            currentOptionSelectState.append("3")
+            currentOptionSelectState.append("5")
+            currentOptionSelectState.append("7")
+            currentOptionSelectState.append("9")
 
+        if self.fillet_even_btn.isChecked() == True: 
+            currentOptionSelectState.append("2")
+            currentOptionSelectState.append("4")
+            currentOptionSelectState.append("6")
+            currentOptionSelectState.append("8")
+            currentOptionSelectState.append("0")
+            
+        if self.fillet_n1_btn.isChecked() == True: 
+            currentOptionSelectState.append("1")
+            
+        if self.fillet_n2_btn.isChecked() == True: 
+            currentOptionSelectState.append("2")
+            
+        if self.fillet_n3_btn.isChecked() == True: 
+            currentOptionSelectState.append("3")
+            
+        if self.fillet_n4_btn.isChecked() == True: 
+            currentOptionSelectState.append("4")
+            
+        if self.fillet_n5_btn.isChecked() == True: 
+            currentOptionSelectState.append("5")
+            
+        if self.fillet_n6_btn.isChecked() == True: 
+            currentOptionSelectState.append("6")
+            
+        if self.fillet_n7_btn.isChecked() == True: 
+            currentOptionSelectState.append("7")
+            
+        if self.fillet_n8_btn.isChecked() == True: 
+            currentOptionSelectState.append("8")
+            
+        if self.fillet_n9_btn.isChecked() == True: 
+            currentOptionSelectState.append("9")
+            
+        if self.fillet_n0_btn.isChecked() == True: 
+            currentOptionSelectState.append("0")
+
+       # print self.fillet_odd_btn.isChecked()
+       # print self.fillet_even_btn.isChecked()
+        currentOptionSelectState = sorted(currentOptionSelectState)
+       # print currentOptionSelectState
+        filletSelect = []
+        for i in currentOptionSelectState:
+            if i in filletSelect:
+                pass
+            else:
+                filletSelect.append(i)
+        #print filletSelect
+        newSelect = []
+        for i in self.currentSelectBone:
+            #print i[-1]
+            if str(i[-1]) in filletSelect:
+              #  print i
+                newSelect.append(i)
+        #print newSelect
+        cmds.select(cl=True)
+        cmds.select(newSelect)
+       
+                           
     def getAllSlots(self,boneList):
         print "getAllSlots"
         slotList = []
@@ -3904,9 +4262,9 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def createSlot(self):
         print "createSlotBtn" 
-        #errMsg = "create Slot fail"
-        #self.initialSpineItemTree()
-        #print errMsg
+        
+        slotAmount = int(self.amountSliderNumLEdit.text())
+
         selectedImageCount = 0
         try:
             selectedImageCount = len(self.imageListTable.selectedItems())
@@ -3921,7 +4279,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.errorMsgLEdit.setText('pls select one image from Table')
         else:
             
-            slotName = currentImage.split('.')[0]
+            slotName = currentImage.split('.')[0] #+ '{:04}'.format(0)
             
         print 'selectedImageCount',selectedImageCount,currentImage,slotName
 
@@ -3937,53 +4295,56 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 
             elif len(parentBone) == 1:
                 try:
-                    if cmds.getAttr('%s.spine_tag'%parentBone[0]) == "spine_RootSkeleton" or cmds.getAttr('%s.spine_tag'%parentBone[0]) == "spine_bone":
-                        self.errorMsgLEdit.setText(currentImage)
-                        imageSize = self.imageInfoTable.item(10,1).text()[1:-1].split(' ')
-                        fileName = self.imageInfoTable.item(2,1).text()
+                    for c in range(0,slotAmount):
+                        if cmds.getAttr('%s.spine_tag'%parentBone[0]) == "spine_RootSkeleton" or cmds.getAttr('%s.spine_tag'%parentBone[0]) == "spine_bone":
+                            self.errorMsgLEdit.setText(currentImage)
+                            imageSize = self.imageInfoTable.item(10,1).text()[1:-1].split(' ')
+                            fileName = self.imageInfoTable.item(2,1).text()
 
-                        imageW = int(imageSize[0])
-                        imageH = int(imageSize[1])
-                        slotPlane = str(cmds.polyPlane(n='%s_#'%slotName,sx=1,sy=1)[0])
-                        cmds.setAttr('%s.rotateX'%slotPlane,90)
-                        cmds.setAttr('%s.scaleX'%slotPlane,imageW)
-                        cmds.setAttr('%s.scaleZ'%slotPlane,imageH)
-                        
+                            imageW = int(imageSize[0])
+                            imageH = int(imageSize[1])
+                            slotPlane = str(cmds.polyPlane(n='%s_#'%slotName,sx=1,sy=1)[0])
+                            cmds.setAttr('%s.rotateX'%slotPlane,90)
+                            cmds.setAttr('%s.scaleX'%slotPlane,imageW)
+                            cmds.setAttr('%s.scaleZ'%slotPlane,imageH)
+                            
 
-                        self.assignSurfaceShader(slotName,slotPlane,fileName)
-                        
-                        ###create bone for slot
-                        boneName = "bone_%s"%slotPlane
+                            self.assignSurfaceShader(slotName,slotPlane,fileName)
+                            
+                           # boneName = 'bone_'+'{:04d}'.format(0)
 
-                        self.createBone(boneName)
-                        print 'bone',boneName
-                        print 'slotPlane',slotPlane,imageW,imageH
-                       # cmds.setAttr('%s.bone_name'%boneName,newBoneName,type='string')
-                        cmds.setAttr('%s.bone_parent'%boneName,parentBone[0],type='string')
-                        cmds.setAttr('%s.bone_slot'%boneName,slotPlane,type='string')
-                        cmds.setAttr('%s.slot_width'%boneName,imageW)
-                        cmds.setAttr('%s.slot_height'%boneName,imageH)
-                       # attachmentFile = cmds.getAttr('%s.slot_attachment'%slotPlane)
-                       # print 'attachmentFile',attachmentFile 
-                       # cmds.setAttr('%s.slot_attachment'%bone,attachmentFile,type='string')
+                            ###create bone for slot
+                            boneName = "bone_%s"%slotPlane # + '{:04d}'.format(0)
 
-                      #  print 
-      
-                        #cmds.rename(bone,newBoneName)
-                        self.defineSlot(slotPlane,boneName)
-                        attachmentFile = str(cmds.getAttr('%s.slot_attachment'%slotPlane))
-                        print 'attachmentFile',attachmentFile 
-                        cmds.setAttr('%s.slot_attachment'%boneName,attachmentFile,type='string')
-                        cmds.parent(slotPlane,boneName)
-                        cmds.parent(boneName,parentBone[0])
+                            self.createBone(boneName)
+                            print 'bone',boneName
+                            print 'slotPlane',slotPlane,imageW,imageH
+                           # cmds.setAttr('%s.bone_name'%boneName,newBoneName,type='string')
+                            cmds.setAttr('%s.bone_parent'%boneName,parentBone[0],type='string')
+                            cmds.setAttr('%s.bone_slot'%boneName,slotPlane,type='string')
+                            cmds.setAttr('%s.slot_width'%boneName,imageW)
+                            cmds.setAttr('%s.slot_height'%boneName,imageH)
+                           # attachmentFile = cmds.getAttr('%s.slot_attachment'%slotPlane)
+                           # print 'attachmentFile',attachmentFile 
+                           # cmds.setAttr('%s.slot_attachment'%bone,attachmentFile,type='string')
 
-                        cmds.setAttr('%s.slot_width'%slotPlane,imageW)
-                        cmds.setAttr('%s.slot_height'%slotPlane,imageH)
-                        
-                       # cmds.parent(bone,)
-                        cmds.select(parentBone[0])
-                    else:
-                        self.errorMsgLEdit.setText('selected Bone is uncorrect')
+                          #  print 
+          
+                            #cmds.rename(bone,newBoneName)
+                            self.defineSlot(slotPlane,boneName)
+                            attachmentFile = str(cmds.getAttr('%s.slot_attachment'%slotPlane))
+                            print 'attachmentFile',attachmentFile 
+                            cmds.setAttr('%s.slot_attachment'%boneName,attachmentFile,type='string')
+                            cmds.parent(slotPlane,boneName)
+                            cmds.parent(boneName,parentBone[0])
+
+                            cmds.setAttr('%s.slot_width'%slotPlane,imageW)
+                            cmds.setAttr('%s.slot_height'%slotPlane,imageH)
+                            
+                           # cmds.parent(bone,)
+                            cmds.select(parentBone[0])
+                        else:
+                            self.errorMsgLEdit.setText('selected Bone is uncorrect')
                 except:
                     self.errorMsgLEdit.setText('selected Bone is uncorrect')
                        
