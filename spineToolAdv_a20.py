@@ -12,6 +12,9 @@ import maya.cmds as cmds
 import maya.OpenMaya as om
 import maya.OpenMayaUI as mui
 import shiboken2
+import random
+
+
 #from PySide2.QtCore import QString
 import os,math,json
 import sys,subprocess
@@ -70,7 +73,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             pass
         #defineDockCamview
         self.createImageInfoTable()
-           
+        self.enableDynaSlotCheck.stateChanged.connect(self.enableDynamicSlot)   
            
            
     def initialWorkSpace(self):
@@ -110,7 +113,17 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.selectSpineJobBtn.setChecked(True)
         #self.defineAllSlotInSpine()
           #  self.imageListTable.clear()
-           
+    def enableDynamicSlot(self):
+        print "enableDynamicSlot"
+     #   print self.enableDynaSlotCheck.isChecked()
+        if self.enableDynaSlotCheck.isChecked() == True:
+           # print "aaaaaa"
+            self.dynamicSlotGrp.setEnabled(True)
+
+        else:
+          #  print "bbbbb"
+            self.dynamicSlotGrp.setEnabled(False)
+
     def createDock(self):
         print "createDock"
         self.dockWidgetImages = QtWidgets.QDockWidget(self)
@@ -893,11 +906,22 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
  
         self.showAllSelectedObjLedit = QtWidgets.QLineEdit(self.filletSelectGrp)
-        self.showAllSelectedObjLedit.setGeometry(QtCore.QRect(110, 10, 300, 30))
+        self.showAllSelectedObjLedit.setGeometry(QtCore.QRect(110, 10, 305, 30))
         self.showAllSelectedObjLedit.setObjectName("showAllSelectedObjLedit")
         self.showAllSelectedObjLedit.setAlignment(QtCore.Qt.AlignCenter)
         self.showAllSelectedObjLedit.setText('')
         self.showAllSelectedObjLedit.setStyleSheet(lineEditRightBDark)          
+        
+        
+        self.selectAnyTransform = QtWidgets.QPushButton(self.filletSelectGrp)
+        self.selectAnyTransform.setGeometry(QtCore.QRect(420, 10, 90, 30))
+        self.selectAnyTransform.setObjectName("createClipping")
+        self.selectAnyTransform.setText(QtWidgets.QApplication.translate("MainWindow", "select Any", None, -1))
+        self.selectAnyTransform.clicked.connect(self.getSelectAnyTransform)
+        self.selectAnyTransform.setStyleSheet(buttonStyleB)             
+
+
+
         
  
         self.renameAllSelectBtn = QtWidgets.QPushButton(self.filletSelectGrp)
@@ -1807,6 +1831,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.dynamicSlotGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
         self.dynamicSlotGrp.setStyleSheet(QGroupBoxA)     
         self.dynamicSlotGrp.setVisible(True)
+        self.dynamicSlotGrp.setEnabled(False)
      
 
  
@@ -1821,6 +1846,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                  QRadioButton {\
                  text-align:center;\
                  color:#aaaaaa;\
+                 }\
+                 QRadioButton:Disable {\
+                 text-align:center;\
+                 color:#333333;\
                  }\
                  "     
         optionLabelA  = "\
@@ -1865,7 +1894,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.slotDynaStartFrame.setGeometry(QtCore.QRect(20, 10, 60, 20))
         self.slotDynaStartFrame.setObjectName("slotDynaStartFrame")
         self.slotDynaStartFrame.setText(QtWidgets.QApplication.translate("MainWindow", "Start Frame", None, -1))  
-        self.slotDynaStartFrame.setStyleSheet(optionLabelA)   
+       # self.slotDynaStartFrame.setStyleSheet(optionLabelA)   
         
         self.lineEdit_shapeStartFrame = QtWidgets.QLineEdit(self.dynamicSlotGrp)
         self.lineEdit_shapeStartFrame.setGeometry(QtCore.QRect(90, 10, 40, 20))
@@ -1878,7 +1907,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.slotDynaEndFrame.setGeometry(QtCore.QRect(140, 10, 60, 20))
         self.slotDynaEndFrame.setObjectName("slotDynaEndFrame")
         self.slotDynaEndFrame.setText(QtWidgets.QApplication.translate("MainWindow", "End Frame", None, -1))  
-        self.slotDynaEndFrame.setStyleSheet(optionLabelA)   
+       # self.slotDynaEndFrame.setStyleSheet(optionLabelA)   
 
         self.lineEdit_shapeEndFrame = QtWidgets.QLineEdit(self.dynamicSlotGrp)
         self.lineEdit_shapeEndFrame.setGeometry(QtCore.QRect(210, 10, 40, 20))
@@ -1889,9 +1918,9 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.checkBox_offsetRandom = QtWidgets.QCheckBox(self.dynamicSlotGrp)
         self.checkBox_offsetRandom.setGeometry(QtCore.QRect(270, 10, 73, 20))
         self.checkBox_offsetRandom.setChecked(True)
-        self.checkBox_offsetRandom.setObjectName("checkBox_offsetRandom_2")
+        self.checkBox_offsetRandom.setObjectName("checkBox_offsetRandom")
         self.checkBox_offsetRandom.setText(QtWidgets.QApplication.translate("MainWindow", "random", None, -1))
-        self.checkBox_offsetRandom.setStyleSheet(optionEditA)   
+       # self.checkBox_offsetRandom.setStyleSheet(optionEditA)   
 
 
 
@@ -1903,13 +1932,13 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.radioButton_createRad.setChecked(True)
         self.radioButton_createRad.setObjectName("radioButton_createRad")
         self.radioButton_createRad.setText(QtWidgets.QApplication.translate("MainWindow", "Radiation", None, -1))
-        self.radioButton_createRad.setStyleSheet(radioBtnStyleA)     
+        #self.radioButton_createRad.setStyleSheet(radioBtnStyleA)     
         
         self.RValueLabel = QtWidgets.QLabel(self.dynamicSlotGrp)
         self.RValueLabel.setGeometry(QtCore.QRect(100, 40, 30, 20))
         self.RValueLabel.setObjectName("RValueLabel")
         self.RValueLabel.setText(QtWidgets.QApplication.translate("MainWindow", "R:", None, -1))
-        self.RValueLabel.setStyleSheet(optionLabelA)   
+        #self.RValueLabel.setStyleSheet(optionLabelA)   
         
         self.lineEdit_RadiusA = QtWidgets.QLineEdit(self.dynamicSlotGrp)
         self.lineEdit_RadiusA.setEnabled(True)
@@ -1923,7 +1952,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.radioButton_createSquare.setGeometry(QtCore.QRect(20, 70, 70, 20))
         self.radioButton_createSquare.setObjectName("radioButton_createSquare")  
         self.radioButton_createSquare.setText(QtWidgets.QApplication.translate("MainWindow", "Square", None, -1))
-        self.radioButton_createSquare.setStyleSheet(radioBtnStyleA)        
+       # self.radioButton_createSquare.setStyleSheet(radioBtnStyleA)        
          
         self.lineEdit_widthSquare = QtWidgets.QLineEdit(self.dynamicSlotGrp)
         self.lineEdit_widthSquare.setEnabled(False)
@@ -1936,7 +1965,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.label_WidthSquare.setGeometry(QtCore.QRect(100, 70, 30, 20))
         self.label_WidthSquare.setObjectName("label_WidthSquare")
         self.label_WidthSquare.setText(QtWidgets.QApplication.translate("MainWindow", "W:", None, -1))
-        self.label_WidthSquare.setStyleSheet(optionLabelA)   
+        #self.label_WidthSquare.setStyleSheet(optionLabelA)   
 
         self.lineEdit_HeightA = QtWidgets.QLineEdit(self.dynamicSlotGrp)
         self.lineEdit_HeightA.setEnabled(False)
@@ -1950,14 +1979,14 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.label_HeighthSquare.setGeometry(QtCore.QRect(160, 70, 30, 20))
         self.label_HeighthSquare.setObjectName("label_HeighthSquare")                    
         self.label_HeighthSquare.setText(QtWidgets.QApplication.translate("MainWindow", "H:", None, -1))
-        self.label_HeighthSquare.setStyleSheet(optionLabelA)                      
+        #self.label_HeighthSquare.setStyleSheet(optionLabelA)                      
                         
         self.checkBox_squareFillIn = QtWidgets.QCheckBox(self.dynamicSlotGrp)
         self.checkBox_squareFillIn.setGeometry(QtCore.QRect(270, 70, 70, 20))
         self.checkBox_squareFillIn.setChecked(False)
         self.checkBox_squareFillIn.setObjectName("checkBox_squareFillIn")   
         self.checkBox_squareFillIn.setText(QtWidgets.QApplication.translate("MainWindow", "Fill in", None, -1))
-        self.checkBox_squareFillIn.setStyleSheet(optionEditA)   
+        #self.checkBox_squareFillIn.setStyleSheet(optionEditA)   
  
                           
            
@@ -1967,14 +1996,14 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.radioButton_createSector.setGeometry(QtCore.QRect(20, 100, 70, 20))
         self.radioButton_createSector.setObjectName("radioButton_createSector")
         self.radioButton_createSector.setText(QtWidgets.QApplication.translate("MainWindow", "Sector", None, -1))
-        self.radioButton_createSector.setStyleSheet(radioBtnStyleA)        
+        #self.radioButton_createSector.setStyleSheet(radioBtnStyleA)        
 
                                                                                                               
         self.label_dynaSectorDegree = QtWidgets.QLabel(self.dynamicSlotGrp)
         self.label_dynaSectorDegree.setGeometry(QtCore.QRect(100, 100, 30, 20))
         self.label_dynaSectorDegree.setObjectName("label_dynaSectorDegree")                                                
         self.label_dynaSectorDegree.setText(QtWidgets.QApplication.translate("MainWindow", "D:", None, -1))
-        self.label_dynaSectorDegree.setStyleSheet(optionLabelA)                      
+       # self.label_dynaSectorDegree.setStyleSheet(optionLabelA)                      
                                                                      
         self.lineEdit_AngleA_start = QtWidgets.QLineEdit(self.dynamicSlotGrp)
         self.lineEdit_AngleA_start.setEnabled(False)
@@ -1997,13 +2026,13 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.radioButton_createDirection.setObjectName("radioButton_createDirection")
         
         self.radioButton_createDirection.setText(QtWidgets.QApplication.translate("MainWindow", "Direction", None, -1))
-        self.radioButton_createDirection.setStyleSheet(radioBtnStyleA)        
+        #self.radioButton_createDirection.setStyleSheet(radioBtnStyleA)        
 
         self.label_dynDirectionX = QtWidgets.QLabel(self.dynamicSlotGrp)
         self.label_dynDirectionX.setGeometry(QtCore.QRect(100, 130, 30, 20))
         self.label_dynDirectionX.setObjectName("label_dynDirectionX")
         self.label_dynDirectionX.setText(QtWidgets.QApplication.translate("MainWindow", "X:", None, -1))
-        self.label_dynDirectionX.setStyleSheet(optionLabelA)    
+       # self.label_dynDirectionX.setStyleSheet(optionLabelA)    
         
                           
         self.lineEdit_DirectionX = QtWidgets.QLineEdit(self.dynamicSlotGrp)
@@ -2017,7 +2046,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.label_dynDirectionY.setGeometry(QtCore.QRect(160, 130, 30, 20))
         self.label_dynDirectionY.setObjectName("label_dynDirectionY")
         self.label_dynDirectionY.setText(QtWidgets.QApplication.translate("MainWindow", "Y:", None, -1))
-        self.label_dynDirectionY.setStyleSheet(optionLabelA)    
+       # self.label_dynDirectionY.setStyleSheet(optionLabelA)    
         
         self.lineEdit_DirectionY = QtWidgets.QLineEdit(self.dynamicSlotGrp)
         self.lineEdit_DirectionY.setEnabled(False)
@@ -2030,7 +2059,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.label_dynDirectionD.setGeometry(QtCore.QRect(220, 130, 30, 20))
         self.label_dynDirectionD.setObjectName("label_dynDirectionD")     
         self.label_dynDirectionD.setText(QtWidgets.QApplication.translate("MainWindow", "D:", None, -1))
-        self.label_dynDirectionD.setStyleSheet(optionLabelA)    
+        #self.label_dynDirectionD.setStyleSheet(optionLabelA)    
         
        
         self.lineEdit_directionDegree = QtWidgets.QLineEdit(self.dynamicSlotGrp)
@@ -2062,7 +2091,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.radioButton_createFollowCurve.setGeometry(QtCore.QRect(20, 160, 110, 20))
         self.radioButton_createFollowCurve.setObjectName("radioButton_createFollowCurve")
         self.radioButton_createFollowCurve.setText(QtWidgets.QApplication.translate("MainWindow", "Follow Curve", None, -1))
-        self.radioButton_createFollowCurve.setStyleSheet(radioBtnStyleA)        
+       # self.radioButton_createFollowCurve.setStyleSheet(radioBtnStyleA)        
 
 
         self.lineEdit_selectCurve = QtWidgets.QLineEdit(self.dynamicSlotGrp)
@@ -2070,7 +2099,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_selectCurve.setGeometry(QtCore.QRect(120, 160, 220, 20))
         self.lineEdit_selectCurve.setObjectName("lineEdit_selectCurve")
         self.lineEdit_selectCurve.setText(QtWidgets.QApplication.translate("MainWindow", "select curve", None, -1))
-        self.lineEdit_selectCurve.setStyleSheet(optionEditA)   
+        #self.lineEdit_selectCurve.setStyleSheet(optionEditA)   
 
 
         self.toolButton_selectCurve = QtWidgets.QToolButton(self.dynamicSlotGrp)
@@ -3623,7 +3652,14 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.currentSelectBone.append(i)
         self.showAllSelectedObjLedit.setText(str(self.currentSelectBone))
         #cmds.
+    
+    def getSelectAnyTransform(self):
         
+        print "getSelectAnyTransform"
+        allSelectorTransform = cmds.ls(sl=True,type='transform')
+        self.currentSelectBone = allSelectorTransform
+        self.showAllSelectedObjLedit.setText(str(self.currentSelectBone))    
+                    
     def renameSelectedBone(self):
         print "renameSelectedBone"
         newName = self.newNameSelectedLEdit.text()
@@ -3650,6 +3686,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
            # for j in self.currentSelectBone:
                # print i
         #cmds.listRelatives('star_A02_5',c=True,type = 'mesh')
+        
+        
+
+        
     
     def optionalSelect(self):
             # print 'optionalSelect'     #1,2,3,4,5,6,7,8,9,0
@@ -4263,6 +4303,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def createSlot(self):
         print "createSlotBtn" 
         
+        newBoneCreatedList = []
         slotAmount = int(self.amountSliderNumLEdit.text())
 
         selectedImageCount = 0
@@ -4298,11 +4339,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     for c in range(0,slotAmount):
                         if cmds.getAttr('%s.spine_tag'%parentBone[0]) == "spine_RootSkeleton" or cmds.getAttr('%s.spine_tag'%parentBone[0]) == "spine_bone":
                             self.errorMsgLEdit.setText(currentImage)
-                            imageSize = self.imageInfoTable.item(10,1).text()[1:-1].split(' ')
-                            fileName = self.imageInfoTable.item(2,1).text()
+                           # imageSize = self.imageInfoTable.item(10,1).text()[1:-1].split(' ')
+                            fileName = self.imageInfoTable.item(0,1).text()
 
-                            imageW = int(imageSize[0])
-                            imageH = int(imageSize[1])
+                            imageW = int(self.imageInfoTable.item(3,1).text())
+                            imageH = int(self.imageInfoTable.item(4,1).text())
                             slotPlane = str(cmds.polyPlane(n='%s_#'%slotName,sx=1,sy=1)[0])
                             cmds.setAttr('%s.rotateX'%slotPlane,90)
                             cmds.setAttr('%s.scaleX'%slotPlane,imageW)
@@ -4311,15 +4352,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
                             self.assignSurfaceShader(slotName,slotPlane,fileName)
                             
-                           # boneName = 'bone_'+'{:04d}'.format(0)
 
-                            ###create bone for slot
                             boneName = "bone_%s"%slotPlane # + '{:04d}'.format(0)
 
                             self.createBone(boneName)
-                            print 'bone',boneName
-                            print 'slotPlane',slotPlane,imageW,imageH
-                           # cmds.setAttr('%s.bone_name'%boneName,newBoneName,type='string')
+
                             cmds.setAttr('%s.bone_parent'%boneName,parentBone[0],type='string')
                             cmds.setAttr('%s.bone_slot'%boneName,slotPlane,type='string')
                             cmds.setAttr('%s.slot_width'%boneName,imageW)
@@ -4337,17 +4374,169 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                             cmds.setAttr('%s.slot_attachment'%boneName,attachmentFile,type='string')
                             cmds.parent(slotPlane,boneName)
                             cmds.parent(boneName,parentBone[0])
-
+                            newBoneCreatedList.append(boneName)
                             cmds.setAttr('%s.slot_width'%slotPlane,imageW)
                             cmds.setAttr('%s.slot_height'%slotPlane,imageH)
                             
                            # cmds.parent(bone,)
                             cmds.select(parentBone[0])
                         else:
-                            self.errorMsgLEdit.setText('selected Bone is uncorrect')
+                            self.errorMsgLEdit.setText('selected Bone is uncorrect A')
                 except:
-                    self.errorMsgLEdit.setText('selected Bone is uncorrect')
-                       
+                    self.errorMsgLEdit.setText('selected Bone is uncorrect B')
+        self.currentSelectBone = newBoneCreatedList
+    
+        self.showAllSelectedObjLedit.setText(str(self.currentSelectBone))           
+                    
+        if self.enableDynaSlotCheck.isChecked() == True:            
+            self.defineDynamicKeys(newBoneCreatedList)
+        else:
+            pass
+        
+    def defineDynamicKeys(self,boneList):
+        print 'defineDynamicKeys'
+        print boneList
+        
+        if self.radioButton_createRad.isChecked() ==True:
+            print "Radiation shape"
+                
+            self.setToRadiation(boneList)
+                
+                
+        elif self.radioButton_createSquare.isChecked() == True:
+            self.setSquare(boneList)
+       
+       # elif self.radioButton_createSector.isChecked() == True:
+       #     print "Sector shape"
+        #    self.setSector(createdJointList)
+       # elif self.radioButton_createDirection.isChecked() == True:
+        #    self.setDirection(createdJointList)
+            
+       # elif self.radioButton_createFollowCurve.isChecked() == True:
+        #    self.setAlongCurve(createdJointList)
+                            
+        
+    def setToRadiation(self,boneList):
+        
+        radius = int(self.lineEdit_RadiusA.text())
+        amount = len(boneList)
+       # jointAmount = int(self.lineEdit_shapeStartFrame.text())
+        startFrame = float(self.lineEdit_shapeStartFrame.text())
+        endFrame = float(self.lineEdit_shapeEndFrame.text())
+        print startFrame,endFrame,amount
+        
+        if self.checkBox_offsetRandom.isChecked() == True:
+            for i in range(0,amount):
+               
+                rad =  random.uniform(0,math.pi*2) 
+                x = radius * math.cos(rad)
+                y = radius * math.sin(rad)
+
+                joint = boneList[i]
+               # print 'joint',joint
+                cmds.setAttr("%s.translateX"%joint,x)
+                cmds.setAttr("%s.translateY"%joint,y)
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="translateX",v=x )
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="translateY",v=y )
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="translateX",v=0 )
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="translateY",v=0 )
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="rotateZ",v=0)
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="scaleX",v=1)
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="scaleY",v=1)
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="rotateZ",v=0)
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="scaleX",v=1)
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="scaleY",v=1)
+                  
+                    
+        else:
+            for i in range(0,amount):
+                dag = (360.0 / float(amount))*float(i)
+              #  print dag
+                rad = (dag *math.pi)/180
+                x = radius * math.cos(rad)
+                y = radius * math.sin(rad)
+                joint = boneList[i]
+                #print 'joint',joint
+                cmds.setAttr("%s.translateX"%joint,x)
+                cmds.setAttr("%s.translateY"%joint,y)
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="translateX",v=x )
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="translateY",v=y )        
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="translateX",v=0 )
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="translateY",v=0 )            
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="rotateZ",v=0)
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="scaleX",v=1)
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="scaleY",v=1)
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="rotateZ",v=0)
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="scaleX",v=1)
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="scaleY",v=1)
+                  
+                    
+        
+    def setSquare(self,boneList):
+        print "square shape"
+        startFrame = float(self.lineEdit_shapeStartFrame.text())
+        endFrame = float(self.lineEdit_shapeEndFrame.text())
+        width = int(self.lineEdit_widthSquare.text())
+        height = int(self.lineEdit_HeightA.text())
+        amount = len(boneList)
+        if self.checkBox_squareFillIn.isChecked() == True:
+            for i in range(0,amount):
+                joint = boneList[i]
+                x= random.randint(-int(width/2),int(width/2)+1)
+                y= random.randint(-int(height/2),int(height/2)+1)
+                print "square fill in X Y",x,y
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="translateX",v=x )
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="translateY",v=y )
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="translateX",v=0 )
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="translateY",v=0 )       
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="rotateZ",v=0)
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="scaleX",v=1)
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="scaleY",v=1)
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="rotateZ",v=0)
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="scaleX",v=1)
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="scaleY",v=1)               
+            
+            pass
+        else:
+            for i in range(0,amount):
+                sideIndex = random.randint(0,3)
+             #   print sideIndex 
+
+                if sideIndex == 0:
+                    x= random.randint(int(-width/2),int(width/2))
+                    y = int(height/2)
+                elif sideIndex == 1:
+                    x= int(width/2)
+                    y = random.randint(int(-height/2),int(height/2))
+                     
+                elif sideIndex == 2:
+                    x= random.randint(int(-width/2),int(width/2))
+                    y = -int(height/2)
+                    
+                    
+                elif sideIndex == 3:
+                    x= -int(width/2)
+                    y = random.randint(int(-height/2),int(height/2))
+
+                joint = boneList[i]
+                   # print 'joint',joint
+                  #  cmds.setAttr("%s.translateX"%joint,x)
+                  #  cmds.setAttr("%s.translateY"%joint,y)
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="translateX",v=x )
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="translateY",v=y )
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="translateX",v=0 )
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="translateY",v=0 )       
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="rotateZ",v=0)
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="scaleX",v=1)
+                cmds.setKeyframe(joint, t=[startFrame,startFrame], at="scaleY",v=1)
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="rotateZ",v=0)
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="scaleX",v=1)
+                cmds.setKeyframe(joint, t=[endFrame,endFrame], at="scaleY",v=1)
+                  
+                
+                        
+        
+        
       
     def defineSelectObj(self):
         print "defineSelectObj"  
@@ -4456,14 +4645,15 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def assignSurfaceShader(self,imageName,object,fileName):  #imageName  as slot name
         print "assignSurfaceShader"
        # slotShaderName =  imageName + '_surfaceShader'
+        
         imageName = imageName.split('/')[-1]
        # print ('fileName',fileName,imageName)
-
+        imageExtName = fileName.split('.')[-1]
         cmds.select(cl=True)
         slotShaderName =  imageName + '_shader'
 
         slotFileName = imageName + '_imageFile'
-       # print 'slotFileName',slotFileName,slotShaderName
+        print 'fileName##########################',fileName,imageExtName#,slotShaderName
         slotSG = imageName + '_SG'
         if len(cmds.ls(slotShaderName)) == 0:
             print ('slotShaderName is not exist')
@@ -4478,7 +4668,12 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             shading_group= cmds.sets(renderable=True,noSurfaceShader=True,empty=True,n=slotSG)
             cmds.connectAttr('%s.color' %shader ,'%s.surfaceShader' %shading_group)
             cmds.connectAttr('%s.outColor' %file_node, '%s.color' %shader)
-            cmds.connectAttr('%s.outTransparency' %file_node, '%s.transparency' %shader)
+            print 'fileName',fileName
+            
+           # if imageExtName == 'jpg':
+             #   pass
+         #   elif imageExtName == 'png':
+           # cmds.connectAttr('%s.outTransparency' %file_node, '%s.transparency' %shader)
             cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
             try:
                 cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
@@ -4657,7 +4852,52 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
      
     def defineImageTableData(self,imageMetaData):
         print "defineImageTableData"
-        imageKey = imageMetaData.keys()
+       # imageKey = imageMetaData.keys()
+       # print imageKey
+        fileName = str(imageMetaData['File Name'])
+        shortName = str(fileName.split('/')[-1])
+        fileSize = str(imageMetaData['File Size'] +' bytes')
+        #imageWH = imageMetaData['Original Size']
+        imageW = str(imageMetaData['Original Size'].split(' ')[0].split('(')[1])
+        imageH = str(imageMetaData['Original Size'].split(' ')[1].split(')')[0])
+        bitSample =str(imageMetaData['Original Bits Per Sample'])
+        print fileName,shortName,fileSize,imageW,imageH
+        self.imageInfoTable.setItem(0,0,QtWidgets.QTableWidgetItem())
+        self.imageInfoTable.item(0, 0).setText(QtWidgets.QApplication.translate("MainWindow",'file name', None,-1))
+        self.imageInfoTable.setItem(0,1,QtWidgets.QTableWidgetItem())
+        self.imageInfoTable.item(0, 1).setText(QtWidgets.QApplication.translate("MainWindow",fileName, None,-1))
+
+        self.imageInfoTable.setItem(1,0,QtWidgets.QTableWidgetItem())
+        self.imageInfoTable.item(1, 0).setText(QtWidgets.QApplication.translate("MainWindow",'shor name', None,-1))     
+
+        self.imageInfoTable.setItem(1,1,QtWidgets.QTableWidgetItem())
+        self.imageInfoTable.item(1, 1).setText(QtWidgets.QApplication.translate("MainWindow",shortName, None,-1))   
+                
+        self.imageInfoTable.setItem(2,0,QtWidgets.QTableWidgetItem())
+        self.imageInfoTable.item(2, 0).setText(QtWidgets.QApplication.translate("MainWindow",'file size', None,-1))     
+                   
+        self.imageInfoTable.setItem(2,1,QtWidgets.QTableWidgetItem())
+        self.imageInfoTable.item(2, 1).setText(QtWidgets.QApplication.translate("MainWindow",fileSize, None,-1))  
+                       
+        self.imageInfoTable.setItem(3,0,QtWidgets.QTableWidgetItem())
+        self.imageInfoTable.item(3, 0).setText(QtWidgets.QApplication.translate("MainWindow",'image width', None,-1))       
+                          
+        self.imageInfoTable.setItem(3,1,QtWidgets.QTableWidgetItem())
+        self.imageInfoTable.item(3, 1).setText(QtWidgets.QApplication.translate("MainWindow",imageW, None,-1))                         
+
+              
+        self.imageInfoTable.setItem(4,0,QtWidgets.QTableWidgetItem())
+        self.imageInfoTable.item(4, 0).setText(QtWidgets.QApplication.translate("MainWindow",'image height', None,-1))        
+              
+        self.imageInfoTable.setItem(4,1,QtWidgets.QTableWidgetItem())
+        self.imageInfoTable.item(4, 1).setText(QtWidgets.QApplication.translate("MainWindow",imageH, None,-1))        
+                
+        self.imageInfoTable.setItem(5,0,QtWidgets.QTableWidgetItem())
+        self.imageInfoTable.item(5, 0).setText(QtWidgets.QApplication.translate("MainWindow",'bit pre sample', None,-1))    
+        
+        self.imageInfoTable.setItem(5,1,QtWidgets.QTableWidgetItem())
+        self.imageInfoTable.item(5, 1).setText(QtWidgets.QApplication.translate("MainWindow",bitSample, None,-1))            
+        '''                
         for i in range(0,len(imageKey)):
             item = QtWidgets.QTableWidgetItem()
             self.imageInfoTable.setItem(i,0,item)
@@ -4673,7 +4913,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           
             self.imageInfoTable.item(i, 1).setText(QtWidgets.QApplication.translate("MainWindow",'%s'%itemValue, None,-1))
 
-
+        '''
           ## define preview image table item
          
           
