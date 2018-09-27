@@ -168,7 +168,7 @@ def getAnimationList(slotList,boneList,fps,start,end,offsetRange):
     for slot in slotList:
         slotName = slot["name"]
         boneName = slot["bone"]
-        tempSlotDict = { slotName:{"color":[]}}
+        #tempSlotDict = { slotName:{"color":[]}}
         soltsAnimationDict.update(tempSlotDict)
 
         getObj =  cmds.ls(slotName,dag=1)[1]
@@ -181,7 +181,7 @@ def getAnimationList(slotList,boneList,fps,start,end,offsetRange):
 
             #print keyFrameList
                 
-        
+        slotTimeLineDict = {slotName:{"color":[],"attachment":[]}}
         
         
         keyFrameList = []
