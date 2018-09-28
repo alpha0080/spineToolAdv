@@ -16,7 +16,7 @@ import random
 
 
 #from PySide2.QtCore import QString
-import os,math,json
+import os,math,json,shutil
 import sys,subprocess
 try:
     sys.path.append("C:/Program Files/Pixar/RenderManProServer-22.1/lib/python2.7/Libs/ite-packages")
@@ -599,7 +599,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                          border-top-left-radius:8px;\
                          border-bottom-left-radius: 8px;\
                          border-style:solid;\
-                         border-width:1px;\
+                         border-width:0px;\
                          border-color:#555555;\
                          }\
                          QPushButton:hover{\
@@ -607,7 +607,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                          border-top-left-radius:8px;\
                          border-bottom-left-radius: 8px;\
                          border-style:solid;\
-                         border-width:1px;\
+                         border-width:0px;\
                          border-color:#883333;\
                          }\
                          QPushButton:pressed{\
@@ -615,10 +615,41 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                          border-top-left-radius:8px;\
                          border-bottom-left-radius: 8px;\
                          border-style:solid;\
-                         border-width:1px;\
+                         border-width:0px;\
                          border-color:#AAAA33;\
                          }\
-                         " %(str(self.fontScale*12)+'px')                              
+                         " %(str(self.fontScale*12)+'px')  
+                         
+        buttonStyleRightB = "\
+                         QPushButton {\
+                         background-color:#778888;\
+                         font-size: %s;\
+                         border-top-right-radius:8px;\
+                         border-bottom-right-radius: 8px;\
+                         border-style:solid;\
+                         border-width:0px;\
+                         border-color:#555555;\
+                         }\
+                         QPushButton:hover{\
+                         background-color:#883333;\
+                         border-top-left-radius:8px;\
+                         border-bottom-left-radius: 8px;\
+                         border-style:solid;\
+                         border-width:0px;\
+                         border-color:#883333;\
+                         }\
+                         QPushButton:pressed{\
+                         background-color:#AAAA33;\
+                         border-top-left-radius:8px;\
+                         border-bottom-left-radius: 8px;\
+                         border-style:solid;\
+                         border-width:0px;\
+                         border-color:#AAAA33;\
+                         }\
+                         " %(str(self.fontScale*12)+'px')                                                        
+                                                                                 
+                                                                                                             
+                                                                                                                                                                     
         lineEditRight = "\
                          QLineEdit {\
                          font-size:%s;\
@@ -1696,11 +1727,21 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
  
         self.spineWorkSpaceLEdit = QtWidgets.QLineEdit(self.environmentSetGrp)
-        self.spineWorkSpaceLEdit.setGeometry(QtCore.QRect(120, 20, 400, 30))
+        self.spineWorkSpaceLEdit.setGeometry(QtCore.QRect(120, 20, 370, 30))
         self.spineWorkSpaceLEdit.setObjectName("spineWorkSpaceLEdit")
         self.spineWorkSpaceLEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.spineWorkSpaceLEdit.setText('')
-        self.spineWorkSpaceLEdit.setStyleSheet(lineEditRightB)     
+        self.spineWorkSpaceLEdit.setStyleSheet(lineEditRightBMiddle)  
+        
+        self.OpenSpineDirBtn = QtWidgets.QPushButton(self.environmentSetGrp)
+        self.OpenSpineDirBtn.setGeometry(QtCore.QRect(490, 20, 30,30))
+        self.OpenSpineDirBtn.setObjectName("OpenSpineDirBtn")
+        self.OpenSpineDirBtn.setText(QtWidgets.QApplication.translate("MainWindow", "...", None, -1))
+        self.OpenSpineDirBtn.clicked.connect(self.openSpineFolder)
+        self.OpenSpineDirBtn.setStyleSheet(buttonStyleRightB)            
+                  
+              
+                    
         
         
         self.selectImageDitBtn = QtWidgets.QPushButton(self.environmentSetGrp)
@@ -1712,11 +1753,22 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
  
         self.spineImagesSpaceLEdit = QtWidgets.QLineEdit(self.environmentSetGrp)
-        self.spineImagesSpaceLEdit.setGeometry(QtCore.QRect(120, 60, 400, 30))
+        self.spineImagesSpaceLEdit.setGeometry(QtCore.QRect(120, 60, 370, 30))
         self.spineImagesSpaceLEdit.setObjectName("spineImagesSpaceLEdit")
         self.spineImagesSpaceLEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.spineImagesSpaceLEdit.setText('')
-        self.spineImagesSpaceLEdit.setStyleSheet(lineEditRightB)     
+        self.spineImagesSpaceLEdit.setStyleSheet(lineEditRightBMiddle)     
+        
+        self.OpenImageDirBtn = QtWidgets.QPushButton(self.environmentSetGrp)
+        self.OpenImageDirBtn.setGeometry(QtCore.QRect(490, 60, 30,30))
+        self.OpenImageDirBtn.setObjectName("OpenImageDirBtn")
+        self.OpenImageDirBtn.setText(QtWidgets.QApplication.translate("MainWindow", "...", None, -1))
+        self.OpenImageDirBtn.clicked.connect(self.openImagesFolder)
+        self.OpenImageDirBtn.setStyleSheet(buttonStyleRightB)            
+        
+        
+        
+        
         
         self.selectExportFolderBtn = QtWidgets.QPushButton(self.environmentSetGrp)
         self.selectExportFolderBtn.setGeometry(QtCore.QRect(10, 100, 110,30))
@@ -1727,13 +1779,19 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
  
         self.spineExportSpaceLEdit = QtWidgets.QLineEdit(self.environmentSetGrp)
-        self.spineExportSpaceLEdit.setGeometry(QtCore.QRect(120, 100, 400, 30))
+        self.spineExportSpaceLEdit.setGeometry(QtCore.QRect(120, 100, 370, 30))
         self.spineExportSpaceLEdit.setObjectName("spineExportSpaceLEdit")
         self.spineExportSpaceLEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.spineExportSpaceLEdit.setText('')
-        self.spineExportSpaceLEdit.setStyleSheet(lineEditRightB)  
+        self.spineExportSpaceLEdit.setStyleSheet(lineEditRightBMiddle)  
 
-
+        self.OpenExportDirBtn = QtWidgets.QPushButton(self.environmentSetGrp)
+        self.OpenExportDirBtn.setGeometry(QtCore.QRect(490, 100, 30,30))
+        self.OpenExportDirBtn.setObjectName("OpenExportDirBtn")
+        self.OpenExportDirBtn.setText(QtWidgets.QApplication.translate("MainWindow", "...", None, -1))
+        self.OpenExportDirBtn.clicked.connect(self.openExportFolder)
+        self.OpenExportDirBtn.setStyleSheet(buttonStyleRightB)            
+        
 
 
         self.createBGBtn = QtWidgets.QPushButton(self.environmentSetGrp)
@@ -2470,20 +2528,27 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.exportToSpineFileBtn.setStyleSheet(buttonStyleB)   
         
 
+        self.slotColorGrp = QtWidgets.QGroupBox(self.dockImageButton)
+        self.slotColorGrp.setGeometry(QtCore.QRect(10,20, 530, 150))
+        self.slotColorGrp.setTitle("")
+        self.slotColorGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
 
+        self.slotColorGrp.setObjectName("slotColorGrp") 
+        self.slotColorGrp.setStyleSheet(QGroupBoxA)     
+        self.slotColorGrp.setVisible(True)
 
               
-        self.testBtn = QtWidgets.QPushButton(self.dockSpineItemTree)
-        self.testBtn.setGeometry(QtCore.QRect(10, 950, 100, 30))
+        self.testBtn = QtWidgets.QPushButton(self.slotColorGrp)
+        self.testBtn.setGeometry(QtCore.QRect(10, 10, 100, 30))
         self.testBtn.setObjectName("testBtn")
         self.testBtn.setText(QtWidgets.QApplication.translate("MainWindow", "set color", None, -1))
         self.testBtn.setStyleSheet(buttonStyleLeftB)     
 
-        self.testBtn.clicked.connect(self.on_clicked)
+        self.testBtn.clicked.connect(self.setColorToSelectBone)
         self.testLabel = QtWidgets.QLabel()
         self.testLabel.setAutoFillBackground(True)
-        self.testLabel = QtWidgets.QPushButton(self.dockSpineItemTree)
-        self.testLabel.setGeometry(QtCore.QRect(130, 950, 100, 30))
+        self.testLabel = QtWidgets.QPushButton(self.slotColorGrp)
+        self.testLabel.setGeometry(QtCore.QRect(130, 10, 100, 30))
         #lay.addWidget(self.testBtn)
         #lay.addWidget(self.testLabel)    
     
@@ -2494,7 +2559,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
         
-
+        '''
         self.exportSpineJsonBtn = QtWidgets.QPushButton(self.dockImageButton)
         self.exportSpineJsonBtn.setGeometry(QtCore.QRect(150, 20, 130, 30))
         self.exportSpineJsonBtn.setObjectName("exportSpineJson")
@@ -2588,18 +2653,29 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.testDBtn.setText(QtWidgets.QApplication.translate("MainWindow", "testD", None, -1))
         self.testDBtn.clicked.connect(self.testD)
         self.testDBtn.setStyleSheet(buttonStyleB)     
+        '''
 
 
-
-    def on_clicked(self):
-        print "on_clicked"
+    def setColorToSelectBone(self):
+        print "setColorToSelectBone"
         color = QtWidgets.QColorDialog.getColor()
         self.testLabel.setAutoFillBackground(True)
-        print color
-        if color.isValid():
-            palette = self.testLabel.palette()
-            palette.setColor(QtGui.QPalette.Background, color)
-            self.testLabel.setPalette(palette)
+       # print color,type(color),dir(color)
+       # print color.redF(),color.blueF()
+        selectJoint = cmds.ls(sl=True,type='joint')
+      #  selectBone = []
+        for i in selectJoint:
+            if cmds.getAttr('%s.spine_tag'%i) == 'spine_bone':
+                #selectBone.append(i)
+                cmds.setAttr('%s.slot_red'%i,float(color.redF()))
+                cmds.setAttr('%s.slot_blue'%i,float(color.blueF()))
+                cmds.setAttr('%s.slot_green'%i,float(color.greenF()))
+
+       # print selectBone
+     #   if color.isValid():
+     #       palette = self.testLabel.palette()
+        #    palette.setColor(QtGui.QPalette.Background, color)
+        #    self.testLabel.setPalette(color)
     ## modify attribut
     
     
@@ -3222,6 +3298,45 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         subprocess.call(openCmd)
     
 
+    def openSpineFolder(self):
+        print "openSpineFolder"
+        dir = self.spineWorkSpaceLEdit.text()
+
+        currentProjWin =''   
+        for cha in dir:
+            if cha =="/":
+                currentProjWin += '\\'
+            else:    
+                currentProjWin += cha 
+        openCmd = "explorer "+'%s'%currentProjWin
+        subprocess.call(openCmd)
+
+    def openImagesFolder(self):
+        print "openImagesFolder"
+        dir = self.spineImagesSpaceLEdit.text()
+
+        currentProjWin =''   
+        for cha in dir:
+            if cha =="/":
+                currentProjWin += '\\'
+            else:    
+                currentProjWin += cha 
+        openCmd = "explorer "+'%s'%currentProjWin
+        subprocess.call(openCmd)       
+         
+    def openExportFolder(self):
+        print "openExportFolder"
+        dir = self.spineExportSpaceLEdit.text()
+
+        currentProjWin =''   
+        for cha in dir:
+            if cha =="/":
+                currentProjWin += '\\'
+            else:    
+                currentProjWin += cha 
+        openCmd = "explorer "+'%s'%currentProjWin
+        subprocess.call(openCmd)        
+
 
     def setToSpineJobTree(self):
         print "setToSpineJobTree"
@@ -3371,6 +3486,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.spineImagesSpaceLEdit.setText(spineImagesFolder)
         self.spineExportSpaceLEdit.setText(exportFolder)
         
+        exportFileName = exportFolder + '/' + "spineExport.json"
+        self.selectExportFileBTnLEdit.setText(exportFileName)
         
         
         
@@ -3378,6 +3495,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def defineExportFileName(self):
         print "defineExportFileName"
+        
+        
         
         basicFilter = "*.json"
         exportFileName = cmds.fileDialog2(fileFilter=basicFilter, dialogStyle=2)[0]
@@ -4286,7 +4405,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print 'slotRegionTimeLineDict',slotRegionTimeLineDict 
         print 'boneTimeLineDict',boneTimeLineDict 
         
-        exportData = {"bones":boneList,"slots":regionSlotList,"skins":skinDict,"animations":{"animA":{"bones":boneTimeLineDict,"slots":slotRegionTimeLineDict}}}
+        exportData = {"skeleton":{"images": "../images/"},"bones":boneList,"slots":regionSlotList,"skins":skinDict,"animations":{"animA":{"bones":boneTimeLineDict,"slots":slotRegionTimeLineDict}}}
         writeData = json.dumps(exportData, sort_keys=True , indent =4) 
         with open(fileName, 'w') as the_file:
             the_file.write(writeData)
@@ -4383,10 +4502,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     slotName = cmds.getAttr('%s.slot_name'%j)
                     
                     parent = cmds.getAttr('%s.slot_bone'%j)
-                    fade = float(cmds.getAttr('%s.slot_fade'%parent))
-                    color = cmds.getAttr('%s.slot_color'%j)[0]
-                    alpha = float(cmds.getAttr('%s.slot_alpha'%j)) *fade
-                    dark = cmds.getAttr('%s.slot_dark'%j)[0]
+                    fade = float(cmds.getAttr('%s.slot_fade'%boneName))
+                    color = cmds.getAttr('%s.slot_color'%boneName)[0]
+                    alpha = float(cmds.getAttr('%s.slot_alpha'%boneName)) *fade
+                    dark = cmds.getAttr('%s.slot_dark'%boneName)[0]
                     attachment = cmds.getAttr('%s.slot_attachment'%j)
                     alphaHex = "%02x"%int((alpha/1)*255)
                     colorHex = "%02x"%int((color[0]/1)*255) + "%02x"%int((color[1]/1)*255) +"%02x"%int((color[2]/1)*255)
@@ -4396,6 +4515,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     slotDict =  {"name":slotName,
                                  "bone":parent,
                                  "color":exportColorHex,
+                                 "dark":darkHex,
                                  "attachment":attachment,
                                  "blend":blendMode}
                    # print 'darkHex',darkHex,type(darkHex)
@@ -4485,7 +4605,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             
             for attr in slotColorAttr:
                 try:
-                    keyframeList = cmds.keyframe(slotName, t=(startFrame,endFrame),query=True,at = attr)
+                    keyframeList = cmds.keyframe(boneName, t=(startFrame,endFrame),query=True,at = attr)
                     for f in keyframeList:
                         if f in slotColorKeyFrameList:
                             pass
@@ -4494,19 +4614,20 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 except:
                     pass
             slotColorKeyFrameList = sorted(slotColorKeyFrameList)
+            
             #for f in slotColorKeyFrameList                 
             #frameValue = cmds.keyframe(obj,at=attr,t=(frame,frame),q=True,eval=True)[0]    starFrame                 
-            #print 'slotColorKeyFrameList',slotColorKeyFrameList
+            print 'slotColorKeyFrameList',slotColorKeyFrameList
             for i in range(0,len(slotColorKeyFrameList)) :
                 f = slotColorKeyFrameList[i]
-               # print 
+                 
                 if f == 0.0:
 
-                    color = cmds.getAttr('%s.slot_color'%slotName,t=0.0)[0]
+                    color = cmds.getAttr('%s.slot_color'%boneName,t=0.0)[0]
 
-                    slotAlpha = cmds.getAttr('%s.slot_alpha'%slotName,t=0.0)
+                    slotAlpha = cmds.getAttr('%s.slot_alpha'%boneName,t=0.0)
 
-                    dark = cmds.getAttr('%s.slot_dark'%slotName,t=0.0)[0]
+                    dark = cmds.getAttr('%s.slot_dark'%boneName,t=0.0)[0]
 
                     fade = cmds.getAttr('%s.slot_fade'%boneName,t=0.0)
                    # print color, slotAlpha,dark,boneName,fade
@@ -4522,14 +4643,14 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     pf = slotColorKeyFrameList[i-1]
                    # for attr in slotColorAttr:
                     tempSlorColordTdict = {}
-                    colorF = cmds.getAttr('%s.slot_color'%slotName,t=f)[0]
-                    slotAlphaF = cmds.getAttr('%s.slot_alpha'%slotName,t=f)
-                    darkF = cmds.getAttr('%s.slot_dark'%slotName,t=f)[0]
+                    colorF = cmds.getAttr('%s.slot_color'%boneName,t=f)[0]
+                    slotAlphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)
+                    darkF = cmds.getAttr('%s.slot_dark'%boneName,t=f)[0]
                     fadeF = cmds.getAttr('%s.slot_fade'%boneName,t=f)
                     alphaF = slotAlphaF * fadeF
-                    colorPF = cmds.getAttr('%s.slot_color'%slotName,t=pf)[0]
-                    slotAlphaPF =cmds.getAttr('%s.slot_alpha'%slotName,t=pf)
-                    darkPF = cmds.getAttr('%s.slot_dark'%slotName,t=pf)[0]
+                    colorPF = cmds.getAttr('%s.slot_color'%boneName,t=pf)[0]
+                    slotAlphaPF =cmds.getAttr('%s.slot_alpha'%boneName,t=pf)
+                    darkPF = cmds.getAttr('%s.slot_dark'%boneName,t=pf)[0]
                     fadePF = cmds.getAttr('%s.slot_fade'%boneName,t=pf)
                     alphaPF = slotAlphaPF * fadePF
 
@@ -6043,7 +6164,32 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
        # print 'allFilesInDir',allFilesInDir
           #print 'fileInSlot',fileInSlot
         cmds.setAttr('%s.slot_attachment'%slot,fileInSlot,type='string')
+        targetFile = self.spineImagesSpaceLEdit.text() + '/' +fileName
+        try:
+            os.remove(targetFile)
+        except:
+            pass
+            
+        shutil.copyfile(currentFile,targetFile)
         
+        ## copy file sequences
+        fileDep = fileName.split('.')
+        fileDigList = ['0','1','2','3','4','5','6','7','8','9']
+        fileDigPart = fileDep[-2]
+        if len(fileDigPart) == 4:
+            if fileDigPart[-1] in fileDigList:
+                for file in allFilesInDir:
+                    if file.split('.')[0] == fileDep[0]:
+                        sourceSeqFile = searchPath +'/'+file
+                        targetSeqFile = self.spineImagesSpaceLEdit.text() + '/'+file
+                        try:
+                            shutil.copyfile(sourceSeqFile,targetSeqFile)
+                        except:
+                            pass
+                
+        
+        
+        #print 'currentFile',currentFile
                                           
     def defineSkin(self,slot):
         print "defineSkin"
