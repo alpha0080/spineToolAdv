@@ -129,7 +129,33 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.selectSpineJobBtn.setChecked(True)
         #self.defineAllSlotInSpine()
           #  self.imageListTable.clear()
-          
+        currentSceneFile = cmds.file(q=True, sn=True)
+        if len(currentSceneFile) == 0:
+            pass
+        else:
+            fileName = currentSceneFile.split('/')[-1]
+            fileDir = currentSceneFile.split(fileName)[0]
+            spineImageDir = fileDir + 'images'
+            spineExportDir =  fileDir + 'export'
+            print fileName,fileDir
+            cmds.file(fileName,open=True,f=True)
+            self.openMayaFileLEdit.setText(fileName)
+            self.spineWorkSpaceLEdit.setText(fileDir)
+            self.spineImagesSpaceLEdit.setText(spineImageDir)
+            self.spineExportSpaceLEdit.setText(spineExportDir)
+           # exportFolder = self
+            exportFileName = spineExportDir + '/' + fileName.split('.')[0] + "_spineExport.json"
+            self.selectExportFileBTnLEdit.setText(exportFileName)
+            
+            try:
+                os.mkdir(spineImageDir)
+            except:
+                pass
+            try:
+                os.mkdir(spineExportDir)
+            except:
+                pass
+                
 
     def changeShapeState(self):  
         print "changeShapeState"
@@ -2569,12 +2595,20 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setSlotColor.setText(QtWidgets.QApplication.translate("MainWindow", "set color", None, -1))
         self.setSlotColor.setStyleSheet(buttonStyleB)     
         self.setSlotColor.clicked.connect(self.setColorToSelectBone)
+ 
+        self.setSlotColorKey = QtWidgets.QPushButton(self.slotColorGrp)
+        self.setSlotColorKey.setGeometry(QtCore.QRect(120, 10, 100, 30))
+        self.setSlotColorKey.setObjectName("setSlotColorKey")
+        self.setSlotColorKey.setText(QtWidgets.QApplication.translate("MainWindow", "set key", None, -1))
+        self.setSlotColorKey.setStyleSheet(buttonStyleB)     
+        self.setSlotColorKey.clicked.connect(self.setSlotColorKeyFrame)
         
+               
         
-        self.testLabel = QtWidgets.QLabel()
-        self.testLabel.setAutoFillBackground(True)
-        self.testLabel = QtWidgets.QPushButton(self.slotColorGrp)
-        self.testLabel.setGeometry(QtCore.QRect(130, 10, 100, 30))
+       # self.testLabel = QtWidgets.QLabel()
+        #self.testLabel.setAutoFillBackground(True)
+        #self.testLabel = QtWidgets.QPushButton(self.slotColorGrp)
+        #self.testLabel.setGeometry(QtCore.QRect(130, 10, 100, 30))
         
         self.setNewSlot = QtWidgets.QPushButton(self.slotColorGrp)
         self.setNewSlot.setGeometry(QtCore.QRect(10, 50, 100, 30))
@@ -2701,8 +2735,13 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print fileName,fileDir
         cmds.file(fileName,open=True,f=True)
         self.openMayaFileLEdit.setText(fileName)
+        self.spineWorkSpaceLEdit.setText(fileDir)
         self.spineImagesSpaceLEdit.setText(spineImageDir)
         self.spineExportSpaceLEdit.setText(spineExportDir)
+       # exportFolder = self
+        exportFileName = spineExportDir + '/' + fileName.split('.')[0] + "_spineExport.json"
+        self.selectExportFileBTnLEdit.setText(exportFileName)
+        
         try:
             os.mkdir(spineImageDir)
         except:
@@ -2747,13 +2786,22 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         cmds.connectAttr('%s.outTransparency' %file_node, '%s.transparency' %shader)
         cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
         cmds.select(cl=True) 
-    #    cmds.select(object)
 
-      #  cmds.hyperShade( assign=slotShaderName )
-      #  cmds.select(cl=True) 
-        
-       # selectJointList = cmds.ls(sl=True,type='joint')
         selectBoneList = filter(lambda x: cmds.getAttr('%s.spine_tag'%x)== 'spine_bone' ,selectJointList)
+        print "currentFile",fileName,targetFileName
+        try:
+            if os.path.isfile(targetFileName) == True:
+                print "file exist"
+                
+            else:
+                #os.remove(targetFile)
+                shutil.copyfile(fileName,targetFileName)        
+        
+        except:
+                       
+            pass
+        cmds.setAttr('%s.fileTextureName'%slotFileName,targetFileName,type='string')
+
         for bone in selectBoneList:
             slotName = cmds.getAttr('%s.bone_slot'%bone)
             print 'slotName',slotName
@@ -2770,11 +2818,24 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
             cmds.select(cl=True) 
         print 'currentImage',currentImage,fileName,selectBoneList
+        
+    def setSlotColorKeyFrame(self):
+        print "setSlotColorKeyFrame"
+        selectJointList = cmds.ls(sl=True,type='joint')
+        selectBoneList = filter(lambda x: cmds.getAttr('%s.spine_tag'%x)== 'spine_bone' ,selectJointList)
+        for bone in selectBoneList:
+            
+            cmds.setKeyframe(bone, at='slot_red')
+            cmds.setKeyframe(bone, at='slot_green')
+            cmds.setKeyframe(bone, at='slot_blue')
+
+        #print 'selectBoneList',selectBoneList
+
 
     def setColorToSelectBone(self):
         print "setColorToSelectBone"
         color = QtWidgets.QColorDialog.getColor()
-        self.testLabel.setAutoFillBackground(True)
+       # self.testLabel.setAutoFillBackground(True)
        # print color,type(color),dir(color)
        # print color.redF(),color.blueF()
         selectJoint = cmds.ls(sl=True,type='joint')
@@ -4301,7 +4362,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                             cmds.setAttr('%s.spine_tag'%curve,'spine_ctrl',type='string')
                             cmds.setAttr('%s.spine_parentCharacterSet'%curve,currentSet[0],type='string') 
                           #  cmds.rename(curve,'rootCtrl')
-                        
+                            cmds.parent(curve,currentSet)
                             self.errorMsgLEdit.setText('Root %s created'%rootName)
                     
                 else:
@@ -4483,6 +4544,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         allMeshItem = []
         meshSlotList = []
         tempAllBoneList = []
+        allCharacterSetList =[]
         #skinDict = {"default":{}}
         allObjInRootCtrl = cmds.listRelatives(rootCtrlName,c=True)
         print 'rootCtrlName',rootCtrlName
@@ -4523,6 +4585,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         slotRegionTimeLineDict = self.defineRegionSlotAnimation(regionSlotList)
         boneTimeLineDict = self.defineBoneAnimation(allBoneList)
 
+        
         print 'depthList',depthList
 
         print 'allBoneList',allBoneList
@@ -6257,11 +6320,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           #print 'getObj',getObj
         shadingGrps = cmds.listConnections(getObj,type='shadingEngine')
         shaders = cmds.ls(cmds.listConnections(shadingGrps),materials=1)
-        if cmds.nodeType(shaders) == 'lambert':
-            fileNode = cmds.listConnections('%s.color' % (shaders[0]), type='file')
-        elif cmds.nodeType(shaders) == 'surfaceShader':
+       # if cmds.nodeType(shaders) == 'lambert':
+        fileNode = cmds.listConnections('%s.color' % (shaders[0]), type='file')
+      #  elif cmds.nodeType(shaders) == 'surfaceShader':
 
-            fileNode = cmds.listConnections('%s.outColor' % (shaders[0]), type='file')
+          #  fileNode = cmds.listConnections('%s.outColor' % (shaders[0]), type='file')
         currentFile = cmds.getAttr("%s.fileTextureName" % fileNode[0])
          # print 'currentFile',currentFile
         fileName = currentFile.split("/")[-1]
@@ -6292,30 +6355,41 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         cmds.setAttr('%s.slot_attachment'%slot,fileInSlot,type='string')
         targetFile = self.spineImagesSpaceLEdit.text() + '/' +fileName
         try:
-            os.remove(targetFile)
+            if os.path.isfile(targetFile) ==True:
+                print "file exist"
+                pass
+            else:
+                #os.remove(targetFile)
+                shutil.copyfile(currentFile,targetFile)
         except:
-            pass
+            shutil.copyfile(currentFile,targetFile)
             
-        shutil.copyfile(currentFile,targetFile)
+        print 'currentFile',currentFile,targetFile
+      #  shutil.copyfile(currentFile,targetFile)
         
+        print 'fileNode',fileNode
+        cmds.setAttr('%s.fileTextureName'%fileNode[0],targetFile,type='string')
         ## copy file sequences
         fileDep = fileName.split('.')
-        fileDigList = ['0','1','2','3','4','5','6','7','8','9']
-        fileDigPart = fileDep[-2]
-        if len(fileDigPart) == 4:
-            if fileDigPart[-1] in fileDigList:
-                for file in allFilesInDir:
-                    if file.split('.')[0] == fileDep[0]:
-                        sourceSeqFile = searchPath +'/'+file
-                        targetSeqFile = self.spineImagesSpaceLEdit.text() + '/'+file
-                        try:
-                            shutil.copyfile(sourceSeqFile,targetSeqFile)
-                        except:
-                            pass
-                
+        print 'fileDep',fileDep
+        if len(fileDep) == 3:
+            fileDigList = ['0','1','2','3','4','5','6','7','8','9']
+            fileDigPart = fileDep[-2]
+            if len(fileDigPart) == 4:
+                if fileDigPart[-1] in fileDigList:
+                    for file in allFilesInDir:
+                        if file.split('.')[0] == fileDep[0]:
+                            sourceSeqFile = searchPath +'/'+file
+                            targetSeqFile = self.spineImagesSpaceLEdit.text() + '/'+file
+                            try:
+                                shutil.copyfile(sourceSeqFile,targetSeqFile)
+                            except:
+                                pass
+        else:
+            pass
         
         
-        #print 'currentFile',currentFile
+        print 'currentFilefffffff',currentFile
                                           
     def defineSkin(self,slot):
         print "defineSkin"
@@ -6630,9 +6704,63 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           
           
     def createImagePlane(self):
-        print self.currentImageFullName
-          
+        print "createImagePlane"
+       # print self.currentImageFullName
+        currentImage = self.imageListTable.currentItem().text()
+        imageName = currentImage.split('.')[0]
+        fileName = self.imageInfoTable.item(0,1).text()
+        
+        targetFileName = self.spineImagesSpaceLEdit.text() +'/' +currentImage
+        imageW = int(self.imageInfoTable.item(3,1).text())
+        imageH = int(self.imageInfoTable.item(4,1).text())
+        
+        slotPlane = str(cmds.polyPlane(n='polyPlane_%s_#'%imageName,sx=1,sy=1)[0])
+        cmds.setAttr('%s.rotateX'%slotPlane,90)
+        cmds.setAttr('%s.scaleX'%slotPlane,imageW)
+        cmds.setAttr('%s.scaleZ'%slotPlane,imageH)
+        ###create new shader
+        slotShaderName =  imageName + '_shader'
+        slotFileName = imageName + '_imageFile'
+        slotSG = imageName + '_SG'
+        print 'currentImage',currentImage,fileName,targetFileName
+        cmds.select(cl=True) 
+        
+        shader = cmds.shadingNode("lambert",asShader=True,n=slotShaderName)
+       # print 'shader',shader
+        cmds.select(shader)
+        shaderName = cmds.ls(sl=True)[0]
+            # shader=cmds.rename(shader,slotShaderName)
+       #     print 'shaderName',shaderName,shader
+        file_node=cmds.shadingNode("file",asTexture=True,n=slotFileName)
+        shading_group= cmds.sets(renderable=True,noSurfaceShader=True,empty=True,n=slotSG)
+        cmds.connectAttr('%s.color' %shader ,'%s.surfaceShader' %shading_group)
+        cmds.connectAttr('%s.outColor' %file_node, '%s.color' %shader)
+           # print 'fileName',fileName
+        
+    
+        cmds.connectAttr('%s.outTransparency' %file_node, '%s.transparency' %shader)
+        cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
+        cmds.select(cl=True) 
+        
+        try:
+            if os.path.isfile(targetFileName) == True:
+                print "file exist"
+                
+            else:
+                #os.remove(targetFile)
+                shutil.copyfile(fileName,targetFileName)        
+        
+        except:
+                       
+            pass
+        cmds.setAttr('%s.fileTextureName'%slotFileName,targetFileName,type='string')
 
+        cmds.select(slotPlane)
+        cmds.hyperShade( assign=slotShaderName )
+        cmds.select(cl=True)
+        print "currentFile",fileName,targetFileName
+ 
+        
           
 
     def imageInfo(self,imagesDir):
