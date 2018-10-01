@@ -1,0 +1,366 @@
+{
+    "animations": {
+        "animA": {
+            "bones": {
+                "bone_clip_coin__1": {
+                    "rotate": [
+                        {
+                            "angle": 0.0, 
+                            "time": 0.0
+                        }, 
+                        {
+                            "angle": 0.0, 
+                            "time": 4.0
+                        }
+                    ], 
+                    "scale": [
+                        {
+                            "time": 0.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }
+                    ], 
+                    "translate": [
+                        {
+                            "time": 0.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }
+                    ]
+                }, 
+                "bone_clip_coin__2": {
+                    "rotate": [
+                        {
+                            "angle": 0.0, 
+                            "time": 0.0
+                        }, 
+                        {
+                            "angle": 0.0, 
+                            "time": 4.0
+                        }
+                    ], 
+                    "scale": [
+                        {
+                            "time": 0.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }
+                    ], 
+                    "translate": [
+                        {
+                            "time": 0.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }
+                    ]
+                }, 
+                "bone_star_A02_1": {
+                    "rotate": [
+                        {
+                            "angle": 0.0, 
+                            "time": 0.0
+                        }, 
+                        {
+                            "angle": 0.0, 
+                            "time": 4.0
+                        }
+                    ], 
+                    "scale": [
+                        {
+                            "time": 0.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }
+                    ], 
+                    "translate": [
+                        {
+                            "time": 0.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }
+                    ]
+                }, 
+                "bone_star_A02_2": {
+                    "rotate": [
+                        {
+                            "angle": 0.0, 
+                            "time": 0.0
+                        }, 
+                        {
+                            "angle": 0.0, 
+                            "time": 4.0
+                        }
+                    ], 
+                    "scale": [
+                        {
+                            "time": 0.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }
+                    ], 
+                    "translate": [
+                        {
+                            "time": 0.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }
+                    ]
+                }, 
+                "bone_star_track_A01_1": {
+                    "rotate": [
+                        {
+                            "angle": 0.0, 
+                            "time": 0.0
+                        }, 
+                        {
+                            "angle": 0.0, 
+                            "time": 4.0
+                        }
+                    ], 
+                    "scale": [
+                        {
+                            "time": 0.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }
+                    ], 
+                    "translate": [
+                        {
+                            "time": 0.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }
+                    ]
+                }
+            }, 
+            "slots": {
+                "clip_coin__1": {
+                    "color": [
+                        {
+                            "color": "ffffffff", 
+                            "dark": "000000ff", 
+                            "time": 0.0
+                        }
+                    ]
+                }, 
+                "clip_coin__2": {
+                    "color": [
+                        {
+                            "color": "ffffffff", 
+                            "dark": "000000ff", 
+                            "time": 0.0
+                        }
+                    ]
+                }, 
+                "star_A02_1": {
+                    "color": [
+                        {
+                            "color": "ffffffff", 
+                            "dark": "000000ff", 
+                            "time": 0.0
+                        }
+                    ]
+                }, 
+                "star_A02_2": {
+                    "color": [
+                        {
+                            "color": "ffffffff", 
+                            "dark": "000000ff", 
+                            "time": 0.0
+                        }
+                    ]
+                }, 
+                "star_track_A01_1": {
+                    "color": [
+                        {
+                            "color": "ffffffff", 
+                            "dark": "000000ff", 
+                            "time": 0.0
+                        }
+                    ]
+                }
+            }
+        }
+    }, 
+    "bones": [
+        {
+            "name": "spine_RootSkeleton"
+        }, 
+        {
+            "name": "bone_star_track_A01_1", 
+            "parent": "spine_RootSkeleton", 
+            "rotation": 0, 
+            "scaleX": 1.0, 
+            "scaleY": 1.0, 
+            "x": 0, 
+            "y": 0
+        }, 
+        {
+            "name": "bone_star_A02_1", 
+            "parent": "spine_RootSkeleton", 
+            "rotation": 0, 
+            "scaleX": 1.0, 
+            "scaleY": 1.0, 
+            "x": 0, 
+            "y": 0
+        }, 
+        {
+            "name": "bone_star_A02_2", 
+            "parent": "spine_RootSkeleton", 
+            "rotation": 0, 
+            "scaleX": 1.0, 
+            "scaleY": 1.0, 
+            "x": 0, 
+            "y": 0
+        }, 
+        {
+            "name": "bone_clip_coin__1", 
+            "parent": "spine_RootSkeleton", 
+            "rotation": 0, 
+            "scaleX": 1.0, 
+            "scaleY": 1.0, 
+            "x": 0, 
+            "y": 0
+        }, 
+        {
+            "name": "bone_clip_coin__2", 
+            "parent": "spine_RootSkeleton", 
+            "rotation": 0, 
+            "scaleX": 1.0, 
+            "scaleY": 1.0, 
+            "x": 0, 
+            "y": 0
+        }
+    ], 
+    "skins": {
+        "default": {
+            "clip_coin__1": {
+                "clip_coin_.0001": {
+                    "height": 256, 
+                    "width": 256, 
+                    "x": 0, 
+                    "y": 0
+                }
+            }, 
+            "clip_coin__2": {
+                "clip_coin_.0001": {
+                    "height": 256, 
+                    "width": 256, 
+                    "x": 0, 
+                    "y": 0
+                }
+            }, 
+            "star_A02_1": {
+                "star_A02": {
+                    "height": 75, 
+                    "width": 75, 
+                    "x": 0, 
+                    "y": 0
+                }
+            }, 
+            "star_A02_2": {
+                "star_A02": {
+                    "height": 75, 
+                    "width": 75, 
+                    "x": 0, 
+                    "y": 0
+                }
+            }, 
+            "star_track_A01_1": {
+                "star_track_A01": {
+                    "height": 128, 
+                    "width": 128, 
+                    "x": 0, 
+                    "y": 0
+                }
+            }
+        }
+    }, 
+    "slots": [
+        {
+            "attachment": "star_track_A01", 
+            "blend": "normal", 
+            "bone": "bone_star_track_A01_1", 
+            "color": "ffffffff", 
+            "name": "star_track_A01_1"
+        }, 
+        {
+            "attachment": "star_A02", 
+            "blend": "normal", 
+            "bone": "bone_star_A02_1", 
+            "color": "ffffffff", 
+            "name": "star_A02_1"
+        }, 
+        {
+            "attachment": "star_A02", 
+            "blend": "normal", 
+            "bone": "bone_star_A02_2", 
+            "color": "ffffffff", 
+            "name": "star_A02_2"
+        }, 
+        {
+            "attachment": "clip_coin_.0001", 
+            "blend": "normal", 
+            "bone": "bone_clip_coin__1", 
+            "color": "ffffffff", 
+            "name": "clip_coin__1"
+        }, 
+        {
+            "attachment": "clip_coin_.0001", 
+            "blend": "normal", 
+            "bone": "bone_clip_coin__2", 
+            "color": "ffffffff", 
+            "name": "clip_coin__2"
+        }
+    ]
+}
