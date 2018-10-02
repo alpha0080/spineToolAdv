@@ -4551,58 +4551,78 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         for i in allObjInRootCtrl:
             if cmds.getAttr('%s.spine_tag'%i) == "spine_characterSet":
                 characterSetGrp.append(i)
+        ### check if bone/joints in spineRootSkeleton
+            
+        allJointInRootCtrl = cmds.listRelatives(rootCtrlName,ad=True,type="joint") 
+        try:
+            jointsCount = len(allJointInRootCtrl)
+        except:
+            print "no joints in spine_rootSkeleton"
+            jointsCount = 0
+            
+        if jointsCount == 0:
+            boneList = [{ "name":rootCtrlName}]
+            skinDict= {"default":{}}
 
-        allJointInRootCtrl = cmds.listRelatives(rootCtrlName,ad=True,type="joint")
-        depthList = []
-        for i in allJointInRootCtrl:
-            try:
-                if cmds.getAttr('%s.spine_tag'%i) == "spine_bone":
-                    tempAllBoneList.append(i) 
-                    depth = len(cmds.ls(i,l=True)[0].split('|'))
-                    if depth in depthList:
-                        pass
-                    else:
-                        depthList.append(depth)
-            except:
-                pass
+            pass
+        else:
+            depthList = []
+            for i in allJointInRootCtrl:
+                try:
+                    if cmds.getAttr('%s.spine_tag'%i) == "spine_bone":
+                        tempAllBoneList.append(i) 
+                        depth = len(cmds.ls(i,l=True)[0].split('|'))
+                        if depth in depthList:
+                            pass
+                        else:
+                            depthList.append(depth)
+                except:
+                    pass
+            
+
+            depthList = sorted(depthList)
+            allBoneList = []
+            for depth in depthList:
+                for i in tempAllBoneList:
+                   # print len(cmds.ls(i,l=True)[0].split('|'))
+                    if len(cmds.ls(i,l=True)[0].split('|')) == depth:
+                        if i in allBoneList:
+                            pass
+                        else:
+                            allBoneList.append(i)
+                        
+            rootBoneList = [{ "name":rootCtrlName}]
+            boneList = self.getAllBoneList(allBoneList,rootBoneList)
+            regionSlotList = self.getAllRegionSlotList(allBoneList) 
+            initSkinList= {"default":{}}
+
+            skinDict = self.getAllRegionSkinList(regionSlotList,initSkinList)
+            slotRegionTimeLineDict = self.defineRegionSlotAnimation(regionSlotList)
+            boneTimeLineDict = self.defineBoneAnimation(allBoneList)
+        if len(characterSetGrp) == 0:
+            pass
+        else:
+            self.defineAllCharacterSetInRootCtrl(rootCtrlName,characterSetGrp,boneList,skinDict)
         
+       # print 'depthList',depthList
 
-        depthList = sorted(depthList)
-        allBoneList = []
-        for depth in depthList:
-            for i in tempAllBoneList:
-               # print len(cmds.ls(i,l=True)[0].split('|'))
-                if len(cmds.ls(i,l=True)[0].split('|')) == depth:
-                    if i in allBoneList:
-                        pass
-                    else:
-                        allBoneList.append(i)
-                    
-
-        boneList = self.getAllBoneList(allBoneList)
-        regionSlotList = self.getAllRegionSlotList(allBoneList) 
-        skinDict = self.getAllRegionSkinList(regionSlotList)
-        slotRegionTimeLineDict = self.defineRegionSlotAnimation(regionSlotList)
-        boneTimeLineDict = self.defineBoneAnimation(allBoneList)
-
-        
-        print 'depthList',depthList
-
-        print 'allBoneList',allBoneList
-        print 'boneList',boneList
-        print  'skinDict',skinDict
-        print 'slotRegionTimeLineDict',slotRegionTimeLineDict 
-        print 'boneTimeLineDict',boneTimeLineDict 
-        
-        exportData = {"skeleton":{"images": "../images/"},"bones":boneList,"slots":regionSlotList,"skins":skinDict,"animations":{"animA":{"bones":boneTimeLineDict,"slots":slotRegionTimeLineDict}}}
-        writeData = json.dumps(exportData, sort_keys=True , indent =4) 
-        with open(fileName, 'w') as the_file:
-            the_file.write(writeData)
-                    
-    def getAllBoneList(self,allBoneList):
+       # print 'allBoneList',allBoneList
+       # print 'boneList',boneList
+       # print  'skinDict',skinDict
+       # print 'slotRegionTimeLineDict',slotRegionTimeLineDict 
+       # print 'boneTimeLineDict',boneTimeLineDict 
+        try:
+            exportData = {"skeleton":{"images": "../images/"},"bones":boneList,"slots":regionSlotList,"skins":skinDict,"animations":{"animA":{"bones":boneTimeLineDict,"slots":slotRegionTimeLineDict}}}
+            writeData = json.dumps(exportData, sort_keys=True , indent =4) 
+            with open(fileName, 'w') as the_file:
+                the_file.write(writeData)
+        except:
+            pass
+                        
+    def getAllBoneList(self,allBoneList,rootBoneList):
         rootCtrlName = self.exportSpineRootLabelLEdit.text()
        # characterSetGrp =[]
-        boneList = [{ "name":rootCtrlName}]
+        boneList = rootBoneList
         #boneList = []
         for bone in allBoneList:
           #  print bone
@@ -4718,10 +4738,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         return slotList    
  
 
-    def getAllRegionSkinList(self,regionSlotList):
+    def getAllRegionSkinList(self,regionSlotList,skinList):
         print "getAllRegionSkinList"
        # print 'regionSlotList',regionSlotList
-        skinList= {"default":{}}
+       # skinList= {"default":{}}
         
        # print "slotList",slotList
        # print "slotListLength",len(slotList)
@@ -4933,58 +4953,101 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # print 'boneKeyFrameList',bone,boneKeyFrameList
         return boneTimeLineDict    
                                                                                                                                                                                                                                                                                                                               
-    def defineAllItemInRootCtrl(self):
-        print "defineAllItemInRootCtrl"
-        '''
-        "animations": {
-           "name": {
-              "bones": { ... },
-              "slots": { ... },
-              "ik": { ... },
-              "deform": { ... },
-              "events": { ... },
-              "draworder": { ... },
-           },
-           ...
-        }
-        
-        "deform": {
-           "skinName": {
-              "slotName": {
-                 "meshName": [
-                    {
-                       "time": 0,
-                       "curve": [ 0.25, 0, 0.75, 1 ]
-                    },
-                    {
-                       "time": 1.5,
-                       "offset": 12,
-                       "vertices": [ -0.75588, -3.68987, -1.01898, -2.97404, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                       -1.01898, -2.97404, -0.75588, -3.68987, 0, 0, -0.75588, -3.68987, -0.75588, -3.68987,
-                       -1.01898, -2.97404, -1.01898, -2.97404, -1.01898, -2.97404, -0.75588, -3.68987 ],
-                       "curve": [ 0.25, 0, 0.75, 1 ]
-                    },
-                    ...
-                 ],
-                 ...
-              },
-              ...
-           },
-           ...
-        }
-        
-        '''
+    def defineAllCharacterSetInRootCtrl(self,rootCtrlName,characterSetGrp,boneList,skinDict): # get all characterSet and mesh skin , animation data
+        print "defineAllCharacterSetInRootCtrl"
         errMsg = "define all items in root ctrl"
-        rootCtrlName = "rootCtrl"
-        boneList = [{ "name":rootCtrlName},]
+       # rootCtrlName = "rootCtrl"
+       # boneList = [{ "name":rootCtrlName}]
+        #### define all characterSet into boneList
+        allMeshSlotList = []
+        allSkinNameList = []
+        
+        for chaSet in characterSetGrp:
+            boneList.append({"name":chaSet,'parent':rootCtrlName})
+            print chaSet
+        
+            allTransformsList =  cmds.listRelatives(chaSet,c=True,p=False)
+            
+            if allTransformsList == None :
+                print "no mesh in characterSet %s"%chaSet
+                pass
+            else:
+                print 'allTransformsList',allTransformsList  
+                for i in allTransformsList:
+                    for j in cmds.listRelatives(i,c=True,p=False):
+                        print 'jjjjj',j
+            
+                    try:
+                        if cmds.nodeType(j) =='mesh' and cmds.getAttr('%s.spine_skinType'%j) =='mesh':
+                            allMeshSlotList.append(i)
+                            allSkinNameList.append(j)
+                    except:
+                        pass
+                    
+       # print rootCtrlName,characterSetGrp,boneList
+      #  print 'allMeshSlotList',allMeshSlotList,allSkinNameList
+        
+        for slot in allMeshSlotList: ## define all mesh's slot
+        #   print cmds.ls(i)
+            try:
+                self.defineSlot(slot,rootCtrlName) 
+            except:
+                pass
+            try:
+             #   print 'slot',slot
+                currentParent = cmds.listRelatives(slot,p=True)[0]
+            #    print 'currentParent',currentParent
+                if cmds.getAttr('%s.spine_tag'%currentParent) == 'spine_characterSet':
+                    cmds.setAttr('%s.slot_bone'%slot,currentParent,type='string')
+            except:
+                print 'current slot/mesh not in character set'
+                pass
+        
+        for i in allSkinNameList:
+            print i
+            skinData = json.loads(cmds.getAttr('%s.spine_skinData'%i))
+           # skinList
+            skinDict['default'].update(skinData)
+            print 'skinData',skinData
+        print 'skinDict',skinDict
+        
+          #print allSlotItem
+        '''
+        slotList = self.getAllMeshSlots(allMeshSlotList)
+        print slotList
+        
+        
+        #animaitonSlotDict = 
+        slotAnimationDict = self.defineSlotAnimation(allMeshSlotList)
+        
+        
+        deformerDict = self.defineDeformAnimation(characterSetGrp)
+        print deformerDict
+       
+        animationDict={"default":{"bones":{},
+                                    "slots":slotAnimationDict,
+                                    "deform":deformerDict}}
+        
+        print 'skinDict',skinDict
+        print 'slotList',slotList
+        print 'animationDict',animationDict
+  
+       # self.defineExportData(boneList,skinDict,slotList,animationDict)
+
+         # print slotList
+        
+        
+        
+        
+        '''
+        
+        
+        
+    def aaaaa(self): 
         allMeshItem = []
         meshSlotList = []
         skinDict = {"default":{}}
-
-               
-        characterSetGrp = "saberSet"
-
-
+        
         allTransformsList =  cmds.listRelatives(characterSetGrp,c=True,p=False)
         allMeshSlotList = []
         allSkinNameList = []
@@ -5403,6 +5466,22 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print "getSkinData"
         cmds.currentTime(0,e=True)
         meshName = cmds.ls(sl=True,dag=2,typ='mesh')[0]
+        currentMeshTransform = cmds.ls(sl=True,type = 'transform')
+        parentCharacterSet = cmds.listRelatives(currentMeshTransform,p=True)[0]
+        print 'parentCharacterSet1',parentCharacterSet
+        try:
+            if len(parentCharacterSet) >0:
+                if cmds.nodeType(parentCharacterSet) == 'transform':
+                   # print parent
+                    if cmds.getAttr('%s.spine_tag'%parentCharacterSet) =='spine_characterSet':
+                        print 'parent CharacterSet %s is selected'%parentCharacterSet
+                    
+                else:
+                    self.errorMsgLEdit.setText('current mesh not in characterSet Code skin 001')
+        except:
+            self.errorMsgLEdit.setText('current mesh not in characterSet Code skin 002')
+
+            pass
         try:
             cmds.deleteAttr('%s.spine_skinData'%meshName)
             cmds.deleteAttr('%s.spine_boneName'%meshName)
@@ -5552,7 +5631,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         errMsg ="Define Data"
         print dataForSpine
         skinData = json.dumps({slotName:{attachmentName:dataForSpine}})
-
+        print 'parentCharacterSet',parentCharacterSet
         
         
         cmds.setAttr('%s.spine_tag'%meshName,'spine_skin',type='string')
@@ -5560,7 +5639,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         cmds.setAttr('%s.spine_slotName'%meshName,slotName,type='string')
         cmds.setAttr('%s.spine_skinName'%meshName,slotName,type='string')  
-        #cmds.setAttr('%s.spine_boneName'%meshName,currentTransformName,type='string')             
+        cmds.setAttr('%s.spine_boneName'%meshName,parentCharacterSet,type='string')             
                   
         cmds.setAttr('%s.spine_attachmentName'%meshName,attachmentName,type='string')
         cmds.setAttr('%s.spine_skinData'%meshName,skinData,type='string')  
@@ -6583,7 +6662,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         images = self.getImagesInFolder()
         print 'images',images
-        imagesDir  = 'C:/Temp/images'#"//mcd-3d/data3d/spine_imageSources/"
+        #imagesDir  = 'C:/Temp/images'#"//mcd-3d/data3d/spine_imageSources/"
        # self.createImageTable(images,50,imagesDir)
        # self.createImageInfoTable()
         #print self.spineItemTree

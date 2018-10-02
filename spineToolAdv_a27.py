@@ -4584,7 +4584,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         skinDict = self.getAllRegionSkinList(regionSlotList)
         slotRegionTimeLineDict = self.defineRegionSlotAnimation(regionSlotList)
         boneTimeLineDict = self.defineBoneAnimation(allBoneList)
-
+        self.defineAllCharacterSetInRootCtrl(characterSetGrp)
         
         print 'depthList',depthList
 
@@ -4933,8 +4933,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # print 'boneKeyFrameList',bone,boneKeyFrameList
         return boneTimeLineDict    
                                                                                                                                                                                                                                                                                                                               
-    def defineAllItemInRootCtrl(self):
-        print "defineAllItemInRootCtrl"
+    def defineAllCharacterSetInRootCtrl(self,characterSetGrp): # get all characterSet and mesh skin , animation data
+        print "defineAllCharacterSetInRootCtrl"
         '''
         "animations": {
            "name": {
@@ -4984,7 +4984,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                
         characterSetGrp = "saberSet"
 
-
+    def aaaaa(self): 
         allTransformsList =  cmds.listRelatives(characterSetGrp,c=True,p=False)
         allMeshSlotList = []
         allSkinNameList = []
@@ -5403,6 +5403,22 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print "getSkinData"
         cmds.currentTime(0,e=True)
         meshName = cmds.ls(sl=True,dag=2,typ='mesh')[0]
+        currentMeshTransform = cmds.ls(sl=True,type = 'transform')
+        parentCharacterSet = cmds.listRelatives(currentMeshTransform,p=True)[0]
+        print 'parentCharacterSet1',parentCharacterSet
+        try:
+            if len(parentCharacterSet) >0:
+                if cmds.nodeType(parentCharacterSet) == 'transform':
+                   # print parent
+                    if cmds.getAttr('%s.spine_tag'%parentCharacterSet) =='spine_characterSet':
+                        print 'parent CharacterSet %s is selected'%parentCharacterSet
+                    
+                else:
+                    self.errorMsgLEdit.setText('current mesh not in characterSet Code skin 001')
+        except:
+            self.errorMsgLEdit.setText('current mesh not in characterSet Code skin 002')
+
+            pass
         try:
             cmds.deleteAttr('%s.spine_skinData'%meshName)
             cmds.deleteAttr('%s.spine_boneName'%meshName)
@@ -5552,7 +5568,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         errMsg ="Define Data"
         print dataForSpine
         skinData = json.dumps({slotName:{attachmentName:dataForSpine}})
-
+        print 'parentCharacterSet',parentCharacterSet
         
         
         cmds.setAttr('%s.spine_tag'%meshName,'spine_skin',type='string')
@@ -5560,7 +5576,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         cmds.setAttr('%s.spine_slotName'%meshName,slotName,type='string')
         cmds.setAttr('%s.spine_skinName'%meshName,slotName,type='string')  
-        #cmds.setAttr('%s.spine_boneName'%meshName,currentTransformName,type='string')             
+        cmds.setAttr('%s.spine_boneName'%meshName,parentCharacterSet,type='string')             
                   
         cmds.setAttr('%s.spine_attachmentName'%meshName,attachmentName,type='string')
         cmds.setAttr('%s.spine_skinData'%meshName,skinData,type='string')  
@@ -6583,7 +6599,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         images = self.getImagesInFolder()
         print 'images',images
-        imagesDir  = 'C:/Temp/images'#"//mcd-3d/data3d/spine_imageSources/"
+        #imagesDir  = 'C:/Temp/images'#"//mcd-3d/data3d/spine_imageSources/"
        # self.createImageTable(images,50,imagesDir)
        # self.createImageInfoTable()
         #print self.spineItemTree
