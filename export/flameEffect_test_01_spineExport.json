@@ -1,0 +1,474 @@
+{
+    "animations": {
+        "animA": {
+            "bones": {
+                "bone_bg_01_1": {
+                    "rotate": [
+                        {
+                            "angle": 0.0, 
+                            "time": 0.0
+                        }, 
+                        {
+                            "angle": 0.0, 
+                            "time": 4.0
+                        }
+                    ], 
+                    "scale": [
+                        {
+                            "time": 0.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }
+                    ], 
+                    "translate": [
+                        {
+                            "time": 0.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }
+                    ]
+                }, 
+                "bone_flame_mask_A_1": {
+                    "rotate": [
+                        {
+                            "angle": 0.0, 
+                            "time": 0.0
+                        }, 
+                        {
+                            "angle": 0.0, 
+                            "time": 4.0
+                        }
+                    ], 
+                    "scale": [
+                        {
+                            "time": 0.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }
+                    ], 
+                    "translate": [
+                        {
+                            "time": 0.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }
+                    ]
+                }, 
+                "bone_flame_mask_A_2": {
+                    "rotate": [
+                        {
+                            "angle": 0.0, 
+                            "time": 0.0
+                        }, 
+                        {
+                            "angle": 0.0, 
+                            "time": 4.0
+                        }
+                    ], 
+                    "scale": [
+                        {
+                            "time": 0.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }
+                    ], 
+                    "translate": [
+                        {
+                            "time": 0.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }
+                    ]
+                }, 
+                "bone_flame_mask_A_3": {
+                    "rotate": [
+                        {
+                            "angle": 0.0, 
+                            "time": 0.0
+                        }, 
+                        {
+                            "angle": 0.0, 
+                            "time": 4.0
+                        }
+                    ], 
+                    "scale": [
+                        {
+                            "time": 0.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }
+                    ], 
+                    "translate": [
+                        {
+                            "time": 0.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }
+                    ]
+                }, 
+                "bone_flame_mask_A_4": {
+                    "rotate": [
+                        {
+                            "angle": 0.0, 
+                            "time": 0.0
+                        }, 
+                        {
+                            "angle": 0.0, 
+                            "time": 4.0
+                        }
+                    ], 
+                    "scale": [
+                        {
+                            "time": 0.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }
+                    ], 
+                    "translate": [
+                        {
+                            "time": 0.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }
+                    ]
+                }, 
+                "bone_flame_mask_A_5": {
+                    "rotate": [
+                        {
+                            "angle": 0.0, 
+                            "time": 0.0
+                        }, 
+                        {
+                            "angle": 0.0, 
+                            "time": 4.0
+                        }
+                    ], 
+                    "scale": [
+                        {
+                            "time": 0.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 1.0, 
+                            "y": 1.0
+                        }
+                    ], 
+                    "translate": [
+                        {
+                            "time": 0.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }, 
+                        {
+                            "time": 4.0, 
+                            "x": 0.0, 
+                            "y": 0.0
+                        }
+                    ]
+                }
+            }, 
+            "slots": {
+                "bg_01_1": {
+                    "color": [
+                        {
+                            "color": "ffffffff", 
+                            "dark": "000000ff", 
+                            "time": 0.0
+                        }, 
+                        {
+                            "color": "ffffffff", 
+                            "dark": "000000ff", 
+                            "time": 4.0
+                        }
+                    ]
+                }, 
+                "flame_mask_A_1": {
+                    "color": [
+                        {
+                            "color": "ffb70033", 
+                            "dark": "00000033", 
+                            "time": 0.0
+                        }, 
+                        {
+                            "color": "ffb70033", 
+                            "dark": "00000033", 
+                            "time": 4.0
+                        }
+                    ]
+                }, 
+                "flame_mask_A_2": {
+                    "color": [
+                        {
+                            "color": "ffb70033", 
+                            "dark": "00000033", 
+                            "time": 0.0
+                        }, 
+                        {
+                            "color": "ffb70033", 
+                            "dark": "00000033", 
+                            "time": 4.0
+                        }
+                    ]
+                }, 
+                "flame_mask_A_3": {
+                    "color": [
+                        {
+                            "color": "ffb70033", 
+                            "dark": "00000033", 
+                            "time": 0.0
+                        }, 
+                        {
+                            "color": "ffb70033", 
+                            "dark": "00000033", 
+                            "time": 4.0
+                        }
+                    ]
+                }, 
+                "flame_mask_A_4": {
+                    "color": [
+                        {
+                            "color": "ffb70033", 
+                            "dark": "00000033", 
+                            "time": 0.0
+                        }, 
+                        {
+                            "color": "ffb70033", 
+                            "dark": "00000033", 
+                            "time": 4.0
+                        }
+                    ]
+                }, 
+                "flame_mask_A_5": {
+                    "color": [
+                        {
+                            "color": "ffb7007f", 
+                            "dark": "0000007f", 
+                            "time": 0.0
+                        }, 
+                        {
+                            "color": "ffb7007f", 
+                            "dark": "0000007f", 
+                            "time": 4.0
+                        }
+                    ]
+                }
+            }
+        }
+    }, 
+    "bones": [
+        {
+            "name": "spine_RootSkeleton"
+        }, 
+        {
+            "name": "bone_bg_01_1", 
+            "parent": "spine_RootSkeleton", 
+            "rotation": 0, 
+            "scaleX": 1.0, 
+            "scaleY": 1.0, 
+            "x": 0, 
+            "y": 0
+        }, 
+        {
+            "name": "bone_flame_mask_A_1", 
+            "parent": "spine_RootSkeleton", 
+            "rotation": 0, 
+            "scaleX": 1.0, 
+            "scaleY": 1.0, 
+            "x": 0, 
+            "y": 0
+        }, 
+        {
+            "name": "bone_flame_mask_A_2", 
+            "parent": "spine_RootSkeleton", 
+            "rotation": 0, 
+            "scaleX": 1.0, 
+            "scaleY": 1.0, 
+            "x": 0, 
+            "y": 0
+        }, 
+        {
+            "name": "bone_flame_mask_A_3", 
+            "parent": "spine_RootSkeleton", 
+            "rotation": 0, 
+            "scaleX": 1.0, 
+            "scaleY": 1.0, 
+            "x": 0, 
+            "y": 0
+        }, 
+        {
+            "name": "bone_flame_mask_A_4", 
+            "parent": "spine_RootSkeleton", 
+            "rotation": 0, 
+            "scaleX": 1.0, 
+            "scaleY": 1.0, 
+            "x": 0, 
+            "y": 0
+        }, 
+        {
+            "name": "bone_flame_mask_A_5", 
+            "parent": "spine_RootSkeleton", 
+            "rotation": 0, 
+            "scaleX": 1.0, 
+            "scaleY": 1.0, 
+            "x": 0, 
+            "y": 0
+        }
+    ], 
+    "skeleton": {
+        "images": "../images/"
+    }, 
+    "skins": {
+        "default": {
+            "bg_01_1": {
+                "bg_01": {
+                    "height": 1080, 
+                    "width": 1920, 
+                    "x": 0, 
+                    "y": 0
+                }
+            }, 
+            "flame_mask_A_1": {
+                "flame_mask_A": {
+                    "height": 1024, 
+                    "width": 1024, 
+                    "x": 0, 
+                    "y": 0
+                }
+            }, 
+            "flame_mask_A_2": {
+                "flame_mask_A": {
+                    "height": 1024, 
+                    "width": 1024, 
+                    "x": 0, 
+                    "y": 0
+                }
+            }, 
+            "flame_mask_A_3": {
+                "flame_mask_A": {
+                    "height": 1024, 
+                    "width": 1024, 
+                    "x": 0, 
+                    "y": 0
+                }
+            }, 
+            "flame_mask_A_4": {
+                "flame_mask_A": {
+                    "height": 1024, 
+                    "width": 1024, 
+                    "x": 0, 
+                    "y": 0
+                }
+            }, 
+            "flame_mask_A_5": {
+                "flame_mask_A": {
+                    "height": 1024, 
+                    "width": 1024, 
+                    "x": 0, 
+                    "y": 0
+                }
+            }
+        }
+    }, 
+    "slots": [
+        {
+            "attachment": "bg_01", 
+            "blend": "normal", 
+            "bone": "bone_bg_01_1", 
+            "color": "ffffffff", 
+            "dark": "000000", 
+            "name": "bg_01_1"
+        }, 
+        {
+            "attachment": "flame_mask_A", 
+            "blend": "normal", 
+            "bone": "bone_flame_mask_A_1", 
+            "color": "ffb70033", 
+            "dark": "000000", 
+            "name": "flame_mask_A_1"
+        }, 
+        {
+            "attachment": "flame_mask_A", 
+            "blend": "normal", 
+            "bone": "bone_flame_mask_A_2", 
+            "color": "ffb70033", 
+            "dark": "000000", 
+            "name": "flame_mask_A_2"
+        }, 
+        {
+            "attachment": "flame_mask_A", 
+            "blend": "normal", 
+            "bone": "bone_flame_mask_A_3", 
+            "color": "ffb70033", 
+            "dark": "000000", 
+            "name": "flame_mask_A_3"
+        }, 
+        {
+            "attachment": "flame_mask_A", 
+            "blend": "normal", 
+            "bone": "bone_flame_mask_A_4", 
+            "color": "ffb70033", 
+            "dark": "000000", 
+            "name": "flame_mask_A_4"
+        }, 
+        {
+            "attachment": "flame_mask_A", 
+            "blend": "normal", 
+            "bone": "bone_flame_mask_A_5", 
+            "color": "ffb7007f", 
+            "dark": "000000", 
+            "name": "flame_mask_A_5"
+        }
+    ]
+}
