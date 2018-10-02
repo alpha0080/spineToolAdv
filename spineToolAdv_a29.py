@@ -4385,7 +4385,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def findAllKeyframes(self,characterSetGrp):
         print "findAllKeyframes"
         #characterSetGrp = 'saberSet'  ###input
+        frameStart = float(self.timeStartLEdit.text())
+        frameEnd = float(self.timeEndLEdit.text())
         allObjects = cmds.ls(characterSetGrp,fl=True,dag=True,type='mesh')
+       # print 'allObjects',allObjects
         meshList = []
         allKeyFrameDict ={}
         for i in allObjects:
@@ -4396,11 +4399,13 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     pass
             except:
                 pass
-                
+      #  print 'meshList',meshList
+              
         for i in meshList:
-            allKeyframesList = []
+            allKeyframesList = [frameStart,frameEnd]
             allDeformersList = cmds.listHistory(i)
             
+           # print 'allDeformersList',allDeformersList
             for deformer in allDeformersList:
                 allKeyframes = cmds.keyframe( deformer, query=True)
                 if allKeyframes == None:
@@ -4411,24 +4416,24 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                             pass
                         else:
                             allKeyframesList.append(f)
-            allKeyFrameDict.update({i:allKeyframesList})
+            allKeyFrameDict.update({i:sorted(allKeyframesList)})
                      
-
+       # print 'allKeyFrameDict',allKeyFrameDict
         return allKeyFrameDict
 
     def defineVertexsValueDeltaTime(self,allKeyFrameListByDeformers):
         print "defineVertexsValueDeltaTime"
         errMsg = "get vertexValue Error"
         #print allKeyFrameListByDeformers
-        frameStart = 0.0
-        frameEnd = 120.0
+        frameStart = float(self.timeStartLEdit.text())
+        frameEnd = float(self.timeEndLEdit.text())
         skinName = "default"
         meshDeformDict = {skinName:{}}
         
         meshList = allKeyFrameListByDeformers.keys()
         
 
-       # print 'meshList',meshList
+        print 'meshList',meshList
         for mesh in meshList:
             slotName = cmds.listRelatives(mesh,p=True)[0]
             attachmentName = cmds.getAttr('%s.spine_attachmentName'%slotName)
@@ -4444,8 +4449,17 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             keyFrameList.append(frameEnd)
             keyFrameList = sorted(keyFrameList)
             vertexPositionPreFrameList= []
-
-            for f in keyFrameList:
+            
+            filterKeyFrameList = []
+            for k in keyFrameList:
+                if k in filterKeyFrameList:
+                    pass
+                else:
+                    filterKeyFrameList.append(k)
+                    
+            
+         #   print 'keyFrameList keyFrameList keyFrameList',keyFrameList
+            for f in filterKeyFrameList:
                 vertexPositionCurrentFrameList = []
                 deltaVertexPositionPreFrameList=[]
                # vertexPositionX_preFrame = 0.0
@@ -4463,8 +4477,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 if f == 0.0:
                     for i in range(0,len(vertexPositionCurrentFrameList)):
                         deltaPosition = vertexPositionCurrentFrameList[i]
-                        deltaVertexPositionPreFrameList.append(deltaPosition)
-                        
+                      #  deltaVertexPositionPreFrameList.append(deltaPosition)
+                        deltaVertexPositionPreFrameList=[]  #### set all key zero in frame 0
                 else:    
                         
                         
@@ -4502,37 +4516,16 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     #### 輸出     
     def defineDeformAnimation(self,characterSetGrp):
         print "defineDeformAnimation"
+        print 'characterSetGrp___',characterSetGrp
         
         #meshList = cmds.ls(sl=True)
         #characterSetGrp = 'saberSet'
         allKeyFrameListByDeformers = self.findAllKeyframes(characterSetGrp) ## 根據控制器，變形器，骨架，取得所有的keyFrame 
-        
+        print 'allKeyFrameListByDeformers',allKeyFrameListByDeformers
         meshDeformDict = self.defineVertexsValueDeltaTime(allKeyFrameListByDeformers) ## 取得每個keyframe的vertex 數值
         return meshDeformDict
         # print allKeyFrameListByDeformers
-        '''
-        deformDict = {}
-            #getTime
-            #getVertics
-
-        allvertexs = cmds.polyListComponentConversion(meshName,tv=True)
-        #vertexList = []
-        cmds.select(allvertexs)
-        vertexList = cmds.ls(sl=True,fl=True)
-        cmds.select(cl=True)
-        ox = 0##cmds.getAttr("%s.translateX"%joinName)
-        oy = 0##cmds.getAttr("%s.translateY"%joinName)
-        print ox,oy
-
-       #  print vertexList
-        vertexPositionForSpine= []
-        for i in vertexList:
-          #   print cmds.pointPosition(i)
-            vertexPositionForSpine.append(cmds.pointPosition(i)[0]-ox)
-            vertexPositionForSpine.append(cmds.pointPosition(i)[1]-oy)
-             
-        return vertexPositionForSpine
-        '''
+   
     def exortTOSpineJson(self): #regionSlot
         print "exortTOSpineJson"
         cmds.currentTime(0,e=True)
@@ -4973,7 +4966,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         for chaSet in characterSetGrp:
             boneList.append({"name":chaSet,'parent':rootCtrlName})
-            print chaSet
+            print 'chaSet',chaSet
         
             allTransformsList =  cmds.listRelatives(chaSet,c=True,p=False)
             
@@ -4981,18 +4974,20 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 print "no mesh in characterSet %s"%chaSet
                 pass
             else:
-                print 'allTransformsList',allTransformsList  
                 for i in allTransformsList:
                     for j in cmds.listRelatives(i,c=True,p=False):
-                        print 'jjjjj',j
+                        print 'jjjjj',i,j
             
-                    try:
-                        if cmds.nodeType(j) =='mesh' and cmds.getAttr('%s.spine_skinType'%j) =='mesh':
-                            allMeshSlotList.append(i)
-                            allSkinNameList.append(j)
-                    except:
-                        pass
-                    
+                        try:
+                            if cmds.nodeType(j) =='mesh' and cmds.getAttr('%s.spine_skinType'%j) =='mesh':
+                                allMeshSlotList.append(i)
+                                allSkinNameList.append(j)
+                        except:
+                            pass
+        print 'allTransformsList____',allTransformsList  ,allMeshSlotList,allSkinNameList
+        chaSetTimelineDict = self.defineBoneAnimation(characterSetGrp)
+        print 'chaSetTimelineDict',chaSetTimelineDict
+  
        # print rootCtrlName,characterSetGrp,boneList
       #  print 'allMeshSlotList',allMeshSlotList,allSkinNameList
         
@@ -5029,20 +5024,22 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         
         #animaitonSlotDict = 
+        print 'allMeshSlotList',allMeshSlotList
         slotAnimationDict = self.defineSlotAnimation(allMeshSlotList)
         
-        
+        print 'slotAnimationDict',slotAnimationDict
         deformerDict = self.defineDeformAnimation(characterSetGrp)
         slotAnimDict.update(slotAnimationDict)
-        print deformerDict
-       
+        #print deformerDict
+        #deformerDict ={}
         animationDict={"default":{"bones":boneAnimDict,
                                     "slots":slotAnimDict,
                                     "deform":deformerDict}}
-        
+            
+        animationDict['default']['bones'].update(chaSetTimelineDict)
         #print 'skinDict',skinDict
        # print 'slotList',slotList
-        print 'slotAnimationDict',animationDict,animationDict
+        print 'slotAnimDict',slotAnimDict
   
        # self.defineExportData(boneList,skinDict,slotList,animationDict)
 
@@ -5061,81 +5058,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         
         
-    def aaaaa(self): 
-        allMeshItem = []
-        meshSlotList = []
-        skinDict = {"default":{}}
-        
-        allTransformsList =  cmds.listRelatives(characterSetGrp,c=True,p=False)
-        allMeshSlotList = []
-        allSkinNameList = []
-        for i in allTransformsList:
-            for j in cmds.listRelatives(i,c=True,p=False):
-                try:
-                    if cmds.nodeType(j) =='mesh' and cmds.getAttr('%s.spine_skinType'%j) =='mesh':
-                        allMeshSlotList.append(i)
-                        allSkinNameList.append(j)
-                except:
-                    pass
-                
-        
-        
 
-        #animationDict={"default":{"bones":{},"slots":{},"deform":{"default":{deformerDict}}}}
-
-              # print i,cmds.nodeType(i)
-          
-          #self.defineExportData(boneList,skinDict)
-        print 'allMeshSlotList',allMeshSlotList
-        for slot in allMeshSlotList: ## define all mesh's slot
-        #   print cmds.ls(i)
-            try:
-                self.defineSlot(slot,rootCtrlName) 
-            except:
-                pass
-          
-        for i in allSkinNameList:
-            skinData = json.loads(cmds.getAttr('%s.spine_skinData'%i))
-            # skinDict.update(skinData)
-            skinDict["default"].update(skinData)
-        #  exportFile = "C:/Users/alpha/Documents/GitHub/spineToolAdv/test_01.json" 
-
-
-          #print allSlotItem
-        slotList = self.getAllMeshSlots(allMeshSlotList)
-        
-        
-        
-        #animaitonSlotDict = 
-        slotAnimationDict = self.defineSlotAnimation(allMeshSlotList)
-        
-        
-        deformerDict = self.defineDeformAnimation(characterSetGrp)
-        print deformerDict
-        '''
-        animationDict = {"default": {
-                                  "bones": {},
-                                  "slots": {},
-                                  "ik": {},
-                                  "deform": {},
-                                  "events": {},
-                                  "draworder": {}
-                                }}
-                                
-        '''
-        animationDict={"default":{"bones":{},
-                                    "slots":slotAnimationDict,
-                                    "deform":deformerDict}}
-        
-        print 'skinDict',skinDict
-        print 'slotList',slotList
-        print 'animationDict',animationDict
-  
-        self.defineExportData(boneList,skinDict,slotList,animationDict)
-
-         # print slotList
-          
-          
 
     def defineSlotAnimation(self,slotList):
         print "defineSlotAnimation"
