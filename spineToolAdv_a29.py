@@ -4564,6 +4564,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             boneList = [{ "name":rootCtrlName}]
             skinDict= {"default":{}}
             slotList = []
+            boneAnimDict = {}
+            slotAnimDict={}
 
             pass
         else:
@@ -4601,10 +4603,14 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             slotRegionTimeLineDict = self.defineRegionSlotAnimation(regionSlotList)
             boneTimeLineDict = self.defineBoneAnimation(allBoneList)
             slotList = regionSlotList
+            boneAnimDict = boneTimeLineDict
+            slotAnimDict= slotRegionTimeLineDict
+            
+            
         if len(characterSetGrp) == 0:
             pass
         else:
-            self.defineAllCharacterSetInRootCtrl(rootCtrlName,characterSetGrp,boneList,skinDict,slotList)
+            self.defineAllCharacterSetInRootCtrl(rootCtrlName,characterSetGrp,boneList,skinDict,slotList,boneAnimDict,slotAnimDict,fileName)
         
        # print 'depthList',depthList
 
@@ -4613,6 +4619,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
        # print  'skinDict',skinDict
        # print 'slotRegionTimeLineDict',slotRegionTimeLineDict 
        # print 'boneTimeLineDict',boneTimeLineDict 
+        '''
         try:
             exportData = {"skeleton":{"images": "../images/"},"bones":boneList,"slots":regionSlotList,"skins":skinDict,"animations":{"animA":{"bones":boneTimeLineDict,"slots":slotRegionTimeLineDict}}}
             writeData = json.dumps(exportData, sort_keys=True , indent =4) 
@@ -4620,7 +4627,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 the_file.write(writeData)
         except:
             pass
-                        
+         '''               
     def getAllBoneList(self,allBoneList,rootBoneList):
         rootCtrlName = self.exportSpineRootLabelLEdit.text()
        # characterSetGrp =[]
@@ -4955,7 +4962,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # print 'boneKeyFrameList',bone,boneKeyFrameList
         return boneTimeLineDict    
                                                                                                                                                                                                                                                                                                                               
-    def defineAllCharacterSetInRootCtrl(self,rootCtrlName,characterSetGrp,boneList,skinDict,slotList): # get all characterSet and mesh skin , animation data
+    def defineAllCharacterSetInRootCtrl(self,rootCtrlName,characterSetGrp,boneList,skinDict,slotList,boneAnimDict,slotAnimDict,fileName): # get all characterSet and mesh skin , animation data
         print "defineAllCharacterSetInRootCtrl"
         errMsg = "define all items in root ctrl"
        # rootCtrlName = "rootCtrl"
@@ -5006,11 +5013,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 pass
         
         for i in allSkinNameList:
-            print i
+         #   print i
             skinData = json.loads(cmds.getAttr('%s.spine_skinData'%i))
            # skinList
             skinDict['default'].update(skinData)
-            print 'skinData',skinData
+          #  print 'skinData',skinData
         print 'skinDict',skinDict
         
           #print allSlotItem
@@ -5020,30 +5027,37 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #slotList = self.getAllMeshSlots(allMeshSlotList)
         print slotList
         
-        '''
+        
         #animaitonSlotDict = 
         slotAnimationDict = self.defineSlotAnimation(allMeshSlotList)
         
         
         deformerDict = self.defineDeformAnimation(characterSetGrp)
+        slotAnimDict.update(slotAnimationDict)
         print deformerDict
        
-        animationDict={"default":{"bones":{},
-                                    "slots":slotAnimationDict,
+        animationDict={"default":{"bones":boneAnimDict,
+                                    "slots":slotAnimDict,
                                     "deform":deformerDict}}
         
-        print 'skinDict',skinDict
-        print 'slotList',slotList
-        print 'animationDict',animationDict
+        #print 'skinDict',skinDict
+       # print 'slotList',slotList
+        print 'slotAnimationDict',animationDict,animationDict
   
        # self.defineExportData(boneList,skinDict,slotList,animationDict)
 
          # print slotList
         
+        try:
+            exportData = {"skeleton":{"images": "../images/"},"bones":boneList,"slots":slotList,"skins":skinDict,"animations":{"animA":{"bones":boneAnimDict,"slots":slotAnimDict,"deform":deformerDict}}}
+            writeData = json.dumps(exportData, sort_keys=True , indent =4) 
+            with open(fileName, 'w') as the_file:
+                the_file.write(writeData)
+        except:
+            pass
         
         
         
-        '''
         
         
         
