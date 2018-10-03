@@ -19,9 +19,9 @@ import random
 import os,math,json,shutil
 import sys,subprocess
 try:
-    sys.path.append("C:/Program Files/Pixar/RenderManProServer-22.1/lib/python2.7/Libs/ite-packages")
+   ## sys.path.append("C:/Program Files/Pixar/RenderManProServer-22.1/lib/python2.7/Libs/ite-packages")
     #sys.path.append("C:/Program Files/Pixar/RenderManProServer-21.7/lib/python2.7/Lib/site-packages")
-
+    sys.path.append("//mcd-one/database/assets/scripts/python2.7_alpha/22")
     import ice
 except:
     pass
@@ -129,7 +129,33 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.selectSpineJobBtn.setChecked(True)
         #self.defineAllSlotInSpine()
           #  self.imageListTable.clear()
-          
+        currentSceneFile = cmds.file(q=True, sn=True)
+        if len(currentSceneFile) == 0:
+            pass
+        else:
+            fileName = currentSceneFile.split('/')[-1]
+            fileDir = currentSceneFile.split(fileName)[0]
+            spineImageDir = fileDir + 'images'
+            spineExportDir =  fileDir + 'export'
+            print fileName,fileDir
+            #cmds.file(fileName,open=True,f=True)
+            self.openMayaFileLEdit.setText(fileName)
+            self.spineWorkSpaceLEdit.setText(fileDir)
+            self.spineImagesSpaceLEdit.setText(spineImageDir)
+            self.spineExportSpaceLEdit.setText(spineExportDir)
+           # exportFolder = self
+            exportFileName = spineExportDir + '/' + fileName.split('.')[0] + "_spineExport.json"
+            self.selectExportFileBTnLEdit.setText(exportFileName)
+            
+            try:
+                os.mkdir(spineImageDir)
+            except:
+                pass
+            try:
+                os.mkdir(spineExportDir)
+            except:
+                pass
+                
 
     def changeShapeState(self):  
         print "changeShapeState"
@@ -271,7 +297,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.workSpaceInfoDock = QtWidgets.QDockWidget(self)
         self.workSpaceInfoDock.setObjectName("workSpaceInfoDock")
         self.workSpaceInfoDock.setMinimumWidth(550)
-        self.workSpaceInfoDock.setMinimumHeight(240)
+        self.workSpaceInfoDock.setMinimumHeight(300)
         #self.workSpaceInfoDock.setMaximumHeight(200)
         
         
@@ -1709,17 +1735,42 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         
         self.environmentSetGrp = QtWidgets.QGroupBox(self.workSpaceInfoDock)
-        self.environmentSetGrp.setGeometry(QtCore.QRect(10, 20, 530, 215))
+        self.environmentSetGrp.setGeometry(QtCore.QRect(10, 20, 530, 280))
         self.environmentSetGrp.setObjectName("environmentSetGrp")
         self.environmentSetGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
         self.environmentSetGrp.setStyleSheet(QGroupBoxA)     
         self.environmentSetGrp.setVisible(True)
         
+ 
+        self.openSpineMayaFileBtn = QtWidgets.QPushButton(self.environmentSetGrp)
+        self.openSpineMayaFileBtn.setGeometry(QtCore.QRect(10, 20, 110,30))
+        self.openSpineMayaFileBtn.setObjectName("openSpineMayaFileBtn")
+        self.openSpineMayaFileBtn.setText(QtWidgets.QApplication.translate("MainWindow", "open Maya file", None, -1))
+        self.openSpineMayaFileBtn.clicked.connect(self.openMayaFile)
+        self.openSpineMayaFileBtn.setStyleSheet(buttonStyleLeftB)     
+
+ 
+        self.openMayaFileLEdit = QtWidgets.QLineEdit(self.environmentSetGrp)
+        self.openMayaFileLEdit.setGeometry(QtCore.QRect(120, 20, 370, 30))
+        self.openMayaFileLEdit.setObjectName("spineWorkSpaceLEdit")
+        self.openMayaFileLEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.openMayaFileLEdit.setText('')
+        self.openMayaFileLEdit.setStyleSheet(lineEditRightBMiddle)  
         
+        self.openMayaFileFolder = QtWidgets.QPushButton(self.environmentSetGrp)
+        self.openMayaFileFolder.setGeometry(QtCore.QRect(490, 20, 30,30))
+        self.openMayaFileFolder.setObjectName("openMayaFileFolder")
+        self.openMayaFileFolder.setText(QtWidgets.QApplication.translate("MainWindow", "...", None, -1))
+      #  self.openMayaFileFolder.clicked.connect(self.openSpineFolder)
+        self.openMayaFileFolder.setStyleSheet(buttonStyleRightB)            
+                          
+               
+                      
+                                    
         
         
         self.selectSpineWorkSpaceBtn = QtWidgets.QPushButton(self.environmentSetGrp)
-        self.selectSpineWorkSpaceBtn.setGeometry(QtCore.QRect(10, 20, 110,30))
+        self.selectSpineWorkSpaceBtn.setGeometry(QtCore.QRect(10, 80, 110,30))
         self.selectSpineWorkSpaceBtn.setObjectName("selectSpineWorkSpaceBtn")
         self.selectSpineWorkSpaceBtn.setText(QtWidgets.QApplication.translate("MainWindow", "work space", None, -1))
         self.selectSpineWorkSpaceBtn.clicked.connect(self.defineSpineWorkSpace)
@@ -1727,14 +1778,14 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
  
         self.spineWorkSpaceLEdit = QtWidgets.QLineEdit(self.environmentSetGrp)
-        self.spineWorkSpaceLEdit.setGeometry(QtCore.QRect(120, 20, 370, 30))
+        self.spineWorkSpaceLEdit.setGeometry(QtCore.QRect(120, 80, 370, 30))
         self.spineWorkSpaceLEdit.setObjectName("spineWorkSpaceLEdit")
         self.spineWorkSpaceLEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.spineWorkSpaceLEdit.setText('')
         self.spineWorkSpaceLEdit.setStyleSheet(lineEditRightBMiddle)  
         
         self.OpenSpineDirBtn = QtWidgets.QPushButton(self.environmentSetGrp)
-        self.OpenSpineDirBtn.setGeometry(QtCore.QRect(490, 20, 30,30))
+        self.OpenSpineDirBtn.setGeometry(QtCore.QRect(490, 80, 30,30))
         self.OpenSpineDirBtn.setObjectName("OpenSpineDirBtn")
         self.OpenSpineDirBtn.setText(QtWidgets.QApplication.translate("MainWindow", "...", None, -1))
         self.OpenSpineDirBtn.clicked.connect(self.openSpineFolder)
@@ -1745,7 +1796,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         
         self.selectImageDitBtn = QtWidgets.QPushButton(self.environmentSetGrp)
-        self.selectImageDitBtn.setGeometry(QtCore.QRect(10, 60, 110,30))
+        self.selectImageDitBtn.setGeometry(QtCore.QRect(10, 120, 110,30))
         self.selectImageDitBtn.setObjectName("selectImageDitBtn")
         self.selectImageDitBtn.setText(QtWidgets.QApplication.translate("MainWindow", "images Folder", None, -1))
        # self.selectImageDitBtn.clicked.connect(self.defineSpineWorkSpace)
@@ -1753,14 +1804,14 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
  
         self.spineImagesSpaceLEdit = QtWidgets.QLineEdit(self.environmentSetGrp)
-        self.spineImagesSpaceLEdit.setGeometry(QtCore.QRect(120, 60, 370, 30))
+        self.spineImagesSpaceLEdit.setGeometry(QtCore.QRect(120, 120, 370, 30))
         self.spineImagesSpaceLEdit.setObjectName("spineImagesSpaceLEdit")
         self.spineImagesSpaceLEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.spineImagesSpaceLEdit.setText('')
         self.spineImagesSpaceLEdit.setStyleSheet(lineEditRightBMiddle)     
         
         self.OpenImageDirBtn = QtWidgets.QPushButton(self.environmentSetGrp)
-        self.OpenImageDirBtn.setGeometry(QtCore.QRect(490, 60, 30,30))
+        self.OpenImageDirBtn.setGeometry(QtCore.QRect(490, 120, 30,30))
         self.OpenImageDirBtn.setObjectName("OpenImageDirBtn")
         self.OpenImageDirBtn.setText(QtWidgets.QApplication.translate("MainWindow", "...", None, -1))
         self.OpenImageDirBtn.clicked.connect(self.openImagesFolder)
@@ -1771,7 +1822,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         
         self.selectExportFolderBtn = QtWidgets.QPushButton(self.environmentSetGrp)
-        self.selectExportFolderBtn.setGeometry(QtCore.QRect(10, 100, 110,30))
+        self.selectExportFolderBtn.setGeometry(QtCore.QRect(10, 160, 110,30))
         self.selectExportFolderBtn.setObjectName("selectExportFolderBtn")
         self.selectExportFolderBtn.setText(QtWidgets.QApplication.translate("MainWindow", "export Folder", None, -1))
        # self.selectExportFolderBtn.clicked.connect(self.defineSpineWorkSpace)
@@ -1779,14 +1830,14 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
  
         self.spineExportSpaceLEdit = QtWidgets.QLineEdit(self.environmentSetGrp)
-        self.spineExportSpaceLEdit.setGeometry(QtCore.QRect(120, 100, 370, 30))
+        self.spineExportSpaceLEdit.setGeometry(QtCore.QRect(120, 160, 370, 30))
         self.spineExportSpaceLEdit.setObjectName("spineExportSpaceLEdit")
         self.spineExportSpaceLEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.spineExportSpaceLEdit.setText('')
         self.spineExportSpaceLEdit.setStyleSheet(lineEditRightBMiddle)  
 
         self.OpenExportDirBtn = QtWidgets.QPushButton(self.environmentSetGrp)
-        self.OpenExportDirBtn.setGeometry(QtCore.QRect(490, 100, 30,30))
+        self.OpenExportDirBtn.setGeometry(QtCore.QRect(490, 160, 30,30))
         self.OpenExportDirBtn.setObjectName("OpenExportDirBtn")
         self.OpenExportDirBtn.setText(QtWidgets.QApplication.translate("MainWindow", "...", None, -1))
         self.OpenExportDirBtn.clicked.connect(self.openExportFolder)
@@ -1795,7 +1846,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
         self.createBGBtn = QtWidgets.QPushButton(self.environmentSetGrp)
-        self.createBGBtn.setGeometry(QtCore.QRect(10, 140, 110, 30))
+        self.createBGBtn.setGeometry(QtCore.QRect(10, 200, 110, 30))
         self.createBGBtn.setObjectName("createBGBtn")
         self.createBGBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Define BG", None, -1))
         self.createBGBtn.clicked.connect(self.defineCreateBGBtn)
@@ -1803,7 +1854,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
         self.createBG_comboBox = QtWidgets.QComboBox(self.environmentSetGrp)
-        self.createBG_comboBox.setGeometry(QtCore.QRect(120, 140, 400, 30))
+        self.createBG_comboBox.setGeometry(QtCore.QRect(120, 200, 400, 30))
         self.createBG_comboBox.setObjectName("comboBox")
         itemNameList = ["100x100","200x200","250x250","300x300","400x400",
                          "512x512","600x600","800x800","1000x1000","1024x1024",
@@ -1817,17 +1868,17 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           
           
         self.jointSizeLabel = QtWidgets.QLabel(self.environmentSetGrp)
-        self.jointSizeLabel.setGeometry(QtCore.QRect(30, 180, 500, 30))
+        self.jointSizeLabel.setGeometry(QtCore.QRect(30, 240, 500, 30))
         self.jointSizeLabel.setObjectName("jointSizeLabel")
         self.jointSizeLabel.setText(QtWidgets.QApplication.translate("MainWindow", "joint size", None, -1))
 
         self.jointSizeValueLabel = QtWidgets.QLabel(self.environmentSetGrp)
-        self.jointSizeValueLabel.setGeometry(QtCore.QRect(100, 180, 500, 30))
+        self.jointSizeValueLabel.setGeometry(QtCore.QRect(100, 240, 500, 30))
         self.jointSizeValueLabel.setObjectName("jointSizeLabel")
         self.jointSizeValueLabel.setText(QtWidgets.QApplication.translate("MainWindow", "10", None, -1))
 
         self.horizontalSlider = QtWidgets.QSlider(self.environmentSetGrp)
-        self.horizontalSlider.setGeometry(QtCore.QRect(150, 180, 300, 30))
+        self.horizontalSlider.setGeometry(QtCore.QRect(150, 240, 300, 30))
         self.horizontalSlider.setMinimum(1)
         self.horizontalSlider.setMaximum(100)
         self.horizontalSlider.setProperty("value", 10)
@@ -2538,131 +2589,167 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.slotColorGrp.setVisible(True)
 
               
-        self.testBtn = QtWidgets.QPushButton(self.slotColorGrp)
-        self.testBtn.setGeometry(QtCore.QRect(10, 10, 100, 30))
-        self.testBtn.setObjectName("testBtn")
-        self.testBtn.setText(QtWidgets.QApplication.translate("MainWindow", "set color", None, -1))
-        self.testBtn.setStyleSheet(buttonStyleLeftB)     
-
-        self.testBtn.clicked.connect(self.setColorToSelectBone)
-        self.testLabel = QtWidgets.QLabel()
-        self.testLabel.setAutoFillBackground(True)
-        self.testLabel = QtWidgets.QPushButton(self.slotColorGrp)
-        self.testLabel.setGeometry(QtCore.QRect(130, 10, 100, 30))
+        self.setSlotColor = QtWidgets.QPushButton(self.slotColorGrp)
+        self.setSlotColor.setGeometry(QtCore.QRect(10, 10, 100, 30))
+        self.setSlotColor.setObjectName("setSlotColor")
+        self.setSlotColor.setText(QtWidgets.QApplication.translate("MainWindow", "set color", None, -1))
+        self.setSlotColor.setStyleSheet(buttonStyleB)     
+        self.setSlotColor.clicked.connect(self.setColorToSelectBone)
+ 
+        self.setSlotColorKey = QtWidgets.QPushButton(self.slotColorGrp)
+        self.setSlotColorKey.setGeometry(QtCore.QRect(120, 10, 100, 30))
+        self.setSlotColorKey.setObjectName("setSlotColorKey")
+        self.setSlotColorKey.setText(QtWidgets.QApplication.translate("MainWindow", "set key", None, -1))
+        self.setSlotColorKey.setStyleSheet(buttonStyleB)     
+        self.setSlotColorKey.clicked.connect(self.setSlotColorKeyFrame)
+        
+               
+        
+       # self.testLabel = QtWidgets.QLabel()
+        #self.testLabel.setAutoFillBackground(True)
+        #self.testLabel = QtWidgets.QPushButton(self.slotColorGrp)
+        #self.testLabel.setGeometry(QtCore.QRect(130, 10, 100, 30))
+        
+        self.setNewSlot = QtWidgets.QPushButton(self.slotColorGrp)
+        self.setNewSlot.setGeometry(QtCore.QRect(10, 50, 100, 30))
+        self.setNewSlot.setObjectName("setNewSlot")
+        self.setNewSlot.setText(QtWidgets.QApplication.translate("MainWindow", "set Slot", None, -1))
+        self.setNewSlot.setStyleSheet(buttonStyleB)             
+        self.setNewSlot.clicked.connect(self.setSlotNewImage)
+       
+        
         #lay.addWidget(self.testBtn)
         #lay.addWidget(self.testLabel)    
     
     
         
 
+    def openMayaFile(self):
+        print "openMayaFile"
+        basicFilter = "*.mb"
+        fullFileName = cmds.fileDialog2(fileFilter=basicFilter, dialogStyle=2,fm=1)[0]
+        fileName = fullFileName.split('/')[-1]
+        fileDir = fullFileName.split(fileName)[0]
+        spineImageDir = fileDir + 'images'
+        spineExportDir =  fileDir + 'export'
+        print fileName,fileDir
+        cmds.file(fileName,open=True,f=True)
+        self.openMayaFileLEdit.setText(fileName)
+        self.spineWorkSpaceLEdit.setText(fileDir)
+        self.spineImagesSpaceLEdit.setText(spineImageDir)
+        self.spineExportSpaceLEdit.setText(spineExportDir)
+       # exportFolder = self
+        exportFileName = spineExportDir + '/' + fileName.split('.')[0] + "_spineExport.json"
+        self.selectExportFileBTnLEdit.setText(exportFileName)
+        
+        try:
+            os.mkdir(spineImageDir)
+        except:
+            pass
+        try:
+            os.mkdir(spineExportDir)
+        except:
+            pass
+            
+
+
+    def setSlotNewImage(self):
+        print "setSlotNewImage"
+        currentImage = self.imageListTable.currentItem().text()
+        imageName = currentImage.split('.')[0]
+        fileName = self.imageInfoTable.item(0,1).text()
+        
+        targetFileName = self.spineImagesSpaceLEdit.text() +'/' +currentImage
+        imageW = int(self.imageInfoTable.item(3,1).text())
+        imageH = int(self.imageInfoTable.item(4,1).text())
+        
+        ###create new shader
+        slotShaderName =  imageName + '_shader'
+        slotFileName = imageName + '_imageFile'
+        slotSG = imageName + '_SG'
+        selectJointList = cmds.ls(sl=True,type='joint')
+        cmds.select(cl=True) 
+
+        shader = cmds.shadingNode("lambert",asShader=True,n=slotShaderName)
+       # print 'shader',shader
+        cmds.select(shader)
+        shaderName = cmds.ls(sl=True)[0]
+            # shader=cmds.rename(shader,slotShaderName)
+       #     print 'shaderName',shaderName,shader
+        file_node=cmds.shadingNode("file",asTexture=True,n=slotFileName)
+        shading_group= cmds.sets(renderable=True,noSurfaceShader=True,empty=True,n=slotSG)
+        cmds.connectAttr('%s.color' %shader ,'%s.surfaceShader' %shading_group)
+        cmds.connectAttr('%s.outColor' %file_node, '%s.color' %shader)
+           # print 'fileName',fileName
+        
     
+        cmds.connectAttr('%s.outTransparency' %file_node, '%s.transparency' %shader)
+        cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
+        cmds.select(cl=True) 
 
-
+        selectBoneList = filter(lambda x: cmds.getAttr('%s.spine_tag'%x)== 'spine_bone' ,selectJointList)
+        print "currentFile",fileName,targetFileName
+        try:
+            if os.path.isfile(targetFileName) == True:
+                print "file exist"
+                
+            else:
+                #os.remove(targetFile)
+                shutil.copyfile(fileName,targetFileName)        
         
-        '''
-        self.exportSpineJsonBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.exportSpineJsonBtn.setGeometry(QtCore.QRect(150, 20, 130, 30))
-        self.exportSpineJsonBtn.setObjectName("exportSpineJson")
-        self.exportSpineJsonBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Export Spine Json", None, -1))
-        self.exportSpineJsonBtn.clicked.connect(self.defineAllItemInRootCtrl)
-        self.exportSpineJsonBtn.setStyleSheet(buttonStyleB)     
+        except:
+                       
+            pass
+        cmds.setAttr('%s.fileTextureName'%slotFileName,targetFileName,type='string')
 
-       
-        self.analyzeCharacterSet = QtWidgets.QPushButton(self.dockImageButton)
-        self.analyzeCharacterSet.setGeometry(QtCore.QRect(10, 20, 130, 30))
-        self.analyzeCharacterSet.setObjectName("analyzeCharacterSet")
-        self.analyzeCharacterSet.setText(QtWidgets.QApplication.translate("MainWindow", "analyze Character Set", None, -1))
-        self.analyzeCharacterSet.clicked.connect(self.doAnalyzeCharacterSet)
-        self.analyzeCharacterSet.setStyleSheet(buttonStyleB)     
+        for bone in selectBoneList:
+            slotName = cmds.getAttr('%s.bone_slot'%bone)
+            print 'slotName',slotName
+            cmds.select(slotName)
+            cmds.hyperShade( assign=slotShaderName )
+            cmds.setAttr('%s.scaleX'%slotName,imageW)
+            cmds.setAttr('%s.scaleZ'%slotName,imageH)
+            cmds.setAttr('%s.slot_width'%slotName,imageW)
+            cmds.setAttr('%s.slot_height'%slotName,imageH)
+            cmds.setAttr('%s.slot_width'%bone,imageW)
+            cmds.setAttr('%s.slot_height'%bone,imageH)
+
+            cmds.setAttr('%s.slot_attachment'%slotName,imageName,type="string")
+
+            cmds.select(cl=True) 
+        print 'currentImage',currentImage,fileName,selectBoneList
         
-        
-        
-        self.setCharacterSetBTn = QtWidgets.QPushButton(self.dockImageButton)
-        self.setCharacterSetBTn.setGeometry(QtCore.QRect(10, 60, 130, 30))
-        self.setCharacterSetBTn.setObjectName("setCharacterSetBTn")
-        self.setCharacterSetBTn.setText(QtWidgets.QApplication.translate("MainWindow", "select Character Set", None, -1))
-        self.setCharacterSetBTn.clicked.connect(self.setCharacterSetName)
-        self.setCharacterSetBTn.setStyleSheet(buttonStyleB)             
-        
+    def setSlotColorKeyFrame(self):
+        print "setSlotColorKeyFrame"
+        selectJointList = cmds.ls(sl=True,type='joint')
+        selectBoneList = filter(lambda x: cmds.getAttr('%s.spine_tag'%x)== 'spine_bone' ,selectJointList)
+        for bone in selectBoneList:
+            
+            cmds.setKeyframe(bone, at='slot_red')
+            cmds.setKeyframe(bone, at='slot_green')
+            cmds.setKeyframe(bone, at='slot_blue')
 
-        self.setCharacterSetLineEdit = QtWidgets.QLineEdit(self.dockImageButton)
-        self.setCharacterSetLineEdit.setGeometry(QtCore.QRect(150, 60, 130, 30))
-        self.setCharacterSetLineEdit.setObjectName("rootJointLineEdit")
-        self.setCharacterSetLineEdit.setText(QtWidgets.QApplication.translate("MainWindow", "Character Set Name", None, -1))
-        self.setCharacterSetLineEdit.setAlignment(QtCore.Qt.AlignCenter)
-        self.setCharacterSetLineEdit.setStyleSheet(lineEditA)     
-
-
-
-        self.createMeshBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.createMeshBtn.setGeometry(QtCore.QRect(290, 20, 100, 30))
-        self.createMeshBtn.setObjectName("createMesh")
-        self.createMeshBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Mesh", None, -1))
-        self.createMeshBtn.clicked.connect(self.definecreateMesh)
-        self.createMeshBtn.setStyleSheet(buttonStyleB)             
-
-        self.createClippingBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.createClippingBtn.setGeometry(QtCore.QRect(400, 20, 100, 30))
-        self.createClippingBtn.setObjectName("createClipping")
-        self.createClippingBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Clip", None, -1))
-        #self.createClippingBtn.clicked.connect(self.definecreateSlotBtn)
-        self.createClippingBtn.setStyleSheet(buttonStyleB)             
-
-
-
-        
-
-        self.setRootBoneJointBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.setRootBoneJointBtn.setGeometry(QtCore.QRect(290, 60, 100, 30))
-        self.setRootBoneJointBtn.setObjectName("setRootBoneBtn")
-        self.setRootBoneJointBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Set Root", None, -1))
-        self.setRootBoneJointBtn.clicked.connect(self.defineRootBone)
-        self.setRootBoneJointBtn.setStyleSheet(buttonStyleB)             
-
-
-        self.setRootLineEdit = QtWidgets.QLineEdit(self.dockImageButton)
-        self.setRootLineEdit.setGeometry(QtCore.QRect(400, 60, 100, 30))
-        self.setRootLineEdit.setObjectName("rootJointLineEdit")
-        self.setRootLineEdit.setAlignment(QtCore.Qt.AlignCenter)
-        self.setRootLineEdit.setStyleSheet(lineEditA)             
-     
-        self.testABtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.testABtn.setGeometry(QtCore.QRect(10, 100, 130, 30))
-        self.testABtn.setObjectName("setRootBoneBtn")
-        self.testABtn.setText(QtWidgets.QApplication.translate("MainWindow", "testA", None, -1))
-        self.testABtn.clicked.connect(self.run)
-        self.testABtn.setStyleSheet(buttonStyleB)             
-
-        self.testBBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.testBBtn.setGeometry(QtCore.QRect(150, 100, 130, 30))
-        self.testBBtn.setObjectName("testb")
-        self.testBBtn.setText(QtWidgets.QApplication.translate("MainWindow", "testB", None, -1))
-        self.testBBtn.clicked.connect(self.defineAllItemInRootCtrl)
-        self.testBBtn.setStyleSheet(buttonStyleB)             
-
-        self.testCBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.testCBtn.setGeometry(QtCore.QRect(290, 100, 100, 30))
-        self.testCBtn.setObjectName("testc")
-        self.testCBtn.setText(QtWidgets.QApplication.translate("MainWindow", "testC", None, -1))
-        self.testCBtn.clicked.connect(self.defineDeformAnimation)
-        self.testCBtn.setStyleSheet(buttonStyleB)             
-         
-        self.testDBtn = QtWidgets.QPushButton(self.dockImageButton)
-        self.testDBtn.setGeometry(QtCore.QRect(400, 100, 100, 30))
-        self.testDBtn.setObjectName("testDBtn")
-        self.testDBtn.setText(QtWidgets.QApplication.translate("MainWindow", "testD", None, -1))
-        self.testDBtn.clicked.connect(self.testD)
-        self.testDBtn.setStyleSheet(buttonStyleB)     
-        '''
+        #print 'selectBoneList',selectBoneList
 
 
     def setColorToSelectBone(self):
         print "setColorToSelectBone"
         color = QtWidgets.QColorDialog.getColor()
-        self.testLabel.setAutoFillBackground(True)
+       # self.testLabel.setAutoFillBackground(True)
        # print color,type(color),dir(color)
        # print color.redF(),color.blueF()
         selectJoint = cmds.ls(sl=True,type='joint')
+        sampleBone = selectJoint[0]
+        sampleMesh = cmds.getAttr('%s.bone_slot'%sampleBone)
+        
+        
+        getObj =  cmds.ls(sampleMesh,dag=1)[1]
+        shadingGrps = cmds.listConnections(getObj,type='shadingEngine')
+        shaders = cmds.ls(cmds.listConnections(shadingGrps),materials=1)
+        fileNode = cmds.listConnections('%s.color' % (shaders[0]), type='file')[0]
+        #currentFile = cmds.getAttr("%s.fileTextureName" % fileNode[0])
+        cmds.setAttr('%s.colorGain'%fileNode, color.redF(), color.greenF(), color.blueF(), type="double3")
+        #print 'currentFile',currentFile
       #  selectBone = []
         for i in selectJoint:
             if cmds.getAttr('%s.spine_tag'%i) == 'spine_bone':
@@ -3178,7 +3265,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     pass
                 else:
                     keyFrameList.append(key)
-                    
+            keyFrameList = sorted(keyFrameList)        
             if alignFrame <= 0 :
                 self.errorMsgLEdit.setText('the frame number should be large than 1')
 
@@ -4175,7 +4262,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                             cmds.setAttr('%s.spine_tag'%curve,'spine_ctrl',type='string')
                             cmds.setAttr('%s.spine_parentCharacterSet'%curve,currentSet[0],type='string') 
                           #  cmds.rename(curve,'rootCtrl')
-                        
+                            cmds.parent(curve,currentSet)
                             self.errorMsgLEdit.setText('Root %s created'%rootName)
                     
                 else:
@@ -4193,12 +4280,229 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         '''
           
    
+
+
+
+    def exortTOSpineJson(self): #regionSlot
+        print "exortTOSpineJson"
+        cmds.currentTime(0,e=True)
+        errMsg = "define all items in root ctrl"
+        rootCtrlName = self.exportSpineRootLabelLEdit.text()
+        fileName = self.selectExportFileBTnLEdit.text()
+        characterSetGrp =[]
+        #boneList = [{ "name":rootCtrlName}]
+        allMeshItem = []
+        meshSlotList = []
+        tempAllBoneList = []
+        allCharacterSetList =[]
+        #skinDict = {"default":{}}
+        allObjInRootCtrl = cmds.listRelatives(rootCtrlName,c=True)
+        print 'rootCtrlName',rootCtrlName
+        for i in allObjInRootCtrl:
+            if cmds.getAttr('%s.spine_tag'%i) == "spine_characterSet":
+                characterSetGrp.append(i)
+        ### check if bone/joints in spineRootSkeleton
+            
+        allJointInRootCtrl = cmds.listRelatives(rootCtrlName,ad=True,type="joint") 
+        try:
+            jointsCount = len(allJointInRootCtrl)
+        except:
+            print "no joints in spine_rootSkeleton"
+            jointsCount = 0
+            
+        if jointsCount == 0:
+            boneList = [{ "name":rootCtrlName}]
+            skinDict= {"default":{}}
+            slotList = []
+            boneAnimDict = {}
+            slotAnimDict={}
+
+            pass
+        else:
+            depthList = []
+            for i in allJointInRootCtrl:
+                try:
+                    if cmds.getAttr('%s.spine_tag'%i) == "spine_bone":
+                        tempAllBoneList.append(i) 
+                        depth = len(cmds.ls(i,l=True)[0].split('|'))
+                        if depth in depthList:
+                            pass
+                        else:
+                            depthList.append(depth)
+                except:
+                    pass
+            
+
+            depthList = sorted(depthList)
+            allBoneList = []
+            for depth in depthList:
+                for i in tempAllBoneList:
+                   # print len(cmds.ls(i,l=True)[0].split('|'))
+                    if len(cmds.ls(i,l=True)[0].split('|')) == depth:
+                        if i in allBoneList:
+                            pass
+                        else:
+                            allBoneList.append(i)
+                        
+            rootBoneList = [{ "name":rootCtrlName}]
+            boneList = self.getAllBoneList(allBoneList,rootBoneList)
+            regionSlotList = self.getAllRegionSlotList(allBoneList) 
+            initSkinList= {"default":{}}
+
+            skinDict = self.getAllRegionSkinList(regionSlotList,initSkinList)
+            slotRegionTimeLineDict = self.defineRegionSlotAnimation(regionSlotList)
+            boneTimeLineDict = self.defineBoneAnimation(allBoneList)
+            slotList = regionSlotList
+            boneAnimDict = boneTimeLineDict
+            slotAnimDict= slotRegionTimeLineDict
+            
+            
+        if len(characterSetGrp) == 0:
+            try:
+                #deformerDict={}
+                exportData = {"skeleton":{"images": "../images/"},"bones":boneList,"slots":slotList,"skins":skinDict,"animations":{"animA":{"bones":boneAnimDict,"slots":slotAnimDict}}}
+                writeData = json.dumps(exportData, sort_keys=True , indent =4) 
+                with open(fileName, 'w') as the_file:
+                    the_file.write(writeData)
+            except:
+                pass
+            
+        else:
+            self.defineAllCharacterSetInRootCtrl(rootCtrlName,characterSetGrp,boneList,skinDict,slotList,boneAnimDict,slotAnimDict,fileName)
+   
+        
+             
+                       
+    def defineAllCharacterSetInRootCtrl(self,rootCtrlName,characterSetGrp,boneList,skinDict,slotList,boneAnimDict,slotAnimDict,fileName): # get all characterSet and mesh skin , animation data
+        print "defineAllCharacterSetInRootCtrl",boneList,slotList,boneAnimDict,slotAnimDict,fileName
+        errMsg = "define all items in root ctrl"
+
+        allMeshSlotList = []
+        allSkinNameList = []
+        
+        for chaSet in characterSetGrp:
+            boneList.append({"name":chaSet,'parent':rootCtrlName})
+            print 'chaSet',chaSet
+        
+            allTransformsList =  cmds.listRelatives(chaSet,c=True,p=False)
+            
+            if allTransformsList == None :
+                print "no mesh in characterSet %s"%chaSet
+                pass
+            else:
+                for i in allTransformsList:
+                    for j in cmds.listRelatives(i,c=True,p=False):
+                        print 'jjjjj',i,j
+            
+                        try:
+                            if cmds.nodeType(j) =='mesh' and cmds.getAttr('%s.spine_skinType'%j) =='mesh':
+                                allMeshSlotList.append(i)
+                                allSkinNameList.append(j)
+                        except:
+                            pass
+        print 'allTransformsList____',allTransformsList  ,allMeshSlotList,allSkinNameList
+        chaSetTimelineDict = self.defineBoneAnimation(characterSetGrp)
+        print 'chaSetTimelineDict',chaSetTimelineDict
+
+        
+        for slot in allMeshSlotList: ## define all mesh's slot
+        #   print cmds.ls(i)
+            try:
+                self.defineSlot(slot,rootCtrlName) 
+            except:
+                pass
+            try:
+             #   print 'slot',slot
+                currentParent = cmds.listRelatives(slot,p=True)[0]
+            #    print 'currentParent',currentParent
+                if cmds.getAttr('%s.spine_tag'%currentParent) == 'spine_characterSet':
+                    cmds.setAttr('%s.slot_bone'%slot,currentParent,type='string')
+            except:
+                print 'current slot/mesh not in character set'
+                pass
+        
+        for i in allSkinNameList:
+         #   print i
+            skinData = json.loads(cmds.getAttr('%s.spine_skinData'%i))
+           # skinList
+            skinDict['default'].update(skinData)
+          #  print 'skinData',skinData
+        print 'skinDict',skinDict
+        
+          #print allSlotItem
+        
+        for slotData in self.getAllMeshSlots(allMeshSlotList):
+            slotList.append(slotData)
+        #slotList = self.getAllMeshSlots(allMeshSlotList)
+        print slotList
+        
+        
+        #animaitonSlotDict = 
+        print 'allMeshSlotList',allMeshSlotList
+        slotAnimationDict = self.defineSlotAnimation(allMeshSlotList)
+        
+        print 'slotAnimationDict',slotAnimationDict
+        deformerDict = self.defineDeformAnimation(characterSetGrp)
+        print 'sdsdssds',self.defineDeformAnimation(characterSetGrp)
+        slotAnimDict.update(slotAnimationDict)
+        print 'deformerDict__3',deformerDict
+        #deformerDict ={}
+        animationDict={"default":{"bones":boneAnimDict,
+                                    "slots":slotAnimDict,
+                                    "deform":deformerDict}}
+            
+        animationDict['default']['bones'].update(chaSetTimelineDict)
+        #print 'skinDict',skinDict
+       # print 'slotList',slotList
+        print 'deformerDict',deformerDict
+  
+
+        
+        try:
+            exportData = {"skeleton":{"images": "../images/"},"bones":boneList,"slots":slotList,"skins":skinDict,"animations":{"animA":{"bones":boneAnimDict,"slots":slotAnimDict,"deform":deformerDict}}}
+            writeData = json.dumps(exportData, sort_keys=True , indent =4) 
+            with open(fileName, 'w') as the_file:
+                the_file.write(writeData)
+        except:
+            pass
+        
+        
+
+    def defineSlotAnimation(self,slotList):
+        print "defineSlotAnimation"
+        
+        slotAnimationDict = {}
+        
+        for slot in slotList:
+            attachmentName = cmds.getAttr('%s.spine_attachmentName'%slot)
+            slotAnimationDict.update({slot:{"attachment": [{ "time": 0, "name": attachmentName }]}})
+            
+            
+        return slotAnimationDict        
+        
+    #### 輸出     
+    def defineDeformAnimation(self,characterSetGrp):
+        print "defineDeformAnimation"
+       # print 'characterSetGrp___',characterSetGrp
+        
+        #meshList = cmds.ls(sl=True)
+        #characterSetGrp = 'saberSet'
+        allKeyFrameListByDeformers = self.findAllKeyframes(characterSetGrp) ## 根據控制器，變形器，骨架，取得所有的keyFrame 
+       # print 'allKeyFrameListByDeformers',allKeyFrameListByDeformers
+        meshDeformDict = self.defineVertexsValueDeltaTime(allKeyFrameListByDeformers) ## 取得每個keyframe的vertex 數值
+      # print 'meshDeformDict__AAA',meshDeformDict
+        return meshDeformDict
+        # print allKeyFrameListByDeformers    
+        
                
-    ### find all keyframe in characterSet
+    ### find all keyframe in characterSet    ## 根據控制器，變形器，骨架，取得所有的keyFrame 
     def findAllKeyframes(self,characterSetGrp):
         print "findAllKeyframes"
         #characterSetGrp = 'saberSet'  ###input
+        frameStart = float(self.timeStartLEdit.text())
+        frameEnd = float(self.timeEndLEdit.text())
         allObjects = cmds.ls(characterSetGrp,fl=True,dag=True,type='mesh')
+       # print 'allObjects',allObjects
         meshList = []
         allKeyFrameDict ={}
         for i in allObjects:
@@ -4209,11 +4513,13 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     pass
             except:
                 pass
-                
+      #  print 'meshList',meshList
+              
         for i in meshList:
-            allKeyframesList = []
+            allKeyframesList = [frameStart,frameEnd]
             allDeformersList = cmds.listHistory(i)
             
+           # print 'allDeformersList',allDeformersList
             for deformer in allDeformersList:
                 allKeyframes = cmds.keyframe( deformer, query=True)
                 if allKeyframes == None:
@@ -4224,24 +4530,27 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                             pass
                         else:
                             allKeyframesList.append(f)
-            allKeyFrameDict.update({i:allKeyframesList})
+            allKeyFrameDict.update({i:sorted(allKeyframesList)})
                      
+       # print 'allKeyFrameDict',allKeyFrameDict
+        return allKeyFrameDict                
 
-        return allKeyFrameDict
-
+              
     def defineVertexsValueDeltaTime(self,allKeyFrameListByDeformers):
         print "defineVertexsValueDeltaTime"
         errMsg = "get vertexValue Error"
+        fps = float(self.fpsLEdit.text())
+
         #print allKeyFrameListByDeformers
-        frameStart = 0.0
-        frameEnd = 120.0
+        frameStart = float(self.timeStartLEdit.text())
+        frameEnd = float(self.timeEndLEdit.text())
         skinName = "default"
         meshDeformDict = {skinName:{}}
         
         meshList = allKeyFrameListByDeformers.keys()
         
 
-       # print 'meshList',meshList
+        print 'meshList',meshList
         for mesh in meshList:
             slotName = cmds.listRelatives(mesh,p=True)[0]
             attachmentName = cmds.getAttr('%s.spine_attachmentName'%slotName)
@@ -4257,163 +4566,75 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             keyFrameList.append(frameEnd)
             keyFrameList = sorted(keyFrameList)
             vertexPositionPreFrameList= []
-
-            for f in keyFrameList:
+            for vertex in vertexList:
+                vertexPositionPreFrameList.append(0.0)
+                vertexPositionPreFrameList.append(0.0)
+                
+            vertexPositionZeroFrame =[]
+            cmds.currentTime(0.0,e=True)
+            for vertex in vertexList:
+                vertexPositionZeroFrame.append(float('{:.3f}'.format(cmds.pointPosition(vertex)[0])))
+                vertexPositionZeroFrame.append(float('{:.3f}'.format(cmds.pointPosition(vertex)[1])) )            
+               
+            print 'vertexPositionPreFrameList_original',vertexPositionPreFrameList
+            filterKeyFrameList = []
+            for k in keyFrameList:
+                if k in filterKeyFrameList:
+                    pass
+                else:
+                    filterKeyFrameList.append(k)
+                    
+            
+            print 'filterKeyFrameList',filterKeyFrameList
+            for f in filterKeyFrameList:
                 vertexPositionCurrentFrameList = []
                 deltaVertexPositionPreFrameList=[]
                # vertexPositionX_preFrame = 0.0
                # vertexPositionY_preFrame = 0.0
                 cmds.currentTime(f,e=True)
                 for vertex in vertexList:
-                    vertexPosionX_CurrentFrame = cmds.pointPosition(vertex)[0]
-                    vertexPosionY_CurrentFrame = cmds.pointPosition(vertex)[1]
+                    print vertex
+                    vertexPosionX_CurrentFrame = float('{:.3f}'.format(cmds.pointPosition(vertex)[0]))
+                    vertexPosionY_CurrentFrame =float('{:.3f}'.format(cmds.pointPosition(vertex)[1])) 
                    # deltaPosionX = vertexPosionX_CurrentFrame-vertexPositionX_preFrame
                    # deltaPosionY = vertexPosionY_CurrentFrame-vertexPositionY_preFrame
                     vertexPositionCurrentFrameList.append(vertexPosionX_CurrentFrame)
                     vertexPositionCurrentFrameList.append(vertexPosionY_CurrentFrame)
                    # vertexPositionX_preFrame = cmds.pointPosition(vertex)[0]
                    # vertexPositionY_preFrame = cmds.pointPosition(vertex)[1]
-                if f == 0.0:
-                    for i in range(0,len(vertexPositionCurrentFrameList)):
-                        deltaPosition = vertexPositionCurrentFrameList[i]
-                        deltaVertexPositionPreFrameList.append(deltaPosition)
+             #   if f == 0.0:
+               #     for i in range(0,len(vertexPositionCurrentFrameList)):
+                 #       deltaPosition = vertexPositionCurrentFrameList[i]
+                  #      deltaVertexPositionPreFrameList.append(deltaPosition)
+               # else:    
                         
-                else:    
                         
-                        
-                    for i in range(0,len(vertexPositionCurrentFrameList)):
-                        deltaPosition = vertexPositionCurrentFrameList[i] - vertexPositionPreFrameList[i]
-                        deltaVertexPositionPreFrameList.append(deltaPosition)
-                   # print deltaPosionX,deltaPosionY
+                for i in range(0,len(vertexPositionCurrentFrameList)):
+                  #  if f == 0.0:
+                    #     deltaVertexPositionPreFrameList.append(0)
+                  #  else:
+                    deltaPosition =  vertexPositionCurrentFrameList[i] -vertexPositionZeroFrame[i]
+                    if abs(deltaPosition) <0.01:
+                        deltaVertexPositionPreFrameList.append(0)
+                    else:
+                        deltaVertexPositionPreFrameList.append(float('{:.3f}'.format(deltaPosition)))
+                   # print deltaPosionX,deltaPosionY float('{:.3f}'.format(deltaPosition))
+                vertexPositionPreFrameList = []
                 vertexPositionPreFrameList = vertexPositionCurrentFrameList
                 print 'vertexPositionPreFrameList',vertexPositionPreFrameList
-                meshDeformDict[skinName][slotName][attachmentName].append({"time":f/30.0,"vertices":deltaVertexPositionPreFrameList})
-
-
+                frame = float(f)/float(fps)
+                print f,frame
+                meshDeformDict[skinName][slotName][attachmentName].append({"time":float('{:.3f}'.format(frame)),"vertices":deltaVertexPositionPreFrameList})
+        print 'meshDeformDict__',meshDeformDict
         return meshDeformDict
-      #  allvertexs = cmds.polyListComponentConversion(meshName,tv=True)
-        #vertexList = []
-        '''
-        cmds.select(allvertexs)
-        vertexList = cmds.ls(sl=True,fl=True)
-        cmds.select(cl=True)
-        ox = cmds.getAttr("%s.translateX"%joinName)
-        oy = cmds.getAttr("%s.translateY"%joinName)
-        print ox,oy
-
-       #  print vertexList
-        vertexPositionForSpine= []
-        for i in vertexList:
-          #   print cmds.pointPosition(i)
-            vertexPositionForSpine.append(cmds.pointPosition(i)[0]-ox)
-            vertexPositionForSpine.append(cmds.pointPosition(i)[1]-oy)
-             
-        '''
-        
-        
                          
-    #### 輸出     
-    def defineDeformAnimation(self,characterSetGrp):
-        print "defineDeformAnimation"
-        
-        #meshList = cmds.ls(sl=True)
-        #characterSetGrp = 'saberSet'
-        allKeyFrameListByDeformers = self.findAllKeyframes(characterSetGrp) ## 根據控制器，變形器，骨架，取得所有的keyFrame 
-        
-        meshDeformDict = self.defineVertexsValueDeltaTime(allKeyFrameListByDeformers) ## 取得每個keyframe的vertex 數值
-        return meshDeformDict
-        # print allKeyFrameListByDeformers
-        '''
-        deformDict = {}
-            #getTime
-            #getVertics
 
-        allvertexs = cmds.polyListComponentConversion(meshName,tv=True)
-        #vertexList = []
-        cmds.select(allvertexs)
-        vertexList = cmds.ls(sl=True,fl=True)
-        cmds.select(cl=True)
-        ox = 0##cmds.getAttr("%s.translateX"%joinName)
-        oy = 0##cmds.getAttr("%s.translateY"%joinName)
-        print ox,oy
-
-       #  print vertexList
-        vertexPositionForSpine= []
-        for i in vertexList:
-          #   print cmds.pointPosition(i)
-            vertexPositionForSpine.append(cmds.pointPosition(i)[0]-ox)
-            vertexPositionForSpine.append(cmds.pointPosition(i)[1]-oy)
-             
-        return vertexPositionForSpine
-        '''
-    def exortTOSpineJson(self): #regionSlot
-        print "exortTOSpineJson"
-        
-        errMsg = "define all items in root ctrl"
-        rootCtrlName = self.exportSpineRootLabelLEdit.text()
-        fileName = self.selectExportFileBTnLEdit.text()
-        characterSetGrp =[]
-        #boneList = [{ "name":rootCtrlName}]
-        allMeshItem = []
-        meshSlotList = []
-        tempAllBoneList = []
-        #skinDict = {"default":{}}
-        allObjInRootCtrl = cmds.listRelatives(rootCtrlName,c=True)
-        print 'rootCtrlName',rootCtrlName
-        for i in allObjInRootCtrl:
-            if cmds.getAttr('%s.spine_tag'%i) == "spine_characterSet":
-                characterSetGrp.append(i)
-
-        allJointInRootCtrl = cmds.listRelatives(rootCtrlName,ad=True,type="joint")
-        depthList = []
-        for i in allJointInRootCtrl:
-            try:
-                if cmds.getAttr('%s.spine_tag'%i) == "spine_bone":
-                    tempAllBoneList.append(i) 
-                    depth = len(cmds.ls(i,l=True)[0].split('|'))
-                    if depth in depthList:
-                        pass
-                    else:
-                        depthList.append(depth)
-            except:
-                pass
-        
-
-        depthList = sorted(depthList)
-        allBoneList = []
-        for depth in depthList:
-            for i in tempAllBoneList:
-               # print len(cmds.ls(i,l=True)[0].split('|'))
-                if len(cmds.ls(i,l=True)[0].split('|')) == depth:
-                    if i in allBoneList:
-                        pass
-                    else:
-                        allBoneList.append(i)
-                    
-
-        boneList = self.getAllBoneList(allBoneList)
-        regionSlotList = self.getAllRegionSlotList(allBoneList) 
-        skinDict = self.getAllRegionSkinList(regionSlotList)
-        slotRegionTimeLineDict = self.defineRegionSlotAnimation(regionSlotList)
-        boneTimeLineDict = self.defineBoneAnimation(allBoneList)
-
-        print 'depthList',depthList
-
-        print 'allBoneList',allBoneList
-        print 'boneList',boneList
-        print  'skinDict',skinDict
-        print 'slotRegionTimeLineDict',slotRegionTimeLineDict 
-        print 'boneTimeLineDict',boneTimeLineDict 
-        
-        exportData = {"skeleton":{"images": "../images/"},"bones":boneList,"slots":regionSlotList,"skins":skinDict,"animations":{"animA":{"bones":boneTimeLineDict,"slots":slotRegionTimeLineDict}}}
-        writeData = json.dumps(exportData, sort_keys=True , indent =4) 
-        with open(fileName, 'w') as the_file:
-            the_file.write(writeData)
-                    
-    def getAllBoneList(self,allBoneList):
+                               
+                                                        
+    def getAllBoneList(self,allBoneList,rootBoneList):
         rootCtrlName = self.exportSpineRootLabelLEdit.text()
        # characterSetGrp =[]
-        boneList = [{ "name":rootCtrlName}]
+        boneList = rootBoneList
         #boneList = []
         for bone in allBoneList:
           #  print bone
@@ -4490,7 +4711,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                # print j , cmds.nodeType(j)
                 if cmds.getAttr('%s.spine_tag'%j) == 'spine_slot':
                     boneName = cmds.getAttr('%s.slot_bone'%j)#i["name"]
-                    blendModeGet = int(cmds.getAttr("%s.slot_blend"%j))
+                    blendModeGet = int(cmds.getAttr("%s.slot_blend"%boneName))
                     if blendModeGet == 0:
                         blendMode = "normal"
                     elif blendModeGet == 1:
@@ -4511,7 +4732,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     colorHex = "%02x"%int((color[0]/1)*255) + "%02x"%int((color[1]/1)*255) +"%02x"%int((color[2]/1)*255)
                     darkHex = "%02x"%int((dark[0]/1)*255) + "%02x"%int((dark[1]/1)*255) +"%02x"%int((dark[2]/1)*255)
                     exportColorHex = str(colorHex + alphaHex)
-                    
+                   # print 'blendMode',blendMode
                     slotDict =  {"name":slotName,
                                  "bone":parent,
                                  "color":exportColorHex,
@@ -4529,10 +4750,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         return slotList    
  
 
-    def getAllRegionSkinList(self,regionSlotList):
+    def getAllRegionSkinList(self,regionSlotList,skinList):
         print "getAllRegionSkinList"
        # print 'regionSlotList',regionSlotList
-        skinList= {"default":{}}
+       # skinList= {"default":{}}
         
        # print "slotList",slotList
        # print "slotListLength",len(slotList)
@@ -4617,7 +4838,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             
             #for f in slotColorKeyFrameList                 
             #frameValue = cmds.keyframe(obj,at=attr,t=(frame,frame),q=True,eval=True)[0]    starFrame                 
-            print 'slotColorKeyFrameList',slotColorKeyFrameList
+           # print 'slotColorKeyFrameList',slotColorKeyFrameList
             for i in range(0,len(slotColorKeyFrameList)) :
                 f = slotColorKeyFrameList[i]
                  
@@ -4666,15 +4887,15 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     exportDarkHexF = str(darkHex + alphaHex)
                     exportColorHexPF = str(colorHexPF + alphaHexPF)
                     exportDarkHexPF = str(darkHexPF + alphaHexPF)                    
-                    if exportColorHexF == exportColorHexPF:
-                        pass
-                    else:
-                        tempSlorColordTdict.update({"time":float('{:.3f}'.format(float(f)/fps)),"color":exportColorHexF})
-                    if exportDarkHexF == exportDarkHexPF:
-                        pass
-                    else:
-                        tempSlorColordTdict.update({"time":float('{:.3f}'.format(float(f)/fps)),"dark":exportDarkHexF})
-                        slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict)     
+                  #  if exportColorHexF == exportColorHexPF:
+                   #     pass
+                    #else:
+                    tempSlorColordTdict.update({"time":float('{:.3f}'.format(float(f)/fps)),"color":exportColorHexF})
+                    #if exportDarkHexF == exportDarkHexPF:
+                    #    pass
+                    #else:
+                    tempSlorColordTdict.update({"time":float('{:.3f}'.format(float(f)/fps)),"dark":exportDarkHexF})
+                    slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict)     
             if slot_sequence == 1:
                 #slotTimeLineDict.update({slotName:{"color":[],"attachment":[]}})
                 slotTimeLineDict[slotName].update({"attachment":[]})
@@ -4744,140 +4965,9 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # print 'boneKeyFrameList',bone,boneKeyFrameList
         return boneTimeLineDict    
                                                                                                                                                                                                                                                                                                                               
-    def defineAllItemInRootCtrl(self):
-        print "defineAllItemInRootCtrl"
-        '''
-        "animations": {
-           "name": {
-              "bones": { ... },
-              "slots": { ... },
-              "ik": { ... },
-              "deform": { ... },
-              "events": { ... },
-              "draworder": { ... },
-           },
-           ...
-        }
-        
-        "deform": {
-           "skinName": {
-              "slotName": {
-                 "meshName": [
-                    {
-                       "time": 0,
-                       "curve": [ 0.25, 0, 0.75, 1 ]
-                    },
-                    {
-                       "time": 1.5,
-                       "offset": 12,
-                       "vertices": [ -0.75588, -3.68987, -1.01898, -2.97404, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                       -1.01898, -2.97404, -0.75588, -3.68987, 0, 0, -0.75588, -3.68987, -0.75588, -3.68987,
-                       -1.01898, -2.97404, -1.01898, -2.97404, -1.01898, -2.97404, -0.75588, -3.68987 ],
-                       "curve": [ 0.25, 0, 0.75, 1 ]
-                    },
-                    ...
-                 ],
-                 ...
-              },
-              ...
-           },
-           ...
-        }
-        
-        '''
-        errMsg = "define all items in root ctrl"
-        rootCtrlName = "rootCtrl"
-        boneList = [{ "name":rootCtrlName},]
-        allMeshItem = []
-        meshSlotList = []
-        skinDict = {"default":{}}
-
-               
-        characterSetGrp = "saberSet"
 
 
-        allTransformsList =  cmds.listRelatives(characterSetGrp,c=True,p=False)
-        allMeshSlotList = []
-        allSkinNameList = []
-        for i in allTransformsList:
-            for j in cmds.listRelatives(i,c=True,p=False):
-                try:
-                    if cmds.nodeType(j) =='mesh' and cmds.getAttr('%s.spine_skinType'%j) =='mesh':
-                        allMeshSlotList.append(i)
-                        allSkinNameList.append(j)
-                except:
-                    pass
-                
-        
-        
 
-        #animationDict={"default":{"bones":{},"slots":{},"deform":{"default":{deformerDict}}}}
-
-              # print i,cmds.nodeType(i)
-          
-          #self.defineExportData(boneList,skinDict)
-        print 'allMeshSlotList',allMeshSlotList
-        for slot in allMeshSlotList: ## define all mesh's slot
-        #   print cmds.ls(i)
-            try:
-                self.defineSlot(slot,rootCtrlName) 
-            except:
-                pass
-          
-        for i in allSkinNameList:
-            skinData = json.loads(cmds.getAttr('%s.spine_skinData'%i))
-            # skinDict.update(skinData)
-            skinDict["default"].update(skinData)
-        #  exportFile = "C:/Users/alpha/Documents/GitHub/spineToolAdv/test_01.json" 
-
-
-          #print allSlotItem
-        slotList = self.getAllMeshSlots(allMeshSlotList)
-        
-        
-        
-        #animaitonSlotDict = 
-        slotAnimationDict = self.defineSlotAnimation(allMeshSlotList)
-        
-        
-        deformerDict = self.defineDeformAnimation(characterSetGrp)
-        print deformerDict
-        '''
-        animationDict = {"default": {
-                                  "bones": {},
-                                  "slots": {},
-                                  "ik": {},
-                                  "deform": {},
-                                  "events": {},
-                                  "draworder": {}
-                                }}
-                                
-        '''
-        animationDict={"default":{"bones":{},
-                                    "slots":slotAnimationDict,
-                                    "deform":deformerDict}}
-        
-        print 'skinDict',skinDict
-        print 'slotList',slotList
-        print 'animationDict',animationDict
-  
-        self.defineExportData(boneList,skinDict,slotList,animationDict)
-
-         # print slotList
-          
-          
-
-    def defineSlotAnimation(self,slotList):
-        print "defineSlotAnimation"
-        
-        slotAnimationDict = {}
-        
-        for slot in slotList:
-            attachmentName = cmds.getAttr('%s.spine_attachmentName'%slot)
-            slotAnimationDict.update({slot:{"attachment": [{ "time": 0, "name": attachmentName }]}})
-            
-            
-        return slotAnimationDict
         
         
     def defineRootBone(self):
@@ -5094,46 +5184,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         cmds.select(cl=True)
         cmds.select(newSelect)
        
-                           
-    def getAllSlots(self,boneList):
-        print "getAllSlots"
-        slotList = []
-        for i in boneList:
-            boneName = i["name"]
-            # print i
-            # print boneName
-         
-            itemList = cmds.listRelatives(boneName,c=True)
-            print "itemList",boneName,itemList
-            try:
-                for j in itemList:
-                # print j , cmds.nodeType(j)
-                    if cmds.nodeType(j) == "transform" :
-                        parentBone = cmds.listRelatives(j,p=True)[0]
-                        getObj =  cmds.ls(j,dag=1)[1]
-                        shadingGrps = cmds.listConnections(getObj,type='shadingEngine')
-                        shaders = cmds.ls(cmds.listConnections(shadingGrps),materials=1)
-                        fileNode = cmds.listConnections('%s.color' % (shaders[0]), type='file')
-                        currentFile = cmds.getAttr("%s.fileTextureName" % fileNode[0])
-                        fileInSlot = currentFile.split("/")[-1].split(".png")[0]
-                        #  print "fileInSlot",fileInSlot
-                        #print j , cmds.listRelatives(j,p=True)[0]
-                        #  print "%s.blendMode" % fileNode[0]
-                        try:
-                            blendMode = cmds.getAttr("%s.blendMode" % fileNode[0])
-                                  
-                            #    print blendMode
-                        except:
-                            blendMode = "normal"
-                            slotList.append({"name":j,
-                                               "bone":parentBone,
-                                               "color":"ffffffff",
-                                               "attachment":fileInSlot,
-                                               "blend":blendMode})  #additive
-            except:
-                pass
-        return slotList
-         
+
 
 
 
@@ -5214,6 +5265,22 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print "getSkinData"
         cmds.currentTime(0,e=True)
         meshName = cmds.ls(sl=True,dag=2,typ='mesh')[0]
+        currentMeshTransform = cmds.ls(sl=True,type = 'transform')
+        parentCharacterSet = cmds.listRelatives(currentMeshTransform,p=True)[0]
+        print 'parentCharacterSet1',parentCharacterSet
+        try:
+            if len(parentCharacterSet) >0:
+                if cmds.nodeType(parentCharacterSet) == 'transform':
+                   # print parent
+                    if cmds.getAttr('%s.spine_tag'%parentCharacterSet) =='spine_characterSet':
+                        print 'parent CharacterSet %s is selected'%parentCharacterSet
+                    
+                else:
+                    self.errorMsgLEdit.setText('current mesh not in characterSet Code skin 001')
+        except:
+            self.errorMsgLEdit.setText('current mesh not in characterSet Code skin 002')
+
+            pass
         try:
             cmds.deleteAttr('%s.spine_skinData'%meshName)
             cmds.deleteAttr('%s.spine_boneName'%meshName)
@@ -5363,7 +5430,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         errMsg ="Define Data"
         print dataForSpine
         skinData = json.dumps({slotName:{attachmentName:dataForSpine}})
-
+        print 'parentCharacterSet',parentCharacterSet
         
         
         cmds.setAttr('%s.spine_tag'%meshName,'spine_skin',type='string')
@@ -5371,7 +5438,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         cmds.setAttr('%s.spine_slotName'%meshName,slotName,type='string')
         cmds.setAttr('%s.spine_skinName'%meshName,slotName,type='string')  
-        #cmds.setAttr('%s.spine_boneName'%meshName,currentTransformName,type='string')             
+        cmds.setAttr('%s.spine_boneName'%meshName,parentCharacterSet,type='string')             
                   
         cmds.setAttr('%s.spine_attachmentName'%meshName,attachmentName,type='string')
         cmds.setAttr('%s.spine_skinData'%meshName,skinData,type='string')  
@@ -6131,11 +6198,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           #print 'getObj',getObj
         shadingGrps = cmds.listConnections(getObj,type='shadingEngine')
         shaders = cmds.ls(cmds.listConnections(shadingGrps),materials=1)
-        if cmds.nodeType(shaders) == 'lambert':
-            fileNode = cmds.listConnections('%s.color' % (shaders[0]), type='file')
-        elif cmds.nodeType(shaders) == 'surfaceShader':
+       # if cmds.nodeType(shaders) == 'lambert':
+        fileNode = cmds.listConnections('%s.color' % (shaders[0]), type='file')
+      #  elif cmds.nodeType(shaders) == 'surfaceShader':
 
-            fileNode = cmds.listConnections('%s.outColor' % (shaders[0]), type='file')
+          #  fileNode = cmds.listConnections('%s.outColor' % (shaders[0]), type='file')
         currentFile = cmds.getAttr("%s.fileTextureName" % fileNode[0])
          # print 'currentFile',currentFile
         fileName = currentFile.split("/")[-1]
@@ -6166,30 +6233,41 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         cmds.setAttr('%s.slot_attachment'%slot,fileInSlot,type='string')
         targetFile = self.spineImagesSpaceLEdit.text() + '/' +fileName
         try:
-            os.remove(targetFile)
+            if os.path.isfile(targetFile) ==True:
+                print "file exist"
+                pass
+            else:
+                #os.remove(targetFile)
+                shutil.copyfile(currentFile,targetFile)
         except:
-            pass
+            shutil.copyfile(currentFile,targetFile)
             
-        shutil.copyfile(currentFile,targetFile)
+        print 'currentFile',currentFile,targetFile
+      #  shutil.copyfile(currentFile,targetFile)
         
+        print 'fileNode',fileNode
+        cmds.setAttr('%s.fileTextureName'%fileNode[0],targetFile,type='string')
         ## copy file sequences
         fileDep = fileName.split('.')
-        fileDigList = ['0','1','2','3','4','5','6','7','8','9']
-        fileDigPart = fileDep[-2]
-        if len(fileDigPart) == 4:
-            if fileDigPart[-1] in fileDigList:
-                for file in allFilesInDir:
-                    if file.split('.')[0] == fileDep[0]:
-                        sourceSeqFile = searchPath +'/'+file
-                        targetSeqFile = self.spineImagesSpaceLEdit.text() + '/'+file
-                        try:
-                            shutil.copyfile(sourceSeqFile,targetSeqFile)
-                        except:
-                            pass
-                
+        print 'fileDep',fileDep
+        if len(fileDep) == 3:
+            fileDigList = ['0','1','2','3','4','5','6','7','8','9']
+            fileDigPart = fileDep[-2]
+            if len(fileDigPart) == 4:
+                if fileDigPart[-1] in fileDigList:
+                    for file in allFilesInDir:
+                        if file.split('.')[0] == fileDep[0]:
+                            sourceSeqFile = searchPath +'/'+file
+                            targetSeqFile = self.spineImagesSpaceLEdit.text() + '/'+file
+                            try:
+                                shutil.copyfile(sourceSeqFile,targetSeqFile)
+                            except:
+                                pass
+        else:
+            pass
         
         
-        #print 'currentFile',currentFile
+        print 'currentFilefffffff',currentFile
                                           
     def defineSkin(self,slot):
         print "defineSkin"
@@ -6383,7 +6461,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         images = self.getImagesInFolder()
         print 'images',images
-        imagesDir  = 'C:/Temp/images'#"//mcd-3d/data3d/spine_imageSources/"
+        #imagesDir  = 'C:/Temp/images'#"//mcd-3d/data3d/spine_imageSources/"
        # self.createImageTable(images,50,imagesDir)
        # self.createImageInfoTable()
         #print self.spineItemTree
@@ -6421,17 +6499,15 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
        
     def getImagesInFolder(self):
         print "getImagesInFolder"
-        
         try:
-            os.mkdir("c:/temp")
+            os.mkdir('c:/temp')
         except:
             pass
-        try:
+        try: 
             os.mkdir("c:/temp/images")
-
         except:
-            pass
-                
+            pass     
+               
         files = os.listdir("c:/temp/images")
         imagesAllow = ['png','jpg','PNG','JPG']
         imageFiles = filter(lambda x: x.split('.')[-1] in imagesAllow, files)
@@ -6514,9 +6590,63 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           
           
     def createImagePlane(self):
-        print self.currentImageFullName
-          
+        print "createImagePlane"
+       # print self.currentImageFullName
+        currentImage = self.imageListTable.currentItem().text()
+        imageName = currentImage.split('.')[0]
+        fileName = self.imageInfoTable.item(0,1).text()
+        
+        targetFileName = self.spineImagesSpaceLEdit.text() +'/' +currentImage
+        imageW = int(self.imageInfoTable.item(3,1).text())
+        imageH = int(self.imageInfoTable.item(4,1).text())
+        
+        slotPlane = str(cmds.polyPlane(n='polyPlane_%s_#'%imageName,sx=1,sy=1)[0])
+        cmds.setAttr('%s.rotateX'%slotPlane,90)
+        cmds.setAttr('%s.scaleX'%slotPlane,imageW)
+        cmds.setAttr('%s.scaleZ'%slotPlane,imageH)
+        ###create new shader
+        slotShaderName =  imageName + '_shader'
+        slotFileName = imageName + '_imageFile'
+        slotSG = imageName + '_SG'
+        print 'currentImage',currentImage,fileName,targetFileName
+        cmds.select(cl=True) 
+        
+        shader = cmds.shadingNode("lambert",asShader=True,n=slotShaderName)
+       # print 'shader',shader
+        cmds.select(shader)
+        shaderName = cmds.ls(sl=True)[0]
+            # shader=cmds.rename(shader,slotShaderName)
+       #     print 'shaderName',shaderName,shader
+        file_node=cmds.shadingNode("file",asTexture=True,n=slotFileName)
+        shading_group= cmds.sets(renderable=True,noSurfaceShader=True,empty=True,n=slotSG)
+        cmds.connectAttr('%s.color' %shader ,'%s.surfaceShader' %shading_group)
+        cmds.connectAttr('%s.outColor' %file_node, '%s.color' %shader)
+           # print 'fileName',fileName
+        
+    
+        cmds.connectAttr('%s.outTransparency' %file_node, '%s.transparency' %shader)
+        cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
+        cmds.select(cl=True) 
+        
+        try:
+            if os.path.isfile(targetFileName) == True:
+                print "file exist"
+                
+            else:
+                #os.remove(targetFile)
+                shutil.copyfile(fileName,targetFileName)        
+        
+        except:
+                       
+            pass
+        cmds.setAttr('%s.fileTextureName'%slotFileName,targetFileName,type='string')
 
+        cmds.select(slotPlane)
+        cmds.hyperShade( assign=slotShaderName )
+        cmds.select(cl=True)
+        print "currentFile",fileName,targetFileName
+ 
+        
           
 
     def imageInfo(self,imagesDir):
@@ -6650,7 +6780,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           
 
 
-
+#def spineToolMain():
 def main():
     global ui
     app = QtWidgets.QApplication.instance()
