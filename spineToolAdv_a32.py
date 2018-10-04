@@ -4412,7 +4412,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             print 'animDict',animDict
             slotAnimLayerDict = animDict['slotRegionTimeLineDict']
             boneAnimLayerDict = animDict['boneRegionTimeLineDict']
-            allAnimDict.update({"BaseAnimation":{"slots":slotAnimLayerDict,"bones":boneAnimLayerDict}})
+            allAnimDict.update({"defaut":{"slots":slotAnimLayerDict,"bones":boneAnimLayerDict}})
         else:
             for i in animLayerList:
                 if i == "BaseAnimation":
@@ -4660,7 +4660,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 chaNotInAnimLayer.append(i)   
                 
         print 'chaInAnimLayer',chaInAnimLayer,chaNotInAnimLayer
-        allKeyFrameListByDeformers = self.findAllKeyframes(characterSetGrp) ## 根據控制器，變形器，骨架，取得所有的keyFrame 
+        allKeyFrameListByDeformers = self.findAllKeyframes(chaInAnimLayer) ## 根據控制器，變形器，骨架，取得所有的keyFrame 
 
         meshDeformDict = self.defineVertexsValueDeltaTime(allKeyFrameListByDeformers) ## 取得每個keyframe的vertex 數值
         return meshDeformDict
