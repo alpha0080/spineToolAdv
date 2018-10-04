@@ -4512,7 +4512,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
       #  print 
         slotRegionTimeLineDict = self.defineRegionSlotAnimation(slotInAnimLayer,slotNotInAnimLayer,animLayerName)  
         boneRegionTimeLineDict = self.defineBoneAnimation(boneInAnimLayer,boneNotInAnimLayer,animLayerName)
-        deformerDict = self.defineDeformAnimation(boneInAnimLayer,boneNotInAnimLayer)
+       # deformerDict = self.defineDeformAnimation(boneInAnimLayer,boneNotInAnimLayer)
         
         
         print 'slotRegionTimeLineDict',animLayerName,slotRegionTimeLineDict
