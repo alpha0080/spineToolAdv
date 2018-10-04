@@ -4406,23 +4406,27 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         animLayerList = cmds.ls(type ="animLayer")
         allAnimDict= {}
         print "all all all",slotList,allBoneList,allMeshSlotList,characterSetGrp
-        if len(animLayerList) <= 1 :
+        if len(animLayerList) == 0 :
             
-            animDict = self.defineAllAnimLayerDict("BaseAnimation",slotList,allBoneList,allMeshSlotList,characterSetGrp)  
+            animDict = self.defineAllAnimLayerDict("defaut",slotList,allBoneList,allMeshSlotList,characterSetGrp)  
             print 'animDict',animDict
             slotAnimLayerDict = animDict['slotRegionTimeLineDict']
             boneAnimLayerDict = animDict['boneRegionTimeLineDict']
             allAnimDict.update({"BaseAnimation":{"slots":slotAnimLayerDict,"bones":boneAnimLayerDict}})
         else:
             for i in animLayerList:
-                
-                for j in animLayerList:
-                    cmds.animLayer( j, e=True, selected=False,s=False)## deselect all animation Layer
-                cmds.animLayer( i, e=True, selected=True,s=True) ## select animation Layer
-                animDict = self.defineAllAnimLayerDict(i,slotList,allBoneList,allMeshSlotList,characterSetGrp)
-                slotAnimLayerDict = animDict['slotRegionTimeLineDict']
-                boneAnimLayerDict = animDict['boneRegionTimeLineDict']
-                allAnimDict.update({i:{"slots":slotAnimLayerDict,"bones":boneAnimLayerDict}})
+                if i == "BaseAnimation":
+                    pass
+                else:
+                 #   for j in animLayerList:
+                  ##      cmds.animLayer( j, e=True, selected=False,s=False)## deselect all animation Layer
+                  
+                 #   cmds.animLayer( i, e=True, selected=True,s=True)
+
+                    animDict = self.defineAllAnimLayerDict(i,slotList,allBoneList,allMeshSlotList,characterSetGrp)
+                    slotAnimLayerDict = animDict['slotRegionTimeLineDict']
+                    boneAnimLayerDict = animDict['boneRegionTimeLineDict']
+                    allAnimDict.update({i:{"slots":slotAnimLayerDict,"bones":boneAnimLayerDict}})
 
         exportData = {"skeleton":{"images": "../images/"},"bones":boneList,"slots":slotList,"skins":skinDict,"animations":allAnimDict}
         writeData = json.dumps(exportData, sort_keys=True , indent =4) 
@@ -4438,12 +4442,12 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def defineAllAnimLayerDict(self,animLayerName,slotList,allBoneList,allMeshSlotList,characterSetGrp):
-       # print "animLayerName",animLayerName
+        print "animLayerName________",animLayerName
        # print "slotList",slotList
        # print "allBoneList",allBoneList
        # print "allMeshSlotList",allMeshSlotList
        # print "characterSetGrp",characterSetGrp
-        if animLayerName == "BaseAnimation":
+        if animLayerName == "defaut":
             slotInAnimLayer = []
             slotNotInAnimLayer = []
             boneInAnimLayer = allBoneList
@@ -4457,60 +4461,70 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             boneInAnimLayer = []
             boneNotInAnimLayer = []
             
-        for i in range(0,len(slotList)):
-            cmds.select(cl=True)
-            slotName=slotList[i]['name']
-            boneName = cmds.getAttr('%s.slot_bone'%slotName)
-           # print 'slotName',slotName,boneName
+            for i in range(0,len(slotList)):
+                cmds.select(cl=True)
+                slotName=slotList[i]['name']
+                boneName = cmds.getAttr('%s.slot_bone'%slotName)
+               # print 'slotName',slotName,boneName
 
-            cmds.select(boneName)
-            ableSlotInAnimLayer = cmds.animLayer(afl=True,q=True)
-          #  print 'ableSlotInAnimLayer',ableSlotInAnimLayer
-            cmds.select(cl=True)
-            if ableSlotInAnimLayer == None:
-                print '%s not in animationLayer'%slotName
-                if slotName in slotNotInAnimLayer:
-                    pass
-                else:
-                    slotNotInAnimLayer.append(slotName)
-                if boneName in boneNotInAnimLayer:
-                    pass
-                else:
-                    boneNotInAnimLayer.append(boneName)
-            else:
-                if animLayerName in ableSlotInAnimLayer:
-                    if slotName in slotInAnimLayer:
-                        pass
-                    else:
-                        slotInAnimLayer.append(slotName)
-                    if boneName in boneInAnimLayer:
-                        pass
-                    else:
-                        boneInAnimLayer.append(boneName)    
-                        
-                        
-                else:
+                cmds.select(boneName)
+                ableSlotInAnimLayer = []
+                ableSlotInAnimLayer = cmds.animLayer(afl=True,q=True)
+              
+               # print 'tempAbleSlotInAnimLayer',tempAbleSlotInAnimLayer
+               
+                
+                
+              #  print 'ableSlotInAnimLayer',ableSlotInAnimLayer
+                cmds.select(cl=True)
+                if ableSlotInAnimLayer == None:
+                    print '%s not in animationLayer'%slotName
                     if slotName in slotNotInAnimLayer:
                         pass
                     else:
                         slotNotInAnimLayer.append(slotName)
-                        
                     if boneName in boneNotInAnimLayer:
                         pass
                     else:
-                        boneNotInAnimLayer.append(boneName)   
-                                            
+                        boneNotInAnimLayer.append(boneName)
+                else:
+                    if animLayerName in ableSlotInAnimLayer:
+                        if slotName in slotInAnimLayer:
+                            pass
+                        else:
+                            slotInAnimLayer.append(slotName)
+                        if boneName in boneInAnimLayer:
+                            pass
+                        else:
+                            boneInAnimLayer.append(boneName)    
+                            
+                            
+                    else:
+                        if slotName in slotNotInAnimLayer:
+                            pass
+                        else:
+                            slotNotInAnimLayer.append(slotName)
+                            
+                        if boneName in boneNotInAnimLayer:
+                            pass
+                        else:
+                            boneNotInAnimLayer.append(boneName)   
+      #  print 
         slotRegionTimeLineDict = self.defineRegionSlotAnimation(slotInAnimLayer,slotNotInAnimLayer,animLayerName)  
         boneRegionTimeLineDict = self.defineBoneAnimation(boneInAnimLayer,boneNotInAnimLayer,animLayerName)
-       # deformerDict = self.defineDeformAnimation(boneInAnimLayer,boneNotInAnimLayer)
-
+        deformerDict = self.defineDeformAnimation(boneInAnimLayer,boneNotInAnimLayer)
         
-       # print 'slotRegionTimeLineDict',slotRegionTimeLineDict
-      #  print 'boneRegionTimeLineDict',boneRegionTimeLineDict
+        
+        print 'slotRegionTimeLineDict',animLayerName,slotRegionTimeLineDict
+        print 'boneRegionTimeLineDict',animLayerName,boneRegionTimeLineDict
   
-       # print 'animLayerName',animLayerName,slotInAnimLayer,slotNotInAnimLayer
+        print 'slotInAnimLayer',animLayerName,slotInAnimLayer
+        print 'slotNotInAnimLayer',animLayerName,slotNotInAnimLayer
+
+        print 'boneInAnimLayer',animLayerName,boneInAnimLayer
+        print 'boneNotInAnimLayer',animLayerName,boneNotInAnimLayer
+
         return {'slotRegionTimeLineDict':slotRegionTimeLineDict,'boneRegionTimeLineDict':boneRegionTimeLineDict}
-       # print 'boneInAnimLayer',animLayerName,boneInAnimLayer,boneNotInAnimLayer
         '''
         regionSlotList =[]
         meshSlotList = []
@@ -4646,10 +4660,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 chaNotInAnimLayer.append(i)   
                 
         print 'chaInAnimLayer',chaInAnimLayer,chaNotInAnimLayer
-       # allKeyFrameListByDeformers = self.findAllKeyframes(characterSetGrp) ## 根據控制器，變形器，骨架，取得所有的keyFrame 
+        allKeyFrameListByDeformers = self.findAllKeyframes(characterSetGrp) ## 根據控制器，變形器，骨架，取得所有的keyFrame 
 
-       # meshDeformDict = self.defineVertexsValueDeltaTime(allKeyFrameListByDeformers) ## 取得每個keyframe的vertex 數值
-       # return meshDeformDict
+        meshDeformDict = self.defineVertexsValueDeltaTime(allKeyFrameListByDeformers) ## 取得每個keyframe的vertex 數值
+        return meshDeformDict
 
                
     ### find all keyframe in characterSet    ## 根據控制器，變形器，骨架，取得所有的keyFrame 
@@ -4952,6 +4966,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print "defineRegionSlotAnimation"
         #slotInAnimLayer,animLayerName
 
+        print "regionSlotList",regionSlotList
+        print "slotNotInAnimLayer",slotNotInAnimLayer
+        print "animLayerName",animLayerName
+
         cmds.currentTime(0.0,e=True)
         startFrame = float(self.timeStartLEdit.text())
         endFrame = float(self.timeEndLEdit.text())
@@ -5108,7 +5126,19 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         return slotTimeLineDict                                           
     
     def defineBoneAnimation(self,boneInAnimLayer,boneNotInAnimLayer,animLayerName):
-        print "defineBoneAnimation"
+        print "defineBoneAnimation",animLayerName
+        print "boneInAnimLayer",boneInAnimLayer
+        print "boneNotInAnimLayer",boneNotInAnimLayer
+        animLayerList = cmds.ls(type ="animLayer")
+              
+        for j in animLayerList:
+            cmds.animLayer( j, e=True, selected=False,s=False)## deselect all animation Layer
+        try:              
+            cmds.animLayer( animLayerName, e=True, selected=True,s=True)
+        except:
+            pass
+        
+        
         startFrame = float(self.timeStartLEdit.text())
         endFrame = float(self.timeEndLEdit.text())
         fps = float(self.fpsLEdit.text())
@@ -5116,6 +5146,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         boneTimeLineDict ={}
         boneAttr = ['translateX','translateY','rotateZ','scaleX','scaleY']
         for bone in boneInAnimLayer:
+            print 'bone______',bone
             if  cmds.getAttr('%s.spine_tag'%bone) == "spine_characterSet":
                 pass
             elif cmds.getAttr('%s.spine_tag'%bone) == "spine_bone":
@@ -5124,6 +5155,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 for attr in boneAttr:
                     try:
                         keyframeList = cmds.keyframe(bone, t=(startFrame,endFrame),query=True,at = attr)
+                      #  cmds.keyframe(bone, t=(startFrame,endFrame),query=True,at = attr)
                         for f in keyframeList:
                             if f in boneKeyFrameList:
                                 pass
@@ -5132,6 +5164,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     except:
                         pass
                 boneKeyFrameList = sorted(boneKeyFrameList)
+                print 'boneKeyFrameList_________2',boneKeyFrameList
                 for f in boneKeyFrameList:
                   #  if f == 0.0:
                     rotate = cmds.getAttr('%s.rotateZ'%bone,t = f)
@@ -5142,9 +5175,12 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     boneTimeLineDict[bone]['rotate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"angle":float('{:.3f}'.format(float(rotate)))})
                     boneTimeLineDict[bone]['translate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(x))),"y":float('{:.3f}'.format(float(y)))})
                     boneTimeLineDict[bone]['scale'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(sx))),"y":float('{:.3f}'.format(float(sy)))})
+        print "boneTimeLineDict_______1",boneTimeLineDict
+        
         for bone in boneNotInAnimLayer:
             boneTimeLineDict.update({bone:{"rotate":[{"time":0.0,"angle":0.0}],"translate":[{"time":0.0,"x":0.0,"y":0.0}],"scale":[{"time":0.0,"x":1.0,"y":1.0}]}})
         # print 'boneKeyFrameList',bone,boneKeyFrameList
+     #   print "boneTimeLineDict",boneTimeLineDict
         return boneTimeLineDict    
                                                                                                                                                                                                                                                                                                                               
 
