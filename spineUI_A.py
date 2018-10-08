@@ -151,6 +151,62 @@ def defineImageButtonDock(self,fontScale):
                      }\
                      "%(str(fontScale))   
                      
+    buttonStyleMain = "\
+                     QPushButton {\
+                     font-size:%spx;\
+                     font-weight: bold;\
+                     background-color:#33aaaa;\
+                     border-radius:8px;\
+                     border-style:solid;\
+                     border-width:2px;\
+                     border-color:#555555;\
+                     }\
+                     QPushButton:hover{\
+                     background-color:#883333;\
+                     border-radius:8px;\
+                     border-style:solid;\
+                     border-width:2px;\
+                     border-color:#883333;\
+                     }\
+                     QPushButton:pressed{\
+                     background-color:#AAAA33;\
+                     border-radius:8px;\
+                     border-style:solid;\
+                     border-width:2px;\
+                     border-color:#AAAA33;\
+                     }\
+                     "%(str(fontScale))                        
+                     
+    buttonStyleMainLeft = "\
+                     QPushButton {\
+                     font-size:%spx;\
+                     font-weight: bold;\
+                     background-color:#33aaaa;\
+                     border-top-left-radius:8px;\
+                     border-bottom-left-radius: 8px;\
+                     border-style:solid;\
+                     border-width:1px;\
+                     border-color:#555555;\
+                     }\
+                     QPushButton:hover{\
+                     background-color:#883333;\
+                     border-radius:8px;\
+                     border-style:solid;\
+                     border-width:1px;\
+                     border-color:#883333;\
+                     }\
+                     QPushButton:pressed{\
+                     background-color:#AAAA33;\
+                     border-radius:8px;\
+                     border-style:solid;\
+                     border-width:1px;\
+                     border-color:#AAAA33;\
+                     }\
+                     "%(str(fontScale))                                      
+                                               
+                     
+                                          
+                                                                                    
     buttonStyleBLeft = "\
                      QPushButton {\
                      font-size:%spx;\
@@ -1466,44 +1522,101 @@ def defineImageButtonDock(self,fontScale):
 
 
 
-
+    
+    
 
     ##### workSpaceInfoDock
     
     
     self.environmentSetGrp = QtWidgets.QGroupBox(self.workSpaceInfoDock)
-    self.environmentSetGrp.setGeometry(QtCore.QRect(10, 20, 530, 280))
+    self.environmentSetGrp.setGeometry(QtCore.QRect(10, 20, 530, 275))
     self.environmentSetGrp.setObjectName("environmentSetGrp")
     self.environmentSetGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
     self.environmentSetGrp.setStyleSheet(QGroupBoxA)     
     self.environmentSetGrp.setVisible(True)
-    
 
+    
+    #### maya file history Group start
+    
+    self.mayaFileHistoryGrp = QtWidgets.QGroupBox(self.workSpaceInfoDock)
+    self.mayaFileHistoryGrp.setGeometry(QtCore.QRect(10, 80, 530, 250))
+    self.mayaFileHistoryGrp.setObjectName("mayaFileHistoryGrp")
+    self.mayaFileHistoryGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
+    self.mayaFileHistoryGrp.setStyleSheet(QGroupBoxA)     
+    self.mayaFileHistoryGrp.setVisible(False)
+        
+
+    self.mayaRecentFileTable = QtWidgets.QTableWidget(self.mayaFileHistoryGrp)
+    self.mayaRecentFileTable.clear()
+    self.mayaRecentFileTable.setGeometry(QtCore.QRect(5, 5,520, 160))
+    self.mayaRecentFileTable.setObjectName("mayaRecentFileTable")
+
+    #self.mayaRecentFileTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+    self.mayaRecentFileTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+    self.mayaRecentFileTable.horizontalHeader().setVisible(False)
+    self.mayaRecentFileTable.verticalHeader().setVisible(False)
+  #  self.mayaRecentFileTable.setStyleSheet(tableA);
+    
+    
+    self.readMayaSelectedFileBtn = QtWidgets.QPushButton(self.mayaFileHistoryGrp)
+    self.readMayaSelectedFileBtn.setGeometry(QtCore.QRect(10, 180, 110,30))
+    self.readMayaSelectedFileBtn.setObjectName("openSpineMayaFileBtn")
+    self.readMayaSelectedFileBtn.setText(QtWidgets.QApplication.translate("MainWindow", "open selected file", None, -1))
+   # self.openSpineMayaFileBtn.clicked.connect(self.openMayaFile)
+    self.readMayaSelectedFileBtn.setStyleSheet(buttonStyleB)     
+
+
+
+
+
+
+
+    #### maya file history Group end
     self.openSpineMayaFileBtn = QtWidgets.QPushButton(self.environmentSetGrp)
-    self.openSpineMayaFileBtn.setGeometry(QtCore.QRect(10, 20, 110,30))
+    self.openSpineMayaFileBtn.setGeometry(QtCore.QRect(10, 10, 110,30))
     self.openSpineMayaFileBtn.setObjectName("openSpineMayaFileBtn")
     self.openSpineMayaFileBtn.setText(QtWidgets.QApplication.translate("MainWindow", "open Maya file", None, -1))
    # self.openSpineMayaFileBtn.clicked.connect(self.openMayaFile)
     self.openSpineMayaFileBtn.setStyleSheet(buttonStyleLeftB)     
 
 
+
+
+
     self.openMayaFileLEdit = QtWidgets.QLineEdit(self.environmentSetGrp)
-    self.openMayaFileLEdit.setGeometry(QtCore.QRect(120, 20, 370, 30))
+    self.openMayaFileLEdit.setGeometry(QtCore.QRect(120, 10, 370, 30))
     self.openMayaFileLEdit.setObjectName("spineWorkSpaceLEdit")
     self.openMayaFileLEdit.setAlignment(QtCore.Qt.AlignCenter)
     self.openMayaFileLEdit.setText('')
     self.openMayaFileLEdit.setStyleSheet(lineEditRightBMiddle)  
     
     self.openMayaFileFolder = QtWidgets.QPushButton(self.environmentSetGrp)
-    self.openMayaFileFolder.setGeometry(QtCore.QRect(490, 20, 30,30))
+    self.openMayaFileFolder.setGeometry(QtCore.QRect(490, 10, 30,30))
     self.openMayaFileFolder.setObjectName("openMayaFileFolder")
     self.openMayaFileFolder.setText(QtWidgets.QApplication.translate("MainWindow", "...", None, -1))
   #  self.openMayaFileFolder.clicked.connect(self.openSpineFolder)
     self.openMayaFileFolder.setStyleSheet(buttonStyleRightB)            
                       
-           
+    self.saveMayaFileBtn = QtWidgets.QPushButton(self.environmentSetGrp)
+    self.saveMayaFileBtn.setGeometry(QtCore.QRect(10, 45, 110,32))
+    self.saveMayaFileBtn.setObjectName("saveMayaFileBtn")
+    self.saveMayaFileBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Save Maya file", None, -1))
+   # self.openSpineMayaFileBtn.clicked.connect(self.openMayaFile)
+    self.saveMayaFileBtn.setStyleSheet(buttonStyleMainLeft)                
                   
-                                
+    self.saveMayaFileLEdit = QtWidgets.QLineEdit(self.environmentSetGrp)
+    self.saveMayaFileLEdit.setGeometry(QtCore.QRect(120, 45, 370, 30))
+    self.saveMayaFileLEdit.setObjectName("saveMayaFileLEdit")
+    self.saveMayaFileLEdit.setAlignment(QtCore.Qt.AlignCenter)
+    self.saveMayaFileLEdit.setText('')
+    self.saveMayaFileLEdit.setStyleSheet(lineEditRightBMiddle)  
+    
+    self.saveMayaFileDialogBtn = QtWidgets.QPushButton(self.environmentSetGrp)
+    self.saveMayaFileDialogBtn.setGeometry(QtCore.QRect(490, 45, 30,30))
+    self.saveMayaFileDialogBtn.setObjectName("saveMayaFileDialogBtn")
+    self.saveMayaFileDialogBtn.setText(QtWidgets.QApplication.translate("MainWindow", "...", None, -1))
+  #  self.openMayaFileFolder.clicked.connect(self.openSpineFolder)
+    self.saveMayaFileDialogBtn.setStyleSheet(buttonStyleRightB)                                       
     
     
     self.selectSpineWorkSpaceBtn = QtWidgets.QPushButton(self.environmentSetGrp)
@@ -1637,7 +1750,7 @@ def defineImageButtonDock(self,fontScale):
     self.vertexSizeLabel.setStyleSheet(labelTextA)
 
     self.vertexSizeSB = QtWidgets.QSpinBox(self.environmentSetGrp)
-    self.vertexSizeSB.setGeometry(QtCore.QRect(270, 240, 60, 30))
+    self.vertexSizeSB.setGeometry(QtCore.QRect(260, 240, 60, 30))
     self.vertexSizeSB.setObjectName("vertexSizeSB")
     self.vertexSizeSB.setAlignment(QtCore.Qt.AlignCenter)
     self.vertexSizeSB.setProperty("value", 3)
@@ -1809,7 +1922,7 @@ def defineImageButtonDock(self,fontScale):
     
     ###### defineSpineSlotBoneGrpBox
     self.defineSpineSlotBoneGrpBox = QtWidgets.QGroupBox(self.dockSpineMeshProgress )
-    self.defineSpineSlotBoneGrpBox.setGeometry(QtCore.QRect(10, 355, 370, 170))
+    self.defineSpineSlotBoneGrpBox.setGeometry(QtCore.QRect(10, 355, 370, 215))
     self.defineSpineSlotBoneGrpBox.setObjectName("defineSpineCharacterGrpBox")
     self.defineSpineSlotBoneGrpBox.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
     self.defineSpineSlotBoneGrpBox.setStyleSheet(QGroupBoxA)     
@@ -1818,13 +1931,17 @@ def defineImageButtonDock(self,fontScale):
     
 
     self.createSlotBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
-    self.createSlotBtn.setGeometry(QtCore.QRect(30, 50, 330, 30))
+    self.createSlotBtn.setGeometry(QtCore.QRect(30, 50, 160, 30))
     self.createSlotBtn.setObjectName("createSlot")
     self.createSlotBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Slot", None, -1))
-   # self.createSlotBtn.clicked.connect(self.createSlot)              
     self.createSlotBtn.setStyleSheet(buttonStyleB)   
     
-
+    self.duplicateSlotBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
+    self.duplicateSlotBtn.setGeometry(QtCore.QRect(200, 50, 160, 30))
+    self.duplicateSlotBtn.setObjectName("duplicateSlotBtn")
+    self.duplicateSlotBtn.setText(QtWidgets.QApplication.translate("MainWindow", "duplicate Slot", None, -1))
+    self.duplicateSlotBtn.setStyleSheet(buttonStyleB)   
+    
  
     
     self.createBoneBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
@@ -1877,7 +1994,7 @@ def defineImageButtonDock(self,fontScale):
     self.enableDynaSlotCheck.setGeometry(QtCore.QRect(30, 145, 200, 20))
     #self.enableDynaSlotCheck.setChecked(True)
     self.enableDynaSlotCheck.setObjectName("enableDynaSlotCheck")
-    self.enableDynaSlotCheck.setText(QtWidgets.QApplication.translate("MainWindow", "Dynamic Slot", None, -1))
+    self.enableDynaSlotCheck.setText(QtWidgets.QApplication.translate("MainWindow", "Dynamic Bone", None, -1))
     self.enableDynaSlotCheck.setStyleSheet(checkA)   
 
  
@@ -1887,7 +2004,7 @@ def defineImageButtonDock(self,fontScale):
   #  self.amountSlotSlider.setStyleSheet(lineEditA)
 
     self.dynamicSlotGrp = QtWidgets.QGroupBox(self.dockSpineMeshProgress )
-    self.dynamicSlotGrp.setGeometry(QtCore.QRect(10,530, 370, 300))
+    self.dynamicSlotGrp.setGeometry(QtCore.QRect(10,575, 370, 300))
     self.dynamicSlotGrp.setObjectName("dynamicSlotGrp")
     self.dynamicSlotGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
     self.dynamicSlotGrp.setStyleSheet(QGroupBoxA)     
@@ -2250,7 +2367,7 @@ def defineImageButtonDock(self,fontScale):
 
     #### extra Grp
     self.extraToolGrp = QtWidgets.QGroupBox(self.dockSpineMeshProgress)
-    self.extraToolGrp.setGeometry(QtCore.QRect(10, 835, 370, 200))
+    self.extraToolGrp.setGeometry(QtCore.QRect(10, 880, 370, 200))
     self.extraToolGrp.setTitle("")
     self.extraToolGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
 
@@ -2334,11 +2451,11 @@ def defineImageButtonDock(self,fontScale):
     self.exportToSpineFileBtn.setObjectName("exportToSpineFileBtn")
     self.exportToSpineFileBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Export To Spine", None, -1))
    # self.exportToSpineFileBtn.clicked.connect(self.exortTOSpineJson)              
-    self.exportToSpineFileBtn.setStyleSheet(buttonStyleB)   
+    self.exportToSpineFileBtn.setStyleSheet(buttonStyleMain)   
     
 
     self.slotColorGrp = QtWidgets.QGroupBox(self.dockImageButton)
-    self.slotColorGrp.setGeometry(QtCore.QRect(10,20, 530, 150))
+    self.slotColorGrp.setGeometry(QtCore.QRect(10,20, 530, 120))
     self.slotColorGrp.setTitle("")
     self.slotColorGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
 

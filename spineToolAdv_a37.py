@@ -13,7 +13,12 @@ import maya.OpenMaya as om
 import maya.OpenMayaUI as mui
 import shiboken2
 import random
+import getpass
 
+import datetime
+import time
+
+from time import gmtime,strftime
 
 #from PySide2.QtCore import QString
 import os,math,json,shutil
@@ -26,6 +31,8 @@ try:
 
     import ice
     import spineUI_A
+    import psycopg2
+
     reload(spineUI_A)
 except:
     pass
@@ -55,7 +62,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(mod_MainWindow, self).__init__(parent)
         #self.QTITEM.ACTION.connect(self.MODDEF)
         self.setupUi(self)
-        fontSize = 16
+        fontSize = 12
           #initial data
        # self.folderDir = '//mcd-3d/data3d/spine_imageSources'  #'C:/Temp/testImage'
         self.imagesFilter = ['jpg','JPG','png','PNG']
@@ -145,7 +152,9 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.createRootBtn.clicked.connect(self.createRootCtrl)
         self.createImagePlaneBtn.clicked.connect(self.createImagePlane)
         self.defineMeshBtn.clicked.connect(self.getSkinData)
-        self.createSlotBtn.clicked.connect(self.createSlot)              
+        self.createSlotBtn.clicked.connect(self.createSlot) 
+        self.duplicateSlotBtn.clicked.connect(self.duplicateSlot) 
+                                 
         self.createBoneBtn.clicked.connect(self.createCleanBone)
         self.selectExportFileBTn.clicked.connect(self.defineExportFileName)
         self.exportToSpineFileBtn.clicked.connect(self.exortTOSpineJson)              
@@ -159,7 +168,74 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.jontSizeLEdit.valueChanged.connect(self.jointSizeValueChange)
         self.vertexSizeSB.valueChanged.connect(self.vertexSizeChange)
                      
-                                 
+         
+        self.openMayaFileFolder.clicked.connect(self.openMayaFileHstory)   
+        self.saveMayaFileBtn.clicked.connect(self.saveMayaFile)      
+        self.saveMayaFileDialogBtn.clicked.connect(self.selectSaveFile)      
+        self.mayaRecentFileTable.itemClicked.connect(self.fileOpenItemClick)
+   
+        
+    def fileOpenItemClick(self ):
+        print "fileOpenItemClick"
+        
+        fileName =  self.spineWorkSpaceLEdit.text() + self.mayaRecentFileTable.currentItem().text()
+        self.mayaRecentFileTable.itemDoubleClicked.connect(lambda x:self.openMayaSpineFile(fileName))
+       # lambda x:self.imageInfo(currentFolder)
+    def openMayaSpineFile(self,fileName):
+        print "openMayaSpineFile",fileName
+        try:
+            cmds.file(fileName,open=True,f=True)     
+            self.initialSpineItemTree()
+            self.mayaFileHistoryGrp.setVisible(False)
+        except:
+            self.errorMsgLEdit.setTet('file %s error'%fileName)
+                                      
+    def selectSaveFile(self):
+        print "selectSaveFile"
+        basicFilter = "*.mb"
+        fullFileName = cmds.fileDialog2(fileFilter=basicFilter, dialogStyle=2)[0]
+        self.saveMayaFileLEdit.setText(fullFileName)
+
+          
+    def openMayaFileHstory(self):
+        print "openMayaFileHstory"
+        
+        login = getpass.getuser()    
+        self.mayaFileHistoryGrp.setVisible(True)
+        
+        #self.mayaRecentFileTable
+            
+        conn3 = psycopg2.connect(database='3D_db', user= 'postgres', password= '', host= '192.168.161.193', port= '5432')
+        cursor3 = conn3.cursor()
+        cursor3.execute("SELECT * FROM spine_maya")
+        tempSpineMayaData = cursor3.fetchall()
+        spineMayaData = list((sorted(tempSpineMayaData, key = lambda x: x[0],reverse=True)))
+        spineMayaDataByUser = filter(lambda x:x[1] == login ,spineMayaData)
+        #cursor3.execute( "UPDATE shots set icon_url = '%s' where name = '%s';" % ( iconURL, itemName))
+        
+        conn3.commit()
+        conn3.close() 
+        fileCount = len(spineMayaDataByUser)
+        self.mayaRecentFileTable.setRowCount(0)
+        self.mayaRecentFileTable.setColumnCount(0)        
+
+        self.mayaRecentFileTable.setRowCount(10)
+        self.mayaRecentFileTable.setColumnCount(2)
+        for i in range(0,fileCount):
+            self.mayaRecentFileTable.setColumnWidth(0, 20)
+            self.mayaRecentFileTable.setColumnWidth(1, 505)
+            #self.mayaRecentFileTable.setColumnWidth(2, 1)
+
+            self.mayaRecentFileTable.setRowHeight(i, 30) 
+            fileName = spineMayaDataByUser[i][0].split('/')[-1]
+            fileUrl = spineMayaDataByUser[i][0]
+            self.mayaRecentFileTable.setItem(i,1,QtWidgets.QTableWidgetItem())
+            self.mayaRecentFileTable.item(i, 1).setText(QtWidgets.QApplication.translate("MainWindow",fileName, None,-1))
+            #self.mayaRecentFileTable.setItem(i,2,QtWidgets.QTableWidgetItem())
+            #self.mayaRecentFileTable.item(i, 2).setText(QtWidgets.QApplication.translate("MainWindow",fileUrl, None,-1))
+
+        print spineMayaDataByUser    
+        
                    
     def initialWorkSpace(self):
         print "initialWorkSpace"
@@ -232,7 +308,55 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 os.mkdir(spineExportDir)
             except:
                 pass
+            
                 
+        saveFileName = fileName.split('.mb')[0].split('_')[-2]
+        print 'fileName__',fileName,saveFileName,fileDir
+        
+        try:
+            
+          #  saveFileName = fileName.split('.mb')[0].spiit('_')[-2]
+            
+
+          #  currentFileName = fileName
+            
+            
+            print 'os.path.isfile(fileNameLong)', saveFileName
+            
+            verIndexList = []
+            print 'fileDIr______3 ', os.listdir(fileDir)
+            for i in os.listdir(fileDir):
+                fileNameLong = fileDir +i
+                print 'fileNameLong',fileNameLong
+                
+                if os.path.isfile(fileNameLong) == True:
+                    if i.split('.')[-1] == "mb":
+                        if len(i.split('_')[-2]) ==4:
+                            if i.split('_')[-2][0] == 'v':
+                                versionNum = i.split('_')[-2].split('v')[1]
+                                #versionNum = int(i.split('v')[1])
+                                print versionNum
+                                if versionNum in verIndexList:
+                                    pass
+                                else:
+                                    verIndexList.append(versionNum)
+                                    
+            verIndexList = sorted(verIndexList)
+            nextIndexNum = int(verIndexList[-1]) +1
+            nextIndexNumString = 'v'+str('{0:03d}'.format(nextIndexNum))
+            tempNewFileName = ""     
+            for i in fileName.split('.mb')[0].split('_')[0:-2]:
+                tempNewFileName += i + '_'
+                
+            newSaveFileName =  tempNewFileName + nextIndexNumString  +'_'+ fileName.split('.mb')[0].split('_')[-1]+'.mb'               
+            
+          
+        except:
+            newSaveFileName = fileName
+        
+        self.saveMayaFileLEdit.setText(newSaveFileName)
+                        
+                                
 
     def changeShapeState(self):  
         print "changeShapeState"
@@ -424,6 +548,32 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             pass
             
 
+    def saveMayaFile(self):
+        print "saveMayaFile"
+        
+        dir = self.spineWorkSpaceLEdit.text()
+        file_name = dir + self.saveMayaFileLEdit.text()
+        login = getpass.getuser()    
+        timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f')
+        cmds.file( rename= file_name )
+        cmds.file( save=True, type='mayaBinary' )
+
+        print file_name,login,timestamp
+         
+        try:   
+            conn3 = psycopg2.connect(database='3D_db', user= 'postgres', password= '', host= '192.168.161.193', port= '5432')
+            cursor3 = conn3.cursor()
+
+            inputData = (file_name,login,timestamp)
+            cursor3.execute("INSERT INTO spine_maya (file_name,login,timestamp) VALUES('%s','%s','%s')"%inputData)
+
+            conn3.commit()
+            conn3.close() 
+        except:
+            pass
+
+
+        self.initialWorkSpace()
 
     def setSlotNewImage(self):
         print "setSlotNewImage"
@@ -3591,11 +3741,20 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print "defineCreateBGBtn"
         bgWidth = int(self.createBG_comboBox.currentText().split('x')[0])
         bgHeight = int(self.createBG_comboBox.currentText().split('x')[1])
-        print (bgWidth,bgHeight)
+      #  print (bgWidth,bgHeight)
         slotPlane = cmds.polyPlane(n='BG_plane',sx=1,sy=1)[0]
         cmds.setAttr('%s.rotateX'%slotPlane,90)
         cmds.setAttr('%s.scaleX'%slotPlane,bgWidth)
         cmds.setAttr('%s.scaleZ'%slotPlane,bgHeight)
+        shader = cmds.shadingNode("lambert",asShader=True,n='bgPlane')
+        cmds.setAttr('%s.color'%shader, 0.0,0.0, 0.0, type="double3")
+        cmds.select(cl=True)
+        cmds.select(slotPlane)
+        cmds.hyperShade( assign=shader ) 
+        cmds.select(cl=True)
+        
+        
+        
 
     def createCleanBone(self):
         print "createCleanBone"
@@ -3709,15 +3868,18 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         #target
     def pasteKeyToSelectBone(self):
+        
         print "pasteKeyToSelectBone"
+        print self.currentSelectedBone
         tempSourceBoneSelected = cmds.ls(sl=True) 
         currentSelectedBone = filter(lambda x: cmds.getAttr('%s.spine_tag'%x)== 'spine_bone' ,tempSourceBoneSelected)
         targetBoneCount = len(currentSelectedBone)
         sourceBoneCount = len(self.currentSelectedBone)
-        if  targetBoneCount == sourceBoneCount:
-            self.errorMsgLEdit('count error') 
+        if  targetBoneCount != sourceBoneCount:
+            self.errorMsgLEdit.setText('count error') 
         else:
             for i in range(0,sourceBoneCount):
+                cmds.currentTime(0,e=True)
                 cmds.copyKey(self.currentSelectedBone[i])
                 targetBone = currentSelectedBone[i]
                 cmds.pasteKey(targetBone)
@@ -3731,41 +3893,60 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         tempSourceBoneSelected = cmds.ls(sl=True) 
         sourceBoneSelected = filter(lambda x: cmds.getAttr('%s.spine_tag'%x)== 'spine_bone' ,tempSourceBoneSelected)
+        
         sourceBoneCount = len(sourceBoneSelected)
         for i in range(0,sourceBoneCount):
             sourceBoneName = cmds.getAttr('%s.bone_name'%sourceBoneSelected[i])
             sourceSlotName = cmds.getAttr('%s.bone_slot'%sourceBoneSelected[i])
             newSlotW = cmds.getAttr('%s.slot_width'%sourceBoneSelected[i])
             newSlotH = cmds.getAttr('%s.slot_height'%sourceBoneSelected[i])
+            parentBone = cmds.getAttr('%s.bone_parent'%sourceBoneName)
 
-           # attachmentFile = cmds.getAttr('%s.slot_attachment'%slotPlane)
+            attachmentFile = cmds.getAttr('%s.slot_attachment'%sourceSlotName)
 
-            existNameBoneCount = len(cmds.ls(n='sourceBoneName*'))
+            existNameBoneCount = len(cmds.ls('%s*'%sourceBoneName))
             newBoneCount = existNameBoneCount +1
-            boneName = sourceBoneName +'_'+'{:04}'.format(newBoneCount)
+            boneName = sourceBoneName +'_'+'{:02}'.format(newBoneCount)
+            slotName = boneName.split('bone_')[1]
+            #cmds.setAttr('%s.slot_attachment'%bone,attachmentFile,type='string')
+            print 'parentBone',parentBone,'boneName',boneName,'slotName',slotName,'attachmentFile',attachmentFile 
+            
             self.createBone(boneName)
-            slotPlane = str(cmds.polyPlane(n='%s_#'%sourceSlotName,sx=1,sy=1)[0])
+            slotPlane = str(cmds.polyPlane(n='%s'%slotName,sx=1,sy=1)[0])
 
-            cmds.setAttr('%s.bone_parent'%boneName,parentBone[0],type='string')
+            cmds.setAttr('%s.bone_parent'%boneName,parentBone,type='string')
             cmds.setAttr('%s.bone_slot'%boneName,slotPlane,type='string')
-            cmds.setAttr('%s.slot_width'%boneName,imageW)
-            cmds.setAttr('%s.slot_height'%boneName,imageH)
+            cmds.setAttr('%s.bone_slot'%boneName,slotPlane,type='string')
+            cmds.setAttr('%s.slot_attachment'%boneName,attachmentFile,type='string')
+
+            cmds.setAttr('%s.slot_width'%boneName,newSlotW)
+            cmds.setAttr('%s.slot_height'%boneName,newSlotH)
            # print 'attachmentFile',attachmentFile 
            # cmds.setAttr('%s.slot_attachment'%bone,attachmentFile,type='string')
+            try:
+                self.defineSlot(slotPlane,boneName)
+            except:
+                pass
+            cmds.setAttr('%s.slot_width'%slotPlane,float(newSlotW))
+            cmds.setAttr('%s.slot_height'%slotPlane,float(newSlotH))
+            cmds.setAttr('%s.slot_attachment'%slotPlane,attachmentFile,type='string')
+            cmds.setAttr('%s.scaleX'%slotPlane,float(newSlotW))
+            cmds.setAttr('%s.scaleZ'%slotPlane,float(newSlotH))
+            cmds.setAttr('%s.rotateX'%slotPlane,90)
+            
+            slotPlaneShape = cmds.listRelatives(sourceSlotName,c=True,p=False)[0]
+            shadingGrps = cmds.listConnections(slotPlaneShape,type='shadingEngine')[0]
+            shader = cmds.ls(cmds.listConnections(shadingGrps),materials=1)[0]
+            cmds.select(cl=True)
+            cmds.select(slotPlane)
+            cmds.hyperShade( assign=shader )
+            cmds.select(cl=True)
+            cmds.copyKey(sourceBoneName)
+            cmds.pasteKey(boneName)
+            cmds.parent(slotName,boneName)
+            cmds.parent(boneName,parentBone)
+            
 
-          #  print 
-
-            #cmds.rename(bone,newBoneName)
-            self.defineSlot(slotPlane,boneName)
-            attachmentFile = str(cmds.getAttr('%s.slot_attachment'%slotPlane))
-            print 'attachmentFile',attachmentFile 
-            cmds.setAttr('%s.slot_attachment'%boneName,attachmentFile,type='string')
-            cmds.parent(slotPlane,boneName)
-            cmds.parent(boneName,parentBone[0])
-            newBoneCreatedList.append(boneName)
-            cmds.setAttr('%s.slot_width'%slotPlane,imageW)
-            cmds.setAttr('%s.slot_height'%slotPlane,imageH)
-                         
         
     def createSlot(self):
         print "createSlotBtn" 
@@ -4597,7 +4778,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         imageW = str(imageMetaData['Original Size'].split(' ')[0].split('(')[1])
         imageH = str(imageMetaData['Original Size'].split(' ')[1].split(')')[0])
         bitSample =str(imageMetaData['Original Bits Per Sample'])
-        print fileName,shortName,fileSize,imageW,imageH
+      #  print fileName,shortName,fileSize,imageW,imageH
         self.imageInfoTable.setItem(0,0,QtWidgets.QTableWidgetItem())
         self.imageInfoTable.item(0, 0).setText(QtWidgets.QApplication.translate("MainWindow",'file name', None,-1))
         self.imageInfoTable.setItem(0,1,QtWidgets.QTableWidgetItem())
@@ -4633,23 +4814,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
         self.imageInfoTable.setItem(5,1,QtWidgets.QTableWidgetItem())
         self.imageInfoTable.item(5, 1).setText(QtWidgets.QApplication.translate("MainWindow",bitSample, None,-1))            
-        '''                
-        for i in range(0,len(imageKey)):
-            item = QtWidgets.QTableWidgetItem()
-            self.imageInfoTable.setItem(i,0,item)
-            itemName = imageKey[i]
-            ## self.imageInfoTable.item(row, column).setIcon(iconFile)
-            self.imageInfoTable.item(i, 0).setText(QtWidgets.QApplication.translate("MainWindow",'%s'%itemName, None,-1))
 
-            item = QtWidgets.QTableWidgetItem()
-            self.imageInfoTable.setItem(i,1,item)
-            itemName = imageKey[i]
-            itemValue = imageMetaData[itemName]
-            ## self.imageInfoTable.item(row, column).setIcon(iconFile)
-          
-            self.imageInfoTable.item(i, 1).setText(QtWidgets.QApplication.translate("MainWindow",'%s'%itemValue, None,-1))
-
-        '''
           ## define preview image table item
          
           
