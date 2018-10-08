@@ -1779,7 +1779,7 @@ def defineImageButtonDock(self,fontScale):
     self.characterCreateBtn.setGeometry(QtCore.QRect(10, 20, 80, 30))
     self.characterCreateBtn.setObjectName("initialSpineRootBtn")
     self.characterCreateBtn.setCheckable(True)
-    self.characterCreateBtn.setChecked(True)
+    self.characterCreateBtn.setChecked(False)
     self.characterCreateBtn.setFlat(False)
     self.characterCreateBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Character", None, -1))
    # self.characterCreateBtn.clicked.connect(self.defineSpineRootSkeleton)
@@ -1790,9 +1790,9 @@ def defineImageButtonDock(self,fontScale):
     self.defineSpineBoneBtn.setGeometry(QtCore.QRect(95, 20, 80, 30))
     self.defineSpineBoneBtn.setObjectName("defineSpineBoneBtn")
     self.defineSpineBoneBtn.setCheckable(True)
-    self.defineSpineBoneBtn.setChecked(False)
+    self.defineSpineBoneBtn.setChecked(True)
     self.defineSpineBoneBtn.setFlat(False)
-    self.defineSpineBoneBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Bone", None, -1))
+    self.defineSpineBoneBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Slot", None, -1))
    # self.characterCreateBtn.clicked.connect(self.defineSpineRootSkeleton)
     self.defineSpineBoneBtn.setStyleSheet(buttonStyleC)          
             
@@ -1817,6 +1817,7 @@ def defineImageButtonDock(self,fontScale):
     self.exportSpineJsonCheckBtn.setCheckable(True)
     self.exportSpineJsonCheckBtn.setChecked(False)
     self.exportSpineJsonCheckBtn.setFlat(False)
+    self.exportSpineJsonCheckBtn.setVisible(False)
     self.exportSpineJsonCheckBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Export", None, -1))
    # self.characterCreateBtn.clicked.connect(self.defineSpineRootSkeleton)
     self.exportSpineJsonCheckBtn.setStyleSheet(buttonStyleC)          
@@ -1833,7 +1834,7 @@ def defineImageButtonDock(self,fontScale):
 
     
     self.defineSpineCharacterGrpBox = QtWidgets.QGroupBox(self.dockSpineMeshProgress)
-    self.defineSpineCharacterGrpBox.setGeometry(QtCore.QRect(10, 120, 370, 230))
+    self.defineSpineCharacterGrpBox.setGeometry(QtCore.QRect(10, 120, 370, 260))
     self.defineSpineCharacterGrpBox.setObjectName("defineSpineCharacterGrpBox")
     self.defineSpineCharacterGrpBox.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
     self.defineSpineCharacterGrpBox.setStyleSheet(QGroupBoxA)     
@@ -1841,14 +1842,14 @@ def defineImageButtonDock(self,fontScale):
 
 
     self.initialSpineRootBtn = QtWidgets.QPushButton(self.defineSpineCharacterGrpBox)
-    self.initialSpineRootBtn.setGeometry(QtCore.QRect(10, 20, 150, 30))
+    self.initialSpineRootBtn.setGeometry(QtCore.QRect(10, 10, 150, 30))
     self.initialSpineRootBtn.setObjectName("initialSpineRootBtn")
     self.initialSpineRootBtn.setText(QtWidgets.QApplication.translate("MainWindow", "initial Spine Root", None, -1))
     #self.initialSpineRootBtn.clicked.connect(self.defineSpineRootSkeleton)
     self.initialSpineRootBtn.setStyleSheet(buttonStyleLeft)     
     
     self.spineRootLEdit = QtWidgets.QLineEdit(self.defineSpineCharacterGrpBox)
-    self.spineRootLEdit.setGeometry(QtCore.QRect(160, 20, 200, 30))
+    self.spineRootLEdit.setGeometry(QtCore.QRect(160, 10, 200, 30))
     self.spineRootLEdit.setObjectName("spineRootLEdit")
     self.spineRootLEdit.setAlignment(QtCore.Qt.AlignCenter)
     self.spineRootLEdit.setText('spine_RootSkeleton')
@@ -1920,9 +1921,30 @@ def defineImageButtonDock(self,fontScale):
    # self.defineMeshBtn.clicked.connect(self.getSkinData)
     self.defineMeshBtn.setStyleSheet(buttonStyleB)     
     
+    
+    ###### defineClippedGrpBox
+    self.defineClippedGrpBox = QtWidgets.QGroupBox(self.dockSpineMeshProgress )
+    self.defineClippedGrpBox.setGeometry(QtCore.QRect(10, 170, 370, 210))
+    self.defineClippedGrpBox.setObjectName("defineSpineCharacterGrpBox")
+    self.defineClippedGrpBox.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
+    self.defineClippedGrpBox.setStyleSheet(QGroupBoxA)     
+    self.defineClippedGrpBox.setVisible(False)   
+    
+    
+  
+    self.defineClippingBtn = QtWidgets.QPushButton(self.defineClippedGrpBox)
+    self.defineClippingBtn.setGeometry(QtCore.QRect(10, 10, 130, 30))
+    self.defineClippingBtn.setObjectName("defineClippingBtn")
+    self.defineClippingBtn.setText(QtWidgets.QApplication.translate("MainWindow", "define Mask", None, -1))
+   # self.createRootBtn.clicked.connect(self.createRootCtrl)
+    self.defineClippingBtn.setStyleSheet(buttonStyleMain)     
+    
+      
+          
+    
     ###### defineSpineSlotBoneGrpBox
     self.defineSpineSlotBoneGrpBox = QtWidgets.QGroupBox(self.dockSpineMeshProgress )
-    self.defineSpineSlotBoneGrpBox.setGeometry(QtCore.QRect(10, 355, 370, 215))
+    self.defineSpineSlotBoneGrpBox.setGeometry(QtCore.QRect(10, 170, 370, 210))
     self.defineSpineSlotBoneGrpBox.setObjectName("defineSpineCharacterGrpBox")
     self.defineSpineSlotBoneGrpBox.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
     self.defineSpineSlotBoneGrpBox.setStyleSheet(QGroupBoxA)     
@@ -1931,18 +1953,24 @@ def defineImageButtonDock(self,fontScale):
     
 
     self.createSlotBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
-    self.createSlotBtn.setGeometry(QtCore.QRect(30, 50, 160, 30))
+    self.createSlotBtn.setGeometry(QtCore.QRect(30, 50, 220, 30))
     self.createSlotBtn.setObjectName("createSlot")
     self.createSlotBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Slot", None, -1))
-    self.createSlotBtn.setStyleSheet(buttonStyleB)   
+    self.createSlotBtn.setStyleSheet(buttonStyleMain)   
     
     self.duplicateSlotBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
-    self.duplicateSlotBtn.setGeometry(QtCore.QRect(200, 50, 160, 30))
+    self.duplicateSlotBtn.setGeometry(QtCore.QRect(255, 50, 100, 30))
     self.duplicateSlotBtn.setObjectName("duplicateSlotBtn")
     self.duplicateSlotBtn.setText(QtWidgets.QApplication.translate("MainWindow", "duplicate Slot", None, -1))
     self.duplicateSlotBtn.setStyleSheet(buttonStyleB)   
     
+
  
+    self.changeParentBone = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
+    self.changeParentBone.setGeometry(QtCore.QRect(30, 180, 220, 30))
+    self.changeParentBone.setObjectName("changeParentBone")
+    self.changeParentBone.setText(QtWidgets.QApplication.translate("MainWindow", "change Parent", None, -1))
+    self.changeParentBone.setStyleSheet(buttonStyleB)    
     
     self.createBoneBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
     self.createBoneBtn.setGeometry(QtCore.QRect(30, 10, 120, 30))
