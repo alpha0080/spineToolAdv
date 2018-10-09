@@ -6,7 +6,33 @@
 #      by: pyside2-uic  running on PySide2 2.0.0~alpha0
 #
 # WARNING! All changes made in this file will be lost!
+import sys
 
+try:
+    sys.path.append("//mcd-one/database/assets/scripts/python2.7_alpha/22") 
+    #sys.path.append("C:/Program Files/Pixar/RenderManProServer-22.1/lib/python2.7/Libs/ite-packages")
+except:
+    pass
+
+try:
+    import spineUI_A
+    reload(spineUI_A)    
+except:
+    pass
+    
+try:
+    import psycopg2
+
+except:
+    pass
+    
+try:
+    import ice
+   
+except:
+    pass
+    
+            
 from PySide2 import QtCore, QtGui, QtWidgets#.QFileSystemModel
 import maya.cmds as cmds
 import maya.OpenMaya as om
@@ -22,25 +48,7 @@ from time import gmtime,strftime
 
 #from PySide2.QtCore import QString
 import os,math,json,shutil
-import sys,subprocess
-try:
-    sys.path.append("C:/Users/alpha/Documents/GitHub/spineToolAdv")
-    import spineUI_A
-    reload(spineUI_A)
-except:
-    pass
-
-
-try:
-    sys.path.append("//mcd-one/database/assets/scripts/python2.7_alpha/22")
-except:
-    sys.path.append("C:/Program Files/Pixar/RenderManProServer-22.1/lib/python2.7/Libs/ite-packages")
-import ice
-
-try:    
-    import psycopg2
-except:
-    pass
+import subprocess
 
 
 
