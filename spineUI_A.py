@@ -2541,7 +2541,14 @@ def defineImageButtonDock(self,fontScale):
     self.setNewSlot.setGeometry(QtCore.QRect(10, 50, 100, 30))
     self.setNewSlot.setObjectName("setNewSlot")
     self.setNewSlot.setText(QtWidgets.QApplication.translate("MainWindow", "set Slot", None, -1))
-    self.setNewSlot.setStyleSheet(buttonStyleB)             
+    self.setNewSlot.setStyleSheet(buttonStyleB)      
+    
+           
+    self.delUnusedNode = QtWidgets.QPushButton(self.slotColorGrp)
+    self.delUnusedNode.setGeometry(QtCore.QRect(120, 50, 100, 30))
+    self.delUnusedNode.setObjectName("delUnusedNode")
+    self.delUnusedNode.setText(QtWidgets.QApplication.translate("MainWindow", "del unused Node", None, -1))
+    self.delUnusedNode.setStyleSheet(buttonStyleB)                             
    # self.setNewSlot.clicked.connect(self.setSlotNewImage)
    
     

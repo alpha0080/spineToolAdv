@@ -197,7 +197,104 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.saveMayaFileDialogBtn.clicked.connect(self.selectSaveFile)      
         self.mayaRecentFileTable.itemClicked.connect(self.fileOpenItemClick)
         self.closeMayaFileHistoryBtn.clicked.connect(self.closeMayaHistoryGrp) 
-   
+        self.delUnusedNode.clicked.connect(self.delUnusedShaderNode) 
+        
+        
+    def delUnusedShaderNode(self):
+        print 'delUnusedShaderNode'
+        allTransform = cmds.ls(type='transform')
+        allSlotShapeList = []
+        usedSGList = []
+        usedShaderList = []
+        usedFileList = []
+
+        for i in allTransform:
+            try:
+                if cmds.getAttr('%s.spine_tag'%i) == 'spine_slot':
+                    shapeName = cmds.listRelatives (i,c=True,type='mesh')[0]
+                    if shapeName in allSlotShapeList:
+                        pass
+                    else:
+                        allSlotShapeList.append(shapeName)
+            except:
+                pass
+
+        for i in allSlotShapeList:
+            sg = cmds.listConnections (i,type='shadingEngine')[0]
+            try:
+                if sg in usedSGList:
+                    pass
+                else:
+                    usedSGList.append(sg)
+            except:
+                pass
+                
+        for i in usedSGList:
+           # print cmds.listConnections (i,type='lambert')
+            try:
+                shader = cmds.listConnections (i,type='lambert')[0]
+            except:
+                shader = cmds.listConnections (i,type='blinn')[0]
+            if shader == 0:
+                pass
+            else:
+                if shader in usedShaderList:
+                    pass
+                else:
+                    usedShaderList.append(shader)
+                    
+        for i in usedShaderList:
+            try:
+                fileList =  cmds.listConnections (i,type='file')
+                for f in fileList:
+                    if f in usedFileList:
+                        pass
+                    else:
+                        usedFileList.append(f)
+            except:
+                pass
+                
+        allSGlist = cmds.ls(type='shadingEngine')
+        allLSlist = cmds.ls(type='lambert')
+        allBSlist = cmds.ls(type='blinn')
+
+        allFilelist = cmds.ls(type='file')
+        print usedSGList
+        print usedShaderList
+        print usedFileList
+        
+        for i in allSGlist:
+            if i not in usedSGList:
+                try:
+                    cmds.delete(i)
+                except:
+                    pass
+                    
+        for i in allLSlist:
+            if i not in usedShaderList:
+                try:
+                    cmds.delete(i)
+                except:
+                    pass
+                    
+        for i in allBSlist:
+            if i not in usedShaderList:
+                try:
+                    cmds.delete(i)
+                except:
+                    pass
+                    
+        for i in allFilelist:
+            if i not in usedFileList:
+                try:
+                    cmds.delete(i)
+                except:
+                    pass  
+        
+        #print usedSGList
+       # print usedShaderList
+        #print usedFileList
+                
     def closeMayaHistoryGrp(self):  
         self.mayaFileHistoryGrp.setVisible(False)
         
@@ -278,7 +375,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.mayaFileHistoryGrp.setVisible(False)
         except:
             self.errorMsgLEdit.setText('file %s error'%fileName)
-                                      
+        self.initialWorkSpace()
+                              
     def selectSaveFile(self):
         print "selectSaveFile"
         basicFilter = "*.mb"
@@ -324,7 +422,6 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.mayaRecentFileTable.item(i, 2).setText(QtWidgets.QApplication.translate("MainWindow",fileUrl, None,-1))
 
         print spineMayaDataByUser    
-        
                    
     def initialWorkSpace(self):
         print "initialWorkSpace"
@@ -671,67 +768,43 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def setSlotNewImage(self):
         print "setSlotNewImage"
-        currentImage = self.imageListTable.currentItem().text()
+        selectJointList = cmds.ls(sl=True,type='joint')
+        print 'selectJointList___1',selectJointList
+        currentImage = self.imageInfoTable.item(1,1).text()
         imageName = currentImage.split('.')[0]
+        slotPlane ="replace"
+       # currentImage = self.imageListTable.currentItem().text()
+        #imageName = currentImage.split('.')[0]
+        print 'currentImage______1',currentImage,imageName
         fileName = self.imageInfoTable.item(0,1).text()
-        
-        targetFileName = self.spineImagesSpaceLEdit.text() +'/' +currentImage
+        slotShaderName = self.createShader(slotPlane,imageName,currentImage)
+        print 'slotShaderName______2',slotShaderName
+      #  targetFileName = self.spineImagesSpaceLEdit.text() +'/' +currentImage
         imageW = int(self.imageInfoTable.item(3,1).text())
         imageH = int(self.imageInfoTable.item(4,1).text())
         
-        ###create new shader
-        slotShaderName =  imageName + '_shader'
-        slotFileName = imageName + '_imageFile'
-        slotSG = imageName + '_SG'
-        selectJointList = cmds.ls(sl=True,type='joint')
-        cmds.select(cl=True) 
+      
+        print 'selectJointList___2',selectJointList
 
-        shader = cmds.shadingNode("lambert",asShader=True,n=slotShaderName)
-       # print 'shader',shader
-        cmds.select(shader)
-        shaderName = cmds.ls(sl=True)[0]
-            # shader=cmds.rename(shader,slotShaderName)
-       #     print 'shaderName',shaderName,shader
-        file_node=cmds.shadingNode("file",asTexture=True,n=slotFileName)
-        shading_group= cmds.sets(renderable=True,noSurfaceShader=True,empty=True,n=slotSG)
-        cmds.connectAttr('%s.color' %shader ,'%s.surfaceShader' %shading_group)
-        cmds.connectAttr('%s.outColor' %file_node, '%s.color' %shader)
-           # print 'fileName',fileName
-        
-    
-        cmds.connectAttr('%s.outTransparency' %file_node, '%s.transparency' %shader)
-        cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
-        cmds.select(cl=True) 
-
-        selectBoneList = filter(lambda x: cmds.getAttr('%s.spine_tag'%x)== 'spine_bone' ,selectJointList)
-        print "currentFile",fileName,targetFileName
-        try:
-            if os.path.isfile(targetFileName) == True:
-                print "file exist"
-                
-            else:
-                #os.remove(targetFile)
-                shutil.copyfile(fileName,targetFileName)        
-        
-        except:
-                       
-            pass
-        cmds.setAttr('%s.fileTextureName'%slotFileName,targetFileName,type='string')
-
+        print 'selectJointList',selectJointList
+        selectBoneList = filter(lambda x: cmds.getAttr('%s.spine_tag'%x) == 'spine_bone' ,selectJointList)
+        print 'selectBoneList',selectBoneList
         for bone in selectBoneList:
             slotName = cmds.getAttr('%s.bone_slot'%bone)
             print 'slotName',slotName
+            cmds.select(cl=True) 
             cmds.select(slotName)
             cmds.hyperShade( assign=slotShaderName )
             cmds.setAttr('%s.scaleX'%slotName,imageW)
             cmds.setAttr('%s.scaleZ'%slotName,imageH)
             cmds.setAttr('%s.slot_width'%slotName,imageW)
             cmds.setAttr('%s.slot_height'%slotName,imageH)
-            cmds.setAttr('%s.slot_width'%bone,imageW)
-            cmds.setAttr('%s.slot_height'%bone,imageH)
-
             cmds.setAttr('%s.slot_attachment'%slotName,imageName,type="string")
 
+            cmds.setAttr('%s.slot_width'%bone,imageW)
+            cmds.setAttr('%s.slot_height'%bone,imageH)
+            cmds.setAttr('%s.slot_attachment'%bone,imageName,type="string")
+            
             cmds.select(cl=True) 
         print 'currentImage',currentImage,fileName,selectBoneList
         
@@ -4108,16 +4181,21 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                             self.errorMsgLEdit.setText(currentImage)
                            # imageSize = self.imageInfoTable.item(10,1).text()[1:-1].split(' ')
                             fileName = self.imageInfoTable.item(0,1).text()
-
+                            print 'fileName fileName fileName',fileName
                             imageW = int(self.imageInfoTable.item(3,1).text())
                             imageH = int(self.imageInfoTable.item(4,1).text())
                             slotPlane = str(cmds.polyPlane(n='%s_#'%slotName,sx=1,sy=1)[0])
                             cmds.setAttr('%s.rotateX'%slotPlane,90)
                             cmds.setAttr('%s.scaleX'%slotPlane,imageW)
                             cmds.setAttr('%s.scaleZ'%slotPlane,imageH)
-                            
+                            currentImage = self.imageInfoTable.item(1,1).text()
+                            imageName = currentImage.split('.')[0]
+                           # print 'slotPlane,imageName,currentImage___0 ',slotPlane,imageName,currentImage
 
-                            self.assignSurfaceShader(slotName,slotPlane,fileName)
+                            self.createShader(slotPlane,imageName,currentImage) 
+                           # print 'slotPlane,imageName,currentImage___1 ',slotPlane,imageName,currentImage
+
+                            #self.assignSurfaceShader(slotName,slotPlane,fileName)
                             
 
                             boneName = "bone_%s"%slotPlane # + '{:04d}'.format(0)
@@ -4137,7 +4215,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                             #cmds.rename(bone,newBoneName)
                             self.defineSlot(slotPlane,boneName)
                             attachmentFile = str(cmds.getAttr('%s.slot_attachment'%slotPlane))
-                            print 'attachmentFile',attachmentFile 
+                       #     print 'attachmentFile_________1',attachmentFile 
                             cmds.setAttr('%s.slot_attachment'%boneName,attachmentFile,type='string')
                             cmds.parent(slotPlane,boneName)
                             cmds.parent(boneName,parentBone[0])
@@ -4669,58 +4747,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
      
              
-                   
-    def assignSurfaceShader(self,imageName,object,fileName):  #imageName  as slot name
-        print "assignSurfaceShader"
-       # slotShaderName =  imageName + '_surfaceShader'
-        
-        imageName = imageName.split('/')[-1]
-       # print ('fileName',fileName,imageName)
-        imageExtName = fileName.split('.')[-1]
-        cmds.select(cl=True)
-        slotShaderName =  imageName + '_shader'
-
-        slotFileName = imageName + '_imageFile'
-        print 'fileName##########################',fileName,imageExtName#,slotShaderName
-        slotSG = imageName + '_SG'
-        if len(cmds.ls(slotShaderName)) == 0:
-            print ('slotShaderName is not exist')
-          #  shader = cmds.shadingNode("surfaceShader",asShader=True,n=slotShaderName)
-            shader = cmds.shadingNode("lambert",asShader=True,n=slotShaderName)
-            print 'shader',shader
-            cmds.select(shader)
-            shaderName = cmds.ls(sl=True)[0]
-            # shader=cmds.rename(shader,slotShaderName)
-            print 'shaderName',shaderName,shader
-            file_node=cmds.shadingNode("file",asTexture=True,n=slotFileName)
-            shading_group= cmds.sets(renderable=True,noSurfaceShader=True,empty=True,n=slotSG)
-            cmds.connectAttr('%s.color' %shader ,'%s.surfaceShader' %shading_group)
-            cmds.connectAttr('%s.outColor' %file_node, '%s.color' %shader)
-            print 'fileName',fileName
-            
-           # if imageExtName == 'jpg':
-             #   pass
-         #   elif imageExtName == 'png':
-            cmds.connectAttr('%s.outTransparency' %file_node, '%s.transparency' %shader)
-            cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
-            try:
-                cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
-                print 'assigned image file'
-            except:
-                pass
-            cmds.select(object)
-            cmds.hyperShade( assign=slotShaderName )
-            cmds.select(cl=True)
-
-             #  print ('create shrfaceShader named %s'%slotShaderName)
-
-        elif len(cmds.ls(slotShaderName)) == 1:
-               
-            print ('%s is exist'%slotShaderName)
-            cmds.select(object)
-            cmds.hyperShade( assign=slotShaderName )
-            cmds.select(cl=True)
-
+ 
         
    
     def defineImageTableFromSel(self):
@@ -4937,31 +4964,97 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           ## define preview image table item
          
           
-          
-          
+     
+    def createShader(self,slotPlane,imageName,currentImage):    #slotName, imageSort name, image full name
+        print "createShader" ,slotPlane,imageName, currentImage 
+        
+       # imageName = currentImage.split('.')[0]
+        fileName = self.imageInfoTable.item(0,1).text()
+        targetFileName = self.spineImagesSpaceLEdit.text() +'/' +currentImage
+        print "targetFileName_________1",targetFileName,os.path.isfile(targetFileName)
+      #  print os.path.isfile(targetFileName)
+        #cmds.nodeType('sugerC01_shader')
+        slotShaderName =  imageName + '_shader'
+        slotFileName = imageName + '_imageFile'
+        slotSG = imageName + '_SG'   
+        #checkShaderExisted = cmds.ls('sugerB01_shader',type = 'blinn')
+        
+        checkShaderExisted = cmds.ls(slotShaderName,type = 'blinn')
+       # if len(checkShaderExisted) >= 1:
+        #    pass
+       # else:
+            
+        shader = cmds.shadingNode("blinn",asShader=True,n=slotShaderName)   
+         
+        file_node=cmds.shadingNode("file",asTexture=True,n=slotFileName)
+        print 'file_node____1',file_node
+        shading_group= cmds.sets(renderable=True,noSurfaceShader=True,empty=True,n=slotSG)
+        cmds.connectAttr('%s.color' %shader ,'%s.surfaceShader' %shading_group)
+        cmds.connectAttr('%s.outColor' %file_node, '%s.color' %shader)
+        cmds.connectAttr('%s.outTransparency' %file_node, '%s.transparency' %shader)
+        cmds.connectAttr('%s.outAlpha' %file_node, '%s.reflectivity' %shader)
+        cmds.setAttr('%s.specularColor'%shader,0,0,0,type='double3')
+        cmds.setAttr('%s.reflectedColor'%shader,0,0,0,type='double3')  ### set to normal blend mode
+
+       # cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
+        print "targetFileName_________2",targetFileName
+        cmds.setAttr('%s.fileTextureName'%file_node,targetFileName,type='string')
+           # 
+
+       # shaderName = cmds.ls(sl=True)[0]  
+
+
+        try:
+            if os.path.isfile(targetFileName) == True:
+                print "file exist"
+                
+            else:
+                #os.remove(targetFile)
+                shutil.copyfile(fileName,targetFileName)        
+        
+        except:
+                       
+            pass
+       # cmds.select(cl=True)      
+       # cmds.select(slotShaderName)
+           
+       
+        if slotPlane == "replace":
+            pass
+        else:
+            cmds.select(cl=True) 
+
+            cmds.select(slotPlane)
+            cmds.hyperShade( assign=shader )
+            cmds.select(cl=True)
+        print "shader______1",shader
+        return shader
+       # print "currentFile",fileName,targetFileName
+ 
     def createImagePlane(self):
         print "createImagePlane"
        # print self.currentImageFullName
-        currentImage = self.imageListTable.currentItem().text()
+        currentImage = self.imageInfoTable.item(1,1).text()#self.imageListTable.currentItem().text()
         imageName = currentImage.split('.')[0]
-        fileName = self.imageInfoTable.item(0,1).text()
-        
-        targetFileName = self.spineImagesSpaceLEdit.text() +'/' +currentImage
+
         imageW = int(self.imageInfoTable.item(3,1).text())
         imageH = int(self.imageInfoTable.item(4,1).text())
         
-        slotPlane = str(cmds.polyPlane(n='polyPlane_%s_#'%imageName,sx=1,sy=1)[0])
+        slotPlane = str(cmds.polyPlane(n='sp_%s_#'%imageName,sx=1,sy=1)[0])
         cmds.setAttr('%s.rotateX'%slotPlane,90)
         cmds.setAttr('%s.scaleX'%slotPlane,imageW)
         cmds.setAttr('%s.scaleZ'%slotPlane,imageH)
         ###create new shader
-        slotShaderName =  imageName + '_shader'
-        slotFileName = imageName + '_imageFile'
-        slotSG = imageName + '_SG'
-        print 'currentImage',currentImage,fileName,targetFileName
-        cmds.select(cl=True) 
-        
+       # slotShaderName =  imageName + '_shader'
+       # slotFileName = imageName + '_imageFile'
+       # slotSG = imageName + '_SG'
+       # print 'currentImage',currentImage,fileName,targetFileName
+       # cmds.select(cl=True) 
+        self.createShader(slotPlane,imageName,currentImage)
+        '''
         shader = cmds.shadingNode("lambert",asShader=True,n=slotShaderName)
+        
+
        # print 'shader',shader
         cmds.select(shader)
         shaderName = cmds.ls(sl=True)[0]
@@ -4977,25 +5070,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         cmds.connectAttr('%s.outTransparency' %file_node, '%s.transparency' %shader)
         cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
         cmds.select(cl=True) 
-        
-        try:
-            if os.path.isfile(targetFileName) == True:
-                print "file exist"
-                
-            else:
-                #os.remove(targetFile)
-                shutil.copyfile(fileName,targetFileName)        
-        
-        except:
-                       
-            pass
-        cmds.setAttr('%s.fileTextureName'%slotFileName,targetFileName,type='string')
+        '''
 
-        cmds.select(slotPlane)
-        cmds.hyperShade( assign=slotShaderName )
-        cmds.select(cl=True)
-        print "currentFile",fileName,targetFileName
- 
         
           
 

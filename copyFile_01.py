@@ -1,11 +1,17 @@
-import shutil
-
-
-fileList =[ "//mcd-one/database/assets/scripts/maya_scripts/spineTool2.py","//mcd-one/database/assets/scripts/python2.7_alpha/22/spineUI_A.py"]
-targetDir = "C:/Users/alpha/Documents/GitHub/spineToolAdv"
-for i in fileList:
-    fileName = i.split('/')[-1]
-    longFileName = targetDir +'/'+fileName
-    print longFileName 
-
-    shutil.copyfile(i,longFileName)  
+allLambertShaderLiset = cmds.ls(type='lambert')
+allNeedShaderList = []
+for i in allLambertShaderLiset:
+    linkList = cmds.listConnections(i)
+  #  print linkList
+    for j in linkList:
+        print j
+        try:
+            if cmds.getAttr('%s.spine_tag'%j) == 'spine_slot':
+                print j
+                if j in allDeleteShaderList:
+                    pass
+                else:
+                    allNeedShaderList.append(i)
+        except:
+            pass
+        
