@@ -663,7 +663,22 @@ def defineImageButtonDock(self,fontScale):
                      text-align:center;\
                      }\
                      "%(str(fontScale))               
-                     
+
+    QGroupBoxCreateSlotBox =  "\
+                     QGroupBox {\
+                     font-size:12px;\
+                     font-size:%spx;\
+                     background-color:#303030;\
+                     border-radius :8px;\
+                     border-style:solid;\
+                     border-width:1px;\
+                     border-color:#666666;\
+                     text-align:center;\
+                     }\
+                     "%(str(fontScale))                         
+                                          
+                                                               
+                                                                                                         
     treeA =  "\
                      QTreeWidget {\
                      font-size:%spx;\
@@ -1558,12 +1573,12 @@ def defineImageButtonDock(self,fontScale):
   #  self.mayaRecentFileTable.setStyleSheet(tableA);
     
     
-    self.readMayaSelectedFileBtn = QtWidgets.QPushButton(self.mayaFileHistoryGrp)
-    self.readMayaSelectedFileBtn.setGeometry(QtCore.QRect(10, 180, 110,30))
-    self.readMayaSelectedFileBtn.setObjectName("openSpineMayaFileBtn")
-    self.readMayaSelectedFileBtn.setText(QtWidgets.QApplication.translate("MainWindow", "open selected file", None, -1))
+    self.closeMayaFileHistoryBtn = QtWidgets.QPushButton(self.mayaFileHistoryGrp)
+    self.closeMayaFileHistoryBtn.setGeometry(QtCore.QRect(10, 180, 110,30))
+    self.closeMayaFileHistoryBtn.setObjectName("closeMayaFileHistoryBtn")
+    self.closeMayaFileHistoryBtn.setText(QtWidgets.QApplication.translate("MainWindow", "close", None, -1))
    # self.openSpineMayaFileBtn.clicked.connect(self.openMayaFile)
-    self.readMayaSelectedFileBtn.setStyleSheet(buttonStyleB)     
+    self.closeMayaFileHistoryBtn.setStyleSheet(buttonStyleB)     
 
 
 
@@ -1944,10 +1959,10 @@ def defineImageButtonDock(self,fontScale):
     
     ###### defineSpineSlotBoneGrpBox
     self.defineSpineSlotBoneGrpBox = QtWidgets.QGroupBox(self.dockSpineMeshProgress )
-    self.defineSpineSlotBoneGrpBox.setGeometry(QtCore.QRect(10, 170, 370, 210))
+    self.defineSpineSlotBoneGrpBox.setGeometry(QtCore.QRect(10, 170, 370, 310))
     self.defineSpineSlotBoneGrpBox.setObjectName("defineSpineCharacterGrpBox")
     self.defineSpineSlotBoneGrpBox.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
-    self.defineSpineSlotBoneGrpBox.setStyleSheet(QGroupBoxA)     
+    self.defineSpineSlotBoneGrpBox.setStyleSheet(QGroupBoxCreateSlotBox)     
     self.defineSpineSlotBoneGrpBox.setVisible(True)
  
     
@@ -1966,11 +1981,13 @@ def defineImageButtonDock(self,fontScale):
     
 
  
-    self.changeParentBone = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
-    self.changeParentBone.setGeometry(QtCore.QRect(30, 180, 220, 30))
-    self.changeParentBone.setObjectName("changeParentBone")
-    self.changeParentBone.setText(QtWidgets.QApplication.translate("MainWindow", "change Parent", None, -1))
-    self.changeParentBone.setStyleSheet(buttonStyleB)    
+    self.changeParentBoneBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
+    self.changeParentBoneBtn.setGeometry(QtCore.QRect(30, 180, 220, 30))
+    self.changeParentBoneBtn.setObjectName("changeParentBoneBtn")
+    self.changeParentBoneBtn.setText(QtWidgets.QApplication.translate("MainWindow", "change Parent", None, -1))
+    self.changeParentBoneBtn.setStyleSheet(buttonStyleB)    
+    
+    
     
     self.createBoneBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
     self.createBoneBtn.setGeometry(QtCore.QRect(30, 10, 120, 30))
