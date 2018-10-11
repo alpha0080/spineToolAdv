@@ -10,10 +10,10 @@ import sys
 
 try:
     sys.path.append("//mcd-one/database/assets/scripts/python2.7_alpha/22") 
-    sys.path.append("C:/Program Files/Pixar/RenderManProServer-22.1/lib/python2.7/Libs/ite-packages")
-   
-    sys.path.append("C:/Users/alpha/Documents/GitHub/spineToolAdv")
-
+    #sys.path.append("C:/Program Files/Pixar/RenderManProServer-22.1/lib/python2.7/Libs/ite-packages")
+    sys.path.append("C:/Users/alpha/Documents/GitHub/spineToolAdv") 
+    
+    
 except:
     pass
 
@@ -35,7 +35,16 @@ try:
 except:
     pass
     
-            
+ 
+import spineExtraTool
+reload(spineExtraTool)
+                       
+import spineMainTool
+reload(spineMainTool)
+                       
+         
+                                         
+                                                                                                                         
 from PySide2 import QtCore, QtGui, QtWidgets#.QFileSystemModel
 import maya.cmds as cmds
 import maya.OpenMaya as om
@@ -171,6 +180,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.defineMeshBtn.clicked.connect(self.getSkinData)
         self.createSlotBtn.clicked.connect(self.createSlot) 
         self.duplicateSlotBtn.clicked.connect(self.duplicateSlot) 
+        self.changeParentBoneBtn.clicked.connect(self.changeParentBone) 
+        
+        
+        
+        
         self.characterCreateBtn.clicked.connect(self.switchToCharacterMode)
         self.defineSpineBoneBtn.clicked.connect(self.switchToSlotMode)
         self.defineSpineMaskBtn.clicked.connect(self.switchToMaskMode)
@@ -181,7 +195,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.exportToSpineFileBtn.clicked.connect(self.exortTOSpineJson)              
         self.setSlotColor.clicked.connect(self.setColorToSelectBone)
         self.setSlotColorKey.clicked.connect(self.setSlotColorKeyFrame)
-        self.setNewSlot.clicked.connect(self.setSlotNewImage)
+        self.setNewSlotBtn.clicked.connect(self.setSlotNewImage)
              
          
         self.amountSlotSlider.valueChanged.connect(self.slotAmountSliderChange)
@@ -194,8 +208,34 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.saveMayaFileBtn.clicked.connect(self.saveMayaFile)      
         self.saveMayaFileDialogBtn.clicked.connect(self.selectSaveFile)      
         self.mayaRecentFileTable.itemClicked.connect(self.fileOpenItemClick)
-   
+        self.closeMayaFileHistoryBtn.clicked.connect(self.closeMayaHistoryGrp) 
+        self.delUnusedNode.clicked.connect(self.delUnusedShaderNode) 
         
+        
+    def delUnusedShaderNode(self):
+        print" delUnusedShaderNode"
+        spineExtraTool.delUnusedShaderNode()
+             
+                  
+                       
+                            
+                                      
+    def closeMayaHistoryGrp(self):  
+        self.mayaFileHistoryGrp.setVisible(False)
+        
+    def changeParentBone(self):
+        print "changeParentBone"
+        currentSelectedBones = cmds.ls(sl=True)
+        selectBoneList = filter(lambda x: cmds.getAttr('%s.spine_tag'%x)== 'spine_bone' ,currentSelectedBones)
+        parentBone = selectBoneList[-1]
+        for i in selectBoneList[0:-2]:
+            cmds.parent(i,parentBone)
+            cmds.setAttr('%s.bone_parent'%i,parentBone,type="string")
+       # grpParent = cmds.listRelatives(parentBone,p=True)[0]
+       # grpParentSpineTag = cmds.getAttr('%s.spine_tag'%grpParent)
+       # print 'selectBoneList',parentBone,grpParentSpineTag
+        
+                 
     def switchToCharacterMode(self):
         print "switchToCharacterMode"
         self.defineSpineSlotBoneGrpBox.setVisible(False)
@@ -260,7 +300,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.mayaFileHistoryGrp.setVisible(False)
         except:
             self.errorMsgLEdit.setText('file %s error'%fileName)
-                                      
+        self.initialWorkSpace()
+                              
     def selectSaveFile(self):
         print "selectSaveFile"
         basicFilter = "*.mb"
@@ -306,7 +347,6 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.mayaRecentFileTable.item(i, 2).setText(QtWidgets.QApplication.translate("MainWindow",fileUrl, None,-1))
 
         print spineMayaDataByUser    
-        
                    
     def initialWorkSpace(self):
         print "initialWorkSpace"
@@ -618,7 +658,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             os.mkdir(spineExportDir)
         except:
             pass
-            
+        try:
+            self.initialWorkSpace()
+            self.setToSpineJobTree()
+        except:
+            pass
 
     def saveMayaFile(self):
         print "saveMayaFile"
@@ -649,67 +693,66 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def setSlotNewImage(self):
         print "setSlotNewImage"
-        currentImage = self.imageListTable.currentItem().text()
+        selectJointList = cmds.ls(sl=True,type='joint')
+        print 'selectJointList___1',selectJointList
+        currentImage = self.imageInfoTable.item(1,1).text()
         imageName = currentImage.split('.')[0]
-        fileName = self.imageInfoTable.item(0,1).text()
+       # slotPlane ="replace"
         
-        targetFileName = self.spineImagesSpaceLEdit.text() +'/' +currentImage
+        
+        sourceImage = self.imageInfoTable.item(0,1).text()
+        imageName = sourceImage.split('/')[-1].split('.')[0]
+        targetDir = self.spineImagesSpaceLEdit.text()
+     #   print sourceImage,targetDir
         imageW = int(self.imageInfoTable.item(3,1).text())
         imageH = int(self.imageInfoTable.item(4,1).text())
         
-        ###create new shader
-        slotShaderName =  imageName + '_shader'
-        slotFileName = imageName + '_imageFile'
-        slotSG = imageName + '_SG'
-        selectJointList = cmds.ls(sl=True,type='joint')
-        cmds.select(cl=True) 
-
-        shader = cmds.shadingNode("lambert",asShader=True,n=slotShaderName)
-       # print 'shader',shader
-        cmds.select(shader)
-        shaderName = cmds.ls(sl=True)[0]
-            # shader=cmds.rename(shader,slotShaderName)
-       #     print 'shaderName',shaderName,shader
-        file_node=cmds.shadingNode("file",asTexture=True,n=slotFileName)
-        shading_group= cmds.sets(renderable=True,noSurfaceShader=True,empty=True,n=slotSG)
-        cmds.connectAttr('%s.color' %shader ,'%s.surfaceShader' %shading_group)
-        cmds.connectAttr('%s.outColor' %file_node, '%s.color' %shader)
-           # print 'fileName',fileName
-        
+        #slotPlane = str(cmds.polyPlane(n='ip_%s_#'%imageName,sx=1,sy=1)[0])
+        #cmds.setAttr('%s.rotateX'%slotPlane,90)
+        #cmds.setAttr('%s.scaleX'%slotPlane,imageW)
+        #cmds.setAttr('%s.scaleZ'%slotPlane,imageH)
     
-        cmds.connectAttr('%s.outTransparency' %file_node, '%s.transparency' %shader)
-        cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
-        cmds.select(cl=True) 
+        slotShaderName = spineMainTool.createShader(sourceImage,targetDir)
+       # cmds.select(cl=True) 
 
-        selectBoneList = filter(lambda x: cmds.getAttr('%s.spine_tag'%x)== 'spine_bone' ,selectJointList)
-        print "currentFile",fileName,targetFileName
-        try:
-            if os.path.isfile(targetFileName) == True:
-                print "file exist"
-                
-            else:
-                #os.remove(targetFile)
-                shutil.copyfile(fileName,targetFileName)        
+       # cmds.select(slotPlane)
+       # cmds.hyperShade( assign=shader )
+       # cmds.select(cl=True)       
         
-        except:
-                       
-            pass
-        cmds.setAttr('%s.fileTextureName'%slotFileName,targetFileName,type='string')
+        
+        
+       # currentImage = self.imageListTable.currentItem().text()
+        #imageName = currentImage.split('.')[0]
+        #print 'currentImage______1',currentImage,imageName
+       # fileName = self.imageInfoTable.item(0,1).text()
+       # slotShaderName = self.createShader(slotPlane,imageName,currentImage)
+        print 'slotShaderName______2',slotShaderName
+      #  targetFileName = self.spineImagesSpaceLEdit.text() +'/' +currentImage
+       # imageW = int(self.imageInfoTable.item(3,1).text())
+        #imageH = int(self.imageInfoTable.item(4,1).text())
+        
+      
+        print 'selectJointList___2',selectJointList
 
+        print 'selectJointList',selectJointList
+        selectBoneList = filter(lambda x: cmds.getAttr('%s.spine_tag'%x) == 'spine_bone' ,selectJointList)
+        print 'selectBoneList',selectBoneList
         for bone in selectBoneList:
             slotName = cmds.getAttr('%s.bone_slot'%bone)
             print 'slotName',slotName
+            cmds.select(cl=True) 
             cmds.select(slotName)
             cmds.hyperShade( assign=slotShaderName )
             cmds.setAttr('%s.scaleX'%slotName,imageW)
             cmds.setAttr('%s.scaleZ'%slotName,imageH)
             cmds.setAttr('%s.slot_width'%slotName,imageW)
             cmds.setAttr('%s.slot_height'%slotName,imageH)
-            cmds.setAttr('%s.slot_width'%bone,imageW)
-            cmds.setAttr('%s.slot_height'%bone,imageH)
-
             cmds.setAttr('%s.slot_attachment'%slotName,imageName,type="string")
 
+            cmds.setAttr('%s.slot_width'%bone,imageW)
+            cmds.setAttr('%s.slot_height'%bone,imageH)
+            cmds.setAttr('%s.slot_attachment'%bone,imageName,type="string")
+            
             cmds.select(cl=True) 
         print 'currentImage',currentImage,fileName,selectBoneList
         
@@ -842,7 +885,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 offsetValue =  random.uniform(minValue,maxValue)
             #print "keyframeList",obj,attr,keyframeList
             
-          #  print offsetValue
+            print offsetValue
             if frameList[0] == "all":
                 for frame in keyframeList:
                     frameValue = cmds.keyframe(obj,at=attr,t=(frame,frame),q=True,eval=True)[0]
@@ -2747,6 +2790,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             
             
             for j in itemList:
+                print j
                # print j , cmds.nodeType(j)
                 if cmds.getAttr('%s.spine_tag'%j) == 'spine_slot':
                     boneName = cmds.getAttr('%s.slot_bone'%j)#i["name"]
@@ -3306,23 +3350,33 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         newName = self.newNameSelectedLEdit.text()
        # print newName,self.currentSelectBone
         fileCount = len(self.currentSelectBone)
-        try:
-            for i in range(0,fileCount):
-               # print #'{:04d}'.format(i)
-                newBoneName = str(newName+'_'+'{:04d}'.format(i))
-                newSlotName = str(newName+'_S_'+'{:04d}'.format(i))
-                newShapeName = str(newName+'_S_Shape_'+'{:04d}'.format(i))
-                bone = self.currentSelectBone[i]
-                slot = cmds.listRelatives(bone,c=True,type ='transform')[0]
-                shape = cmds.listRelatives(slot,c=True,type ='mesh')[0]
-               # print bone,slot,shape,newBoneName,newSlotName,newShapeName
-                cmds.setAttr('%s.bone_name'%bone,newBoneName,type='string')
-                cmds.setAttr('%s.bone_slot'%bone,newSlotName,type='string')
-                cmds.rename('%s'%bone,'%s'%newBoneName)
-                cmds.rename('%s'%slot,'%s'%newSlotName)
-                cmds.rename('%s'%shape,'%s'%newShapeName)
-        except:
-            pass
+        #try:
+        for i in range(0,fileCount):
+           # print #'{:04d}'.format(i)
+            newBoneName = str(newName+'_'+'{:04d}'.format(i))
+            newSlotName = str(newName+'_S_'+'{:04d}'.format(i))
+            newShapeName = str(newName+'_S_Shape_'+'{:04d}'.format(i))
+            bone = self.currentSelectBone[i]
+            childSlot = cmds.listRelatives(bone,c=True)[0]
+
+            slot = cmds.listRelatives(bone,c=True,type ='transform')[0]
+           # shape = cmds.listRelatives(slot,c=True,type ='mesh')[0]
+           # print bone,slot,shape,newBoneName,newSlotName,newShapeName
+            cmds.setAttr('%s.bone_name'%bone,newBoneName,type='string')
+            cmds.setAttr('%s.bone_slot'%bone,newSlotName,type='string')
+            
+            cmds.setAttr('%s.slot_name'%childSlot,newSlotName,type='string')
+            cmds.setAttr('%s.slot_bone'%childSlot,newBoneName,type='string')
+                        
+            
+            
+            cmds.rename('%s'%bone,'%s'%newBoneName)
+            cmds.rename('%s'%slot,'%s'%newSlotName)
+            
+            
+            #cmds.rename('%s'%shape,'%s'%newShapeName)
+       # except:
+        #    pass
         self.getSelectSlotBone()
            # for j in self.currentSelectBone:
                # print i
@@ -3964,14 +4018,23 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def duplicateSlot(self):
         print "duplicateSlot"
-        
+        cmds.currentTime(0.0,e=True)
         tempSourceBoneSelected = cmds.ls(sl=True) 
         sourceBoneSelected = filter(lambda x: cmds.getAttr('%s.spine_tag'%x)== 'spine_bone' ,tempSourceBoneSelected)
         
         sourceBoneCount = len(sourceBoneSelected)
+        #numCount = 0
         for i in range(0,sourceBoneCount):
             sourceBoneName = cmds.getAttr('%s.bone_name'%sourceBoneSelected[i])
             sourceSlotName = cmds.getAttr('%s.bone_slot'%sourceBoneSelected[i])
+            cmds.setAttr('%s.translateX'%sourceBoneName,0)
+            cmds.setAttr('%s.translateY'%sourceBoneName,0)            
+            cmds.setAttr('%s.rotateZ'%sourceBoneName,90)           
+            cmds.setAttr('%s.scaleX'%sourceBoneName,1)           
+            cmds.setAttr('%s.scaleZ'%sourceBoneName,1)           
+
+             
+                                       
             newSlotW = cmds.getAttr('%s.slot_width'%sourceBoneSelected[i])
             newSlotH = cmds.getAttr('%s.slot_height'%sourceBoneSelected[i])
             parentBone = cmds.getAttr('%s.bone_parent'%sourceBoneName)
@@ -3980,8 +4043,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
             existNameBoneCount = len(cmds.ls('%s*'%sourceBoneName))
             newBoneCount = existNameBoneCount +1
-            boneName = sourceBoneName +'_'+'{:02}'.format(newBoneCount)
-            slotName = boneName.split('bone_')[1]
+            boneName = sourceBoneName +'_'+'{:02}'.format(newBoneCount) + '{:02}'.format(i)
+            try:
+                slotName = boneName.split('bone_')[1]
+            except:
+                slotName = sourceBoneName +'_s_'+'{:02}'.format(newBoneCount) + '{:02}'.format(i)
             #cmds.setAttr('%s.slot_attachment'%bone,attachmentFile,type='string')
             print 'parentBone',parentBone,'boneName',boneName,'slotName',slotName,'attachmentFile',attachmentFile 
             
@@ -3995,8 +4061,9 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
             cmds.setAttr('%s.slot_width'%boneName,newSlotW)
             cmds.setAttr('%s.slot_height'%boneName,newSlotH)
-           # print 'attachmentFile',attachmentFile 
-           # cmds.setAttr('%s.slot_attachment'%bone,attachmentFile,type='string')
+            cmds.parent(slotName,boneName)
+            cmds.parent(boneName,parentBone)
+            
             try:
                 self.defineSlot(slotPlane,boneName)
             except:
@@ -4017,9 +4084,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             cmds.select(cl=True)
             cmds.copyKey(sourceBoneName)
             cmds.pasteKey(boneName)
-            cmds.parent(slotName,boneName)
-            cmds.parent(boneName,parentBone)
-            
+        cmds.currentTime(0.0,e=True)
+
 
         
     def createSlot(self):
@@ -4044,7 +4110,6 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             
             slotName = currentImage.split('.')[0] #+ '{:04}'.format(0)
             
-        print 'selectedImageCount',selectedImageCount,currentImage,slotName
 
         
         if selectedImageCount ==0:
@@ -4058,22 +4123,33 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 
             elif len(parentBone) == 1:
                 try:
+                    sourceImage = self.imageInfoTable.item(0,1).text()
+                    imageName = sourceImage.split('/')[-1].split('.')[0]
+                    targetDir = self.spineImagesSpaceLEdit.text()
+                    #print sourceImage,targetDir
+                    imageW = int(self.imageInfoTable.item(3,1).text())
+                    imageH = int(self.imageInfoTable.item(4,1).text())
+                    shader = spineMainTool.createShader(sourceImage,targetDir)
+
+                                        
                     for c in range(0,slotAmount):
                         if cmds.getAttr('%s.spine_tag'%parentBone[0]) == "spine_RootSkeleton" or cmds.getAttr('%s.spine_tag'%parentBone[0]) == "spine_bone":
                             self.errorMsgLEdit.setText(currentImage)
-                           # imageSize = self.imageInfoTable.item(10,1).text()[1:-1].split(' ')
-                            fileName = self.imageInfoTable.item(0,1).text()
-
-                            imageW = int(self.imageInfoTable.item(3,1).text())
-                            imageH = int(self.imageInfoTable.item(4,1).text())
+                         
                             slotPlane = str(cmds.polyPlane(n='%s_#'%slotName,sx=1,sy=1)[0])
                             cmds.setAttr('%s.rotateX'%slotPlane,90)
                             cmds.setAttr('%s.scaleX'%slotPlane,imageW)
                             cmds.setAttr('%s.scaleZ'%slotPlane,imageH)
                             
-
-                            self.assignSurfaceShader(slotName,slotPlane,fileName)
                             
+                            cmds.select(cl=True) 
+
+                            cmds.select(slotPlane)
+                            cmds.hyperShade( assign=shader )
+                            cmds.select(cl=True)
+                            
+                            
+                     
 
                             boneName = "bone_%s"%slotPlane # + '{:04d}'.format(0)
 
@@ -4083,16 +4159,13 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                             cmds.setAttr('%s.bone_slot'%boneName,slotPlane,type='string')
                             cmds.setAttr('%s.slot_width'%boneName,imageW)
                             cmds.setAttr('%s.slot_height'%boneName,imageH)
-                           # attachmentFile = cmds.getAttr('%s.slot_attachment'%slotPlane)
-                           # print 'attachmentFile',attachmentFile 
-                           # cmds.setAttr('%s.slot_attachment'%bone,attachmentFile,type='string')
-
-                          #  print 
-          
-                            #cmds.rename(bone,newBoneName)
-                            self.defineSlot(slotPlane,boneName)
-                            attachmentFile = str(cmds.getAttr('%s.slot_attachment'%slotPlane))
-                            print 'attachmentFile',attachmentFile 
+                            
+                            print 'slotPlane___1',slotPlane,boneName,targetDir
+                            spineMainTool.defineSlot(slotPlane,boneName,targetDir)
+                            
+                            #self.defineSlot(slotPlane,boneName)
+                            attachmentFile = str(cmds.getAttr ('%s.slot_attachment'%slotPlane))
+                            print 'attachmentFile_________1',attachmentFile 
                             cmds.setAttr('%s.slot_attachment'%boneName,attachmentFile,type='string')
                             cmds.parent(slotPlane,boneName)
                             cmds.parent(boneName,parentBone[0])
@@ -4453,16 +4526,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                   
                 
                         
-        
-        
-      
-    def defineSelectObj(self):
-        print "defineSelectObj"  
-        currentTarget = cmds.ls(sl=True,typ='transform')[0]
-     
-        self.defineSlot(currentTarget)
-        self.defineSkin(currentTarget)
-          
+
           
           
           
@@ -4624,58 +4688,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
      
              
-                   
-    def assignSurfaceShader(self,imageName,object,fileName):  #imageName  as slot name
-        print "assignSurfaceShader"
-       # slotShaderName =  imageName + '_surfaceShader'
-        
-        imageName = imageName.split('/')[-1]
-       # print ('fileName',fileName,imageName)
-        imageExtName = fileName.split('.')[-1]
-        cmds.select(cl=True)
-        slotShaderName =  imageName + '_shader'
-
-        slotFileName = imageName + '_imageFile'
-        print 'fileName##########################',fileName,imageExtName#,slotShaderName
-        slotSG = imageName + '_SG'
-        if len(cmds.ls(slotShaderName)) == 0:
-            print ('slotShaderName is not exist')
-          #  shader = cmds.shadingNode("surfaceShader",asShader=True,n=slotShaderName)
-            shader = cmds.shadingNode("lambert",asShader=True,n=slotShaderName)
-            print 'shader',shader
-            cmds.select(shader)
-            shaderName = cmds.ls(sl=True)[0]
-            # shader=cmds.rename(shader,slotShaderName)
-            print 'shaderName',shaderName,shader
-            file_node=cmds.shadingNode("file",asTexture=True,n=slotFileName)
-            shading_group= cmds.sets(renderable=True,noSurfaceShader=True,empty=True,n=slotSG)
-            cmds.connectAttr('%s.color' %shader ,'%s.surfaceShader' %shading_group)
-            cmds.connectAttr('%s.outColor' %file_node, '%s.color' %shader)
-            print 'fileName',fileName
-            
-           # if imageExtName == 'jpg':
-             #   pass
-         #   elif imageExtName == 'png':
-            cmds.connectAttr('%s.outTransparency' %file_node, '%s.transparency' %shader)
-            cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
-            try:
-                cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
-                print 'assigned image file'
-            except:
-                pass
-            cmds.select(object)
-            cmds.hyperShade( assign=slotShaderName )
-            cmds.select(cl=True)
-
-             #  print ('create shrfaceShader named %s'%slotShaderName)
-
-        elif len(cmds.ls(slotShaderName)) == 1:
-               
-            print ('%s is exist'%slotShaderName)
-            cmds.select(object)
-            cmds.hyperShade( assign=slotShaderName )
-            cmds.select(cl=True)
-
+ 
         
    
     def defineImageTableFromSel(self):
@@ -4892,47 +4905,46 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
           ## define preview image table item
          
           
-          
-          
-    def createImagePlane(self):
-        print "createImagePlane"
-       # print self.currentImageFullName
-        currentImage = self.imageListTable.currentItem().text()
-        imageName = currentImage.split('.')[0]
+     
+    def createShader(self,slotPlane,imageName,currentImage):    #slotName, imageSort name, image full name
+        print "createShader" ,slotPlane,imageName, currentImage 
+        
+       # imageName = currentImage.split('.')[0]
         fileName = self.imageInfoTable.item(0,1).text()
-        
         targetFileName = self.spineImagesSpaceLEdit.text() +'/' +currentImage
-        imageW = int(self.imageInfoTable.item(3,1).text())
-        imageH = int(self.imageInfoTable.item(4,1).text())
-        
-        slotPlane = str(cmds.polyPlane(n='polyPlane_%s_#'%imageName,sx=1,sy=1)[0])
-        cmds.setAttr('%s.rotateX'%slotPlane,90)
-        cmds.setAttr('%s.scaleX'%slotPlane,imageW)
-        cmds.setAttr('%s.scaleZ'%slotPlane,imageH)
-        ###create new shader
+        print "targetFileName_________1",targetFileName,os.path.isfile(targetFileName)
+      #  print os.path.isfile(targetFileName)
+        #cmds.nodeType('sugerC01_shader')
         slotShaderName =  imageName + '_shader'
         slotFileName = imageName + '_imageFile'
-        slotSG = imageName + '_SG'
-        print 'currentImage',currentImage,fileName,targetFileName
-        cmds.select(cl=True) 
+        slotSG = imageName + '_SG'   
+        #checkShaderExisted = cmds.ls('sugerB01_shader',type = 'blinn')
         
-        shader = cmds.shadingNode("lambert",asShader=True,n=slotShaderName)
-       # print 'shader',shader
-        cmds.select(shader)
-        shaderName = cmds.ls(sl=True)[0]
-            # shader=cmds.rename(shader,slotShaderName)
-       #     print 'shaderName',shaderName,shader
+        checkShaderExisted = cmds.ls(slotShaderName,type = 'blinn')
+       # if len(checkShaderExisted) >= 1:
+        #    pass
+       # else:
+            
+        shader = cmds.shadingNode("blinn",asShader=True,n=slotShaderName)   
+         
         file_node=cmds.shadingNode("file",asTexture=True,n=slotFileName)
+        print 'file_node____1',file_node
         shading_group= cmds.sets(renderable=True,noSurfaceShader=True,empty=True,n=slotSG)
         cmds.connectAttr('%s.color' %shader ,'%s.surfaceShader' %shading_group)
         cmds.connectAttr('%s.outColor' %file_node, '%s.color' %shader)
-           # print 'fileName',fileName
-        
-    
         cmds.connectAttr('%s.outTransparency' %file_node, '%s.transparency' %shader)
-        cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
-        cmds.select(cl=True) 
-        
+        cmds.connectAttr('%s.outAlpha' %file_node, '%s.reflectivity' %shader)
+        cmds.setAttr('%s.specularColor'%shader,0,0,0,type='double3')
+        cmds.setAttr('%s.reflectedColor'%shader,0,0,0,type='double3')  ### set to normal blend mode
+
+       # cmds.setAttr('%s.fileTextureName'%slotFileName,fileName,type='string')
+        print "targetFileName_________2",targetFileName
+        cmds.setAttr('%s.fileTextureName'%file_node,targetFileName,type='string')
+           # 
+
+       # shaderName = cmds.ls(sl=True)[0]  
+
+
         try:
             if os.path.isfile(targetFileName) == True:
                 print "file exist"
@@ -4944,14 +4956,46 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         except:
                        
             pass
-        cmds.setAttr('%s.fileTextureName'%slotFileName,targetFileName,type='string')
+       # cmds.select(cl=True)      
+       # cmds.select(slotShaderName)
+           
+       
+        if slotPlane == "replace":
+            pass
+        else:
+            cmds.select(cl=True) 
+
+            cmds.select(slotPlane)
+            cmds.hyperShade( assign=shader )
+            cmds.select(cl=True)
+        print "shader______1",shader
+        return shader
+       # print "currentFile",fileName,targetFileName
+ 
+    def createImagePlane(self):
+        print "createImagePlane"
+       # print self.currentImageFullName
+       # currentImage = self.imageInfoTable.item(1,1).text()#self.imageListTable.currentItem().text()
+        sourceImage = self.imageInfoTable.item(0,1).text()
+        imageName = sourceImage.split('/')[-1].split('.')[0]
+        targetDir = self.spineImagesSpaceLEdit.text()
+     #   print sourceImage,targetDir
+        imageW = int(self.imageInfoTable.item(3,1).text())
+        imageH = int(self.imageInfoTable.item(4,1).text())
+        
+        slotPlane = str(cmds.polyPlane(n='ip_%s_#'%imageName,sx=1,sy=1)[0])
+        cmds.setAttr('%s.rotateX'%slotPlane,90)
+        cmds.setAttr('%s.scaleX'%slotPlane,imageW)
+        cmds.setAttr('%s.scaleZ'%slotPlane,imageH)
+    
+        shader = spineMainTool.createShader(sourceImage,targetDir)
+        cmds.select(cl=True) 
 
         cmds.select(slotPlane)
-        cmds.hyperShade( assign=slotShaderName )
+        cmds.hyperShade( assign=shader )
         cmds.select(cl=True)
-        print "currentFile",fileName,targetFileName
- 
-        
+      #  print 'shader',shader
+   
           
 
     def imageInfo(self,imagesDir):
@@ -4977,13 +5021,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 
-    def run(self):
-        print ("export json")
-        setRoot = self.setRootLineEdit.text()
-        boneList = self.defineBone(setRoot)
-        skinDict = self.getSkinData()
-        self.defineExportData(boneList,skinDict)
-          #print (boneList)
+
 
     def defineBone(self,root):
           ###all z axis should aim up
@@ -5065,27 +5103,9 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
       
 
 
-    def defineExportData(self,boneList,skinDict,slotList,animationDict):
-          
-        exportFile = "C:/Users/alpha/Documents/GitHub/spineToolAdv/test_02.json"
-        exportData = {'skeleton':{},
-                         'bones':boneList,
-                         'slots':slotList,
-                         'skins':skinDict,
-                         'events':{},
-                         'animations':animationDict        
-        }
-          
-          
-          
-        writeData = json.dumps(exportData, sort_keys=True , indent =4) 
-          #writeData = json.dumps(exportJson) 
-        with open(exportFile, 'w') as the_file:
-            the_file.write(writeData)
-          
 
 
-#def spineToolMain():
+#def spineTool2Main():
 def main():
     global ui
     app = QtWidgets.QApplication.instance()
