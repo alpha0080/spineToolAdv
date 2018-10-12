@@ -427,7 +427,58 @@ def defineImageButtonDock(self,fontScale):
                      }\
                      "%(str(fontScale))                                       
                                                                              
-                                                                                                         
+ 
+    buttonStyleLeftSlotGrp = "\
+                     QPushButton {\
+                     background-color:#778888;\
+                     font-size: %spx;\
+                     border-top-left-radius:8px;\
+                     border-bottom-left-radius: 8px;\
+                     border-style:solid;\
+                     border-width:0px;\
+                     border-color:#777777;\
+                     }\
+                     QPushButton:hover{\
+                     background-color:#883333;\
+                     border-top-left-radius:8px;\
+                     border-bottom-left-radius: 8px;\
+                     border-style:solid;\
+                     border-width:0px;\
+                     border-color:#777777;\
+                     }\
+                     QPushButton:pressed{\
+                     background-color:#AAAA33;\
+                     border-top-left-radius:8px;\
+                     border-bottom-left-radius: 8px;\
+                     border-style:solid;\
+                     border-width:0px;\
+                     border-color:#777777;\
+                     }\
+                     "%(str(fontScale))                                                                                                            
+                                                                                                                                                                                                                 
+    lineEditRightSlotGrp = "\
+                     QLineEdit {\
+                     font-size:%spx;\
+                     background-color:#333333;\
+                     border-top-right-radius: 8px;\
+                     border-bottom-right-radius: 8px;\
+                     border-style:solid;\
+                     border-width:1px;\
+                     border-color:#777777;\
+                     text-align:left;\
+                     }\
+                     QComboBox {\
+                     font-size:%spx;\
+                     background-color:#333333;\
+                     border-top-right-radius: 8px;\
+                     border-bottom-right-radius: 8px;\
+                     border-style:solid;\
+                     border-width:1px;\
+                     border-color:#777777;\
+                     text-align:left;\
+                     }\
+                     "%(str(fontScale),str(fontScale))                                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
                                                                                                                                                                  
     lineEditRight = "\
                      QLineEdit {\
@@ -751,7 +802,7 @@ def defineImageButtonDock(self,fontScale):
 
 
     self.trimBeforeFrameLEdit = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.trimBeforeFrameLEdit.setGeometry(QtCore.QRect(110, 10, 100, 30))
+    self.trimBeforeFrameLEdit.setGeometry(QtCore.QRect(110, 10, 70, 30))
     self.trimBeforeFrameLEdit.setObjectName("trimBeforeFrameLEdit")
     self.trimBeforeFrameLEdit.setAlignment(QtCore.Qt.AlignCenter)
     self.trimBeforeFrameLEdit.setText('1')
@@ -769,7 +820,7 @@ def defineImageButtonDock(self,fontScale):
 
 
     self.trimAfterFrameLEdit = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.trimAfterFrameLEdit.setGeometry(QtCore.QRect(350, 10, 100, 30))
+    self.trimAfterFrameLEdit.setGeometry(QtCore.QRect(350, 10, 70, 30))
     self.trimAfterFrameLEdit.setObjectName("trimAfterFrameLEdit")
     self.trimAfterFrameLEdit.setAlignment(QtCore.Qt.AlignCenter)
     self.trimAfterFrameLEdit.setText('1')
@@ -784,7 +835,7 @@ def defineImageButtonDock(self,fontScale):
     self.trimBetweenFrameBTN.setStyleSheet(buttonStyleLeftB)    
     
     self.trimBetweenFrameStartLEdit = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.trimBetweenFrameStartLEdit.setGeometry(QtCore.QRect(110, 50, 100, 30))
+    self.trimBetweenFrameStartLEdit.setGeometry(QtCore.QRect(110, 50, 70, 30))
     self.trimBetweenFrameStartLEdit.setObjectName("trimBetweenFrameStartLEdit")
     self.trimBetweenFrameStartLEdit.setAlignment(QtCore.Qt.AlignCenter)
     self.trimBetweenFrameStartLEdit.setText('1')
@@ -792,7 +843,7 @@ def defineImageButtonDock(self,fontScale):
     
     
     self.trimBetweenFrameEndLEdit = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.trimBetweenFrameEndLEdit.setGeometry(QtCore.QRect(210, 50, 100, 30))
+    self.trimBetweenFrameEndLEdit.setGeometry(QtCore.QRect(180, 50, 70, 30))
     self.trimBetweenFrameEndLEdit.setObjectName("trimBetweenFrameEndLEdit")
     self.trimBetweenFrameEndLEdit.setAlignment(QtCore.Qt.AlignCenter)
     self.trimBetweenFrameEndLEdit.setText('100')
@@ -809,7 +860,7 @@ def defineImageButtonDock(self,fontScale):
 
 
     self.alignToFrameLEdit = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.alignToFrameLEdit.setGeometry(QtCore.QRect(110, 90, 100, 30))
+    self.alignToFrameLEdit.setGeometry(QtCore.QRect(110, 90, 70, 30))
     self.alignToFrameLEdit.setObjectName("alignToFrameLEdit")
     self.alignToFrameLEdit.setAlignment(QtCore.Qt.AlignCenter)
     self.alignToFrameLEdit.setText('1')
@@ -840,28 +891,28 @@ def defineImageButtonDock(self,fontScale):
 
 
     self.scaleTimeOriginIN = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.scaleTimeOriginIN.setGeometry(QtCore.QRect(110, 130, 100, 30))
+    self.scaleTimeOriginIN.setGeometry(QtCore.QRect(110, 130, 70, 30))
     self.scaleTimeOriginIN.setObjectName("scaleTimeOriginIN")
     self.scaleTimeOriginIN.setAlignment(QtCore.Qt.AlignCenter)
     self.scaleTimeOriginIN.setText('1')
     self.scaleTimeOriginIN.setStyleSheet(lineEditRightBMiddleDark)  
              
     self.scaleTimeOriginOut = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.scaleTimeOriginOut.setGeometry(QtCore.QRect(210, 130, 100, 30))
+    self.scaleTimeOriginOut.setGeometry(QtCore.QRect(180, 130, 70, 30))
     self.scaleTimeOriginOut.setObjectName("scaleTimeOriginOut")
     self.scaleTimeOriginOut.setAlignment(QtCore.Qt.AlignCenter)
     self.scaleTimeOriginOut.setText('20')
     self.scaleTimeOriginOut.setStyleSheet(lineEditRightBMiddleDark)     
     
     self.scaleTimeNewIn = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.scaleTimeNewIn.setGeometry(QtCore.QRect(310, 130, 100, 30))
+    self.scaleTimeNewIn.setGeometry(QtCore.QRect(250, 130, 70, 30))
     self.scaleTimeNewIn.setObjectName("scaleTimeNewIn")
     self.scaleTimeNewIn.setAlignment(QtCore.Qt.AlignCenter)
     self.scaleTimeNewIn.setText('1')
     self.scaleTimeNewIn.setStyleSheet(lineEditRightBMiddleDark)     
     
     self.scaleTimeNewOut = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.scaleTimeNewOut.setGeometry(QtCore.QRect(410,130, 100, 30))
+    self.scaleTimeNewOut.setGeometry(QtCore.QRect(320,130, 70, 30))
     self.scaleTimeNewOut.setObjectName("scaleTimeNewOut")
     self.scaleTimeNewOut.setAlignment(QtCore.Qt.AlignCenter)
     self.scaleTimeNewOut.setText('60')
@@ -878,33 +929,41 @@ def defineImageButtonDock(self,fontScale):
 
 
     self.loopTimeIn = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.loopTimeIn.setGeometry(QtCore.QRect(110, 170, 100, 30))
+    self.loopTimeIn.setGeometry(QtCore.QRect(110, 170, 70, 30))
     self.loopTimeIn.setObjectName("loopTimeIn")
     self.loopTimeIn.setAlignment(QtCore.Qt.AlignCenter)
     self.loopTimeIn.setText('2')
     self.loopTimeIn.setStyleSheet(lineEditRightBMiddleDark)  
              
     self.loopTimeOut = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.loopTimeOut.setGeometry(QtCore.QRect(210, 170, 100, 30))
+    self.loopTimeOut.setGeometry(QtCore.QRect(180, 170, 70, 30))
     self.loopTimeOut.setObjectName("loopTimeOut")
     self.loopTimeOut.setAlignment(QtCore.Qt.AlignCenter)
     self.loopTimeOut.setText('20')
     self.loopTimeOut.setStyleSheet(lineEditRightBMiddleDark)     
     
     self.loopSpaceFrame = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.loopSpaceFrame.setGeometry(QtCore.QRect(310, 170, 100, 30))
+    self.loopSpaceFrame.setGeometry(QtCore.QRect(250, 170, 70, 30))
     self.loopSpaceFrame.setObjectName("loopSpaceFrame")
     self.loopSpaceFrame.setAlignment(QtCore.Qt.AlignCenter)
     self.loopSpaceFrame.setText('5')
     self.loopSpaceFrame.setStyleSheet(lineEditRightBMiddleDark)     
     
     self.loopTimes = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.loopTimes.setGeometry(QtCore.QRect(410,170, 100, 30))
+    self.loopTimes.setGeometry(QtCore.QRect(320,170, 70, 30))
     self.loopTimes.setObjectName("loopTimes")
     self.loopTimes.setAlignment(QtCore.Qt.AlignCenter)
     self.loopTimes.setText('1')
-    self.loopTimes.setStyleSheet(lineEditRightBDark)           
-                   
+    self.loopTimes.setStyleSheet(lineEditRightBDark)     
+          
+    self.checkBox_offsetRandomLoop = QtWidgets.QCheckBox(self.keyFrameToolGrp)
+    self.checkBox_offsetRandomLoop.setGeometry(QtCore.QRect(400, 180, 70, 20))
+    self.checkBox_offsetRandomLoop.setChecked(True)
+    self.checkBox_offsetRandomLoop.setObjectName("checkBox_offsetRandomLoop")
+    self.checkBox_offsetRandomLoop.setText(QtWidgets.QApplication.translate("MainWindow", "random", None, -1))
+    self.checkBox_offsetRandomLoop.setStyleSheet(checkA)   
+
+              
                                            
     ##### fillet select
     self.filletSelectGrp = QtWidgets.QGroupBox(self.dockWidgetImagesInfo)
@@ -1554,7 +1613,7 @@ def defineImageButtonDock(self,fontScale):
     #### maya file history Group start
     
     self.mayaFileHistoryGrp = QtWidgets.QGroupBox(self.workSpaceInfoDock)
-    self.mayaFileHistoryGrp.setGeometry(QtCore.QRect(10, 80, 530, 250))
+    self.mayaFileHistoryGrp.setGeometry(QtCore.QRect(20, 80, 530, 220))
     self.mayaFileHistoryGrp.setObjectName("mayaFileHistoryGrp")
     self.mayaFileHistoryGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
     self.mayaFileHistoryGrp.setStyleSheet(QGroupBoxA)     
@@ -1563,7 +1622,7 @@ def defineImageButtonDock(self,fontScale):
 
     self.mayaRecentFileTable = QtWidgets.QTableWidget(self.mayaFileHistoryGrp)
     self.mayaRecentFileTable.clear()
-    self.mayaRecentFileTable.setGeometry(QtCore.QRect(5, 5,520, 160))
+    self.mayaRecentFileTable.setGeometry(QtCore.QRect(5, 5,520, 180))
     self.mayaRecentFileTable.setObjectName("mayaRecentFileTable")
 
     #self.mayaRecentFileTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
@@ -1574,7 +1633,7 @@ def defineImageButtonDock(self,fontScale):
     
     
     self.closeMayaFileHistoryBtn = QtWidgets.QPushButton(self.mayaFileHistoryGrp)
-    self.closeMayaFileHistoryBtn.setGeometry(QtCore.QRect(10, 180, 110,30))
+    self.closeMayaFileHistoryBtn.setGeometry(QtCore.QRect(400, 187, 110,30))
     self.closeMayaFileHistoryBtn.setObjectName("closeMayaFileHistoryBtn")
     self.closeMayaFileHistoryBtn.setText(QtWidgets.QApplication.translate("MainWindow", "close", None, -1))
    # self.openSpineMayaFileBtn.clicked.connect(self.openMayaFile)
@@ -1959,7 +2018,7 @@ def defineImageButtonDock(self,fontScale):
     
     ###### defineSpineSlotBoneGrpBox
     self.defineSpineSlotBoneGrpBox = QtWidgets.QGroupBox(self.dockSpineMeshProgress )
-    self.defineSpineSlotBoneGrpBox.setGeometry(QtCore.QRect(10, 170, 370, 310))
+    self.defineSpineSlotBoneGrpBox.setGeometry(QtCore.QRect(20, 170, 370, 360))
     self.defineSpineSlotBoneGrpBox.setObjectName("defineSpineCharacterGrpBox")
     self.defineSpineSlotBoneGrpBox.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
     self.defineSpineSlotBoneGrpBox.setStyleSheet(QGroupBoxCreateSlotBox)     
@@ -1982,7 +2041,7 @@ def defineImageButtonDock(self,fontScale):
 
  
     self.changeParentBoneBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
-    self.changeParentBoneBtn.setGeometry(QtCore.QRect(30, 180, 220, 30))
+    self.changeParentBoneBtn.setGeometry(QtCore.QRect(30, 320, 220, 30))
     self.changeParentBoneBtn.setObjectName("changeParentBoneBtn")
     self.changeParentBoneBtn.setText(QtWidgets.QApplication.translate("MainWindow", "change Parent", None, -1))
     self.changeParentBoneBtn.setStyleSheet(buttonStyleB)    
@@ -2003,7 +2062,7 @@ def defineImageButtonDock(self,fontScale):
     self.createBoneNameLEdit.setAlignment(QtCore.Qt.AlignCenter)
     self.createBoneNameLEdit.setText('')
     
-    self.createBoneNameLEdit.setStyleSheet(lineEditRightB)     
+    self.createBoneNameLEdit.setStyleSheet(lineEditRightSlotGrp)     
     
     
  

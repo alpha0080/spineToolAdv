@@ -11,7 +11,7 @@ import sys
 try:
     sys.path.append("//mcd-one/database/assets/scripts/python2.7_alpha/22") 
     #sys.path.append("C:/Program Files/Pixar/RenderManProServer-22.1/lib/python2.7/Libs/ite-packages")
-    sys.path.append("C:/Users/alpha/Documents/GitHub/spineToolAdv") 
+    #sys.path.append("C:/Users/alpha/Documents/GitHub/spineToolAdv") 
     
     
 except:

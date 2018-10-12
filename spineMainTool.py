@@ -59,9 +59,9 @@ def createShader(sourceImage,targetDir):    #slotName, imageSort name, image ful
     
     
     
-def defineSlot(slotName,boneName,targetDir):
+def defineSlot(slotName,boneName,sourceDir,targetDir):
       
-        print "defineSlot",slotName,boneName,targetDir
+        print "defineSlot",slotName,boneName,sourceDir,targetDir
 
         try:
             cmds.addAttr(slotName, ln='spineSlot', numberOfChildren=14, attributeType='compound' )
@@ -115,10 +115,10 @@ def defineSlot(slotName,boneName,targetDir):
       #  elif cmds.nodeType(shaders) == 'surfaceShader':
 
           #  fileNode = cmds.listConnections('%s.outColor' % (shaders[0]), type='file')
-        currentFile = cmds.getAttr("%s.fileTextureName" % fileNode[0])
+        currentFile = cmds.getAttr("%s.fileTextureName" %fileNode[0])
         fileName = currentFile.split("/")[-1]
         fileInSlot = currentFile.split("/")[-1][0:-4]
-        searchPath = currentFile.split(fileName)[0]
+        searchPath = sourceDir#currentFile.split(fileName)[0]
         allFilesInDir = os.listdir(searchPath)
         print 'currentFile',currentFile,fileInSlot,searchPath,allFilesInDir
 
@@ -126,7 +126,7 @@ def defineSlot(slotName,boneName,targetDir):
         imagesFilter = ['jpg','JPG','png','PNG']
         for i in allFilesInDir:
             if i.split('.')[-1] in imagesFilter:
-                print len(i.split('.'))
+               # print len(i.split('.'))
                 if len(i.split('.')) == 3:
                     #print i
                     try:
@@ -161,6 +161,9 @@ def defineSlot(slotName,boneName,targetDir):
         print 'fileNode',fileNode
         cmds.setAttr('%s.fileTextureName'%fileNode[0],targetFile,type='string')
         ## copy file sequences
+        
+        
+        
         fileDep = fileName.split('.')
         print 'fileDep',fileDep
         if len(fileDep) == 3:
@@ -170,8 +173,10 @@ def defineSlot(slotName,boneName,targetDir):
                 if fileDigPart[-1] in fileDigList:
                     for file in allFilesInDir:
                         if file.split('.')[0] == fileDep[0]:
-                            sourceSeqFile = searchPath +'/'+file
+                            sourceSeqFile = searchPath +file
+                            print 'sourceSeqFile',sourceSeqFile
                             targetSeqFile = targetDir + '/'+file
+                            print 'targetSeqFile',targetSeqFile
                             try:
                                 shutil.copyfile(sourceSeqFile,targetSeqFile)
                             except:
