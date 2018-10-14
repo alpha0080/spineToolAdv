@@ -90,8 +90,14 @@ def defineSlot(slotName,boneName,sourceDir,targetDir):
 
             cmds.addAttr(slotName, ln='slot_blend', sn='s_blend' , at="enum",en="normal:additive:multiply:screen", parent='spineSlot' ,k=True )
 
-        
+           # cmds.setAttr ('%s.translateZ'%slotName,keyable = False, cb = False, lock = True)  
+           # cmds.setAttr ('%s.rotateX'%slotName, lock = True)  
+           # cmds.setAttr ('%s.rotateY'%slotName,keyable = False, cb = False, lock = True)  
 
+           # cmds.setAttr ('%s.scaleX'%slotName, lock = True)  
+           # cmds.setAttr ('%s.scaleZ'%slotName, lock = True)  
+           # cmds.setAttr ('%s.scaleY'%slotName,keyable = False, cb = False, lock = True)  
+           # cmds.setAttr ('%s.visibility'%slotName,keyable = False, cb = False, lock = True)  
                
                
         except:

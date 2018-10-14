@@ -14,7 +14,7 @@ def buildDock(self):
     self.dockWidgetImages = QtWidgets.QDockWidget(self)
     self.dockWidgetImages.setObjectName("dockWidget")
     self.dockWidgetImages.setMinimumWidth(280)
-    self.dockWidgetImages.setMinimumHeight(600)
+    self.dockWidgetImages.setMinimumHeight(700)
 
     self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockWidgetImages)
 
@@ -794,15 +794,15 @@ def defineImageButtonDock(self,fontScale):
     self.keyFrameToolGrp.setVisible(True)
             
     self.trimBeforeFrameBtn = QtWidgets.QPushButton(self.keyFrameToolGrp)
-    self.trimBeforeFrameBtn.setGeometry(QtCore.QRect(10, 10, 100,30))
+    self.trimBeforeFrameBtn.setGeometry(QtCore.QRect(10, 10, 80,30))
     self.trimBeforeFrameBtn.setObjectName("trimBeforeFrameBtn")
-    self.trimBeforeFrameBtn.setText(QtWidgets.QApplication.translate("MainWindow", "trim Before Num", None, -1))
+    self.trimBeforeFrameBtn.setText(QtWidgets.QApplication.translate("MainWindow", "trim Before", None, -1))
     #self.trimBeforeFrameBtn.clicked.connect(self.trimBeforeFrame)
     self.trimBeforeFrameBtn.setStyleSheet(buttonStyleLeftB)     
 
 
     self.trimBeforeFrameLEdit = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.trimBeforeFrameLEdit.setGeometry(QtCore.QRect(110, 10, 70, 30))
+    self.trimBeforeFrameLEdit.setGeometry(QtCore.QRect(90, 10, 60, 30))
     self.trimBeforeFrameLEdit.setObjectName("trimBeforeFrameLEdit")
     self.trimBeforeFrameLEdit.setAlignment(QtCore.Qt.AlignCenter)
     self.trimBeforeFrameLEdit.setText('1')
@@ -812,15 +812,15 @@ def defineImageButtonDock(self,fontScale):
     
         
     self.trimAfterFrameBtn = QtWidgets.QPushButton(self.keyFrameToolGrp)
-    self.trimAfterFrameBtn.setGeometry(QtCore.QRect(250, 10, 100,30))
+    self.trimAfterFrameBtn.setGeometry(QtCore.QRect(180, 10, 80,30))
     self.trimAfterFrameBtn.setObjectName("trimAfterFrameBtn")
-    self.trimAfterFrameBtn.setText(QtWidgets.QApplication.translate("MainWindow", "trim After Num", None, -1))
+    self.trimAfterFrameBtn.setText(QtWidgets.QApplication.translate("MainWindow", "trim After", None, -1))
     #self.trimAfterFrameBtn.clicked.connect(self.trimAfterFrame)
     self.trimAfterFrameBtn.setStyleSheet(buttonStyleLeftB)     
 
 
     self.trimAfterFrameLEdit = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.trimAfterFrameLEdit.setGeometry(QtCore.QRect(350, 10, 70, 30))
+    self.trimAfterFrameLEdit.setGeometry(QtCore.QRect(260, 10, 60, 30))
     self.trimAfterFrameLEdit.setObjectName("trimAfterFrameLEdit")
     self.trimAfterFrameLEdit.setAlignment(QtCore.Qt.AlignCenter)
     self.trimAfterFrameLEdit.setText('1')
@@ -828,14 +828,14 @@ def defineImageButtonDock(self,fontScale):
     
         
     self.trimBetweenFrameBTN = QtWidgets.QPushButton(self.keyFrameToolGrp)
-    self.trimBetweenFrameBTN.setGeometry(QtCore.QRect(10, 50, 100,30))
+    self.trimBetweenFrameBTN.setGeometry(QtCore.QRect(10, 50, 80,30))
     self.trimBetweenFrameBTN.setObjectName("trimBetweenFrameBTN")
-    self.trimBetweenFrameBTN.setText(QtWidgets.QApplication.translate("MainWindow", "between Frame", None, -1))
+    self.trimBetweenFrameBTN.setText(QtWidgets.QApplication.translate("MainWindow", "trim between", None, -1))
    # self.trimBetweenFrameBTN.clicked.connect(self.trimBetweenFrame)
     self.trimBetweenFrameBTN.setStyleSheet(buttonStyleLeftB)    
     
     self.trimBetweenFrameStartLEdit = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.trimBetweenFrameStartLEdit.setGeometry(QtCore.QRect(110, 50, 70, 30))
+    self.trimBetweenFrameStartLEdit.setGeometry(QtCore.QRect(90, 50, 60, 30))
     self.trimBetweenFrameStartLEdit.setObjectName("trimBetweenFrameStartLEdit")
     self.trimBetweenFrameStartLEdit.setAlignment(QtCore.Qt.AlignCenter)
     self.trimBetweenFrameStartLEdit.setText('1')
@@ -843,7 +843,7 @@ def defineImageButtonDock(self,fontScale):
     
     
     self.trimBetweenFrameEndLEdit = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.trimBetweenFrameEndLEdit.setGeometry(QtCore.QRect(180, 50, 70, 30))
+    self.trimBetweenFrameEndLEdit.setGeometry(QtCore.QRect(150, 50, 60, 30))
     self.trimBetweenFrameEndLEdit.setObjectName("trimBetweenFrameEndLEdit")
     self.trimBetweenFrameEndLEdit.setAlignment(QtCore.Qt.AlignCenter)
     self.trimBetweenFrameEndLEdit.setText('100')
@@ -852,20 +852,47 @@ def defineImageButtonDock(self,fontScale):
                             
                        
     self.alignToFrameBtn = QtWidgets.QPushButton(self.keyFrameToolGrp)
-    self.alignToFrameBtn.setGeometry(QtCore.QRect(10, 90, 100,30))
+    self.alignToFrameBtn.setGeometry(QtCore.QRect(10, 90, 80,30))
     self.alignToFrameBtn.setObjectName("alignToFrameBtn")
-    self.alignToFrameBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Align to Frame", None, -1))
+    self.alignToFrameBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Align to", None, -1))
     #self.alignToFrameBtn.clicked.connect(self.alignKeys)
     self.alignToFrameBtn.setStyleSheet(buttonStyleLeftB)     
 
 
     self.alignToFrameLEdit = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.alignToFrameLEdit.setGeometry(QtCore.QRect(110, 90, 70, 30))
+    self.alignToFrameLEdit.setGeometry(QtCore.QRect(90, 90, 60, 30))
     self.alignToFrameLEdit.setObjectName("alignToFrameLEdit")
     self.alignToFrameLEdit.setAlignment(QtCore.Qt.AlignCenter)
     self.alignToFrameLEdit.setText('1')
     self.alignToFrameLEdit.setStyleSheet(lineEditRightBDark)     
     
+    self.alignToSeqFrame = QtWidgets.QPushButton(self.keyFrameToolGrp)
+    self.alignToSeqFrame.setGeometry(QtCore.QRect(180, 90, 80,30))
+    self.alignToSeqFrame.setObjectName("alignToSeqFrame")
+    self.alignToSeqFrame.setText(QtWidgets.QApplication.translate("MainWindow", "Align Seq", None, -1))
+    #self.alignToFrameBtn.clicked.connect(self.alignKeys)
+    self.alignToSeqFrame.setStyleSheet(buttonStyleLeftB)     
+
+    self.alignSeqStartFrame = QtWidgets.QLineEdit(self.keyFrameToolGrp)
+    self.alignSeqStartFrame.setGeometry(QtCore.QRect(260, 90, 60, 30))
+    self.alignSeqStartFrame.setObjectName("alignSeqStartFrame")
+    self.alignSeqStartFrame.setAlignment(QtCore.Qt.AlignCenter)
+    self.alignSeqStartFrame.setText('1')
+    self.alignSeqStartFrame.setStyleSheet(lineEditRightBMiddleDark)     
+    
+    self.alignSeqStepFrame = QtWidgets.QLineEdit(self.keyFrameToolGrp)
+    self.alignSeqStepFrame.setGeometry(QtCore.QRect(320,90, 60, 30))
+    self.alignSeqStepFrame.setObjectName("scaleTimeNewOut")
+    self.alignSeqStepFrame.setAlignment(QtCore.Qt.AlignCenter)
+    self.alignSeqStepFrame.setText('5')
+    self.alignSeqStepFrame.setStyleSheet(lineEditRightBMiddleDark)    
+ 
+    self.alignSeqGrpCount = QtWidgets.QLineEdit(self.keyFrameToolGrp)
+    self.alignSeqGrpCount.setGeometry(QtCore.QRect(380,90, 60, 30))
+    self.alignSeqGrpCount.setObjectName("alignSeqGrpCount")
+    self.alignSeqGrpCount.setAlignment(QtCore.Qt.AlignCenter)
+    self.alignSeqGrpCount.setText('10')
+    self.alignSeqGrpCount.setStyleSheet(lineEditRightBDark)         
     #self.offsetFrameBtn = QtWidgets.QPushButton(self.keyFrameToolGrp)
    # self.offsetFrameBtn.setGeometry(QtCore.QRect(250, 90, 100,30))
    # self.offsetFrameBtn.setObjectName("offsetFrameBtn")
@@ -883,7 +910,7 @@ def defineImageButtonDock(self,fontScale):
            
     
     self.scaleTimeBtn = QtWidgets.QPushButton(self.keyFrameToolGrp)
-    self.scaleTimeBtn.setGeometry(QtCore.QRect(10, 130, 100, 30))
+    self.scaleTimeBtn.setGeometry(QtCore.QRect(10, 130, 80, 30))
     self.scaleTimeBtn.setObjectName("scaleTimeBtn")
     self.scaleTimeBtn.setText(QtWidgets.QApplication.translate("MainWindow", "scale frame", None, -1))
    # self.scaleTimeBtn.clicked.connect(self.scaleFrames)
@@ -891,28 +918,28 @@ def defineImageButtonDock(self,fontScale):
 
 
     self.scaleTimeOriginIN = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.scaleTimeOriginIN.setGeometry(QtCore.QRect(110, 130, 70, 30))
+    self.scaleTimeOriginIN.setGeometry(QtCore.QRect(90, 130, 60, 30))
     self.scaleTimeOriginIN.setObjectName("scaleTimeOriginIN")
     self.scaleTimeOriginIN.setAlignment(QtCore.Qt.AlignCenter)
     self.scaleTimeOriginIN.setText('1')
     self.scaleTimeOriginIN.setStyleSheet(lineEditRightBMiddleDark)  
              
     self.scaleTimeOriginOut = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.scaleTimeOriginOut.setGeometry(QtCore.QRect(180, 130, 70, 30))
+    self.scaleTimeOriginOut.setGeometry(QtCore.QRect(150, 130, 60, 30))
     self.scaleTimeOriginOut.setObjectName("scaleTimeOriginOut")
     self.scaleTimeOriginOut.setAlignment(QtCore.Qt.AlignCenter)
     self.scaleTimeOriginOut.setText('20')
     self.scaleTimeOriginOut.setStyleSheet(lineEditRightBMiddleDark)     
     
     self.scaleTimeNewIn = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.scaleTimeNewIn.setGeometry(QtCore.QRect(250, 130, 70, 30))
+    self.scaleTimeNewIn.setGeometry(QtCore.QRect(210, 130, 60, 30))
     self.scaleTimeNewIn.setObjectName("scaleTimeNewIn")
     self.scaleTimeNewIn.setAlignment(QtCore.Qt.AlignCenter)
     self.scaleTimeNewIn.setText('1')
     self.scaleTimeNewIn.setStyleSheet(lineEditRightBMiddleDark)     
     
     self.scaleTimeNewOut = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.scaleTimeNewOut.setGeometry(QtCore.QRect(320,130, 70, 30))
+    self.scaleTimeNewOut.setGeometry(QtCore.QRect(270,130, 60, 30))
     self.scaleTimeNewOut.setObjectName("scaleTimeNewOut")
     self.scaleTimeNewOut.setAlignment(QtCore.Qt.AlignCenter)
     self.scaleTimeNewOut.setText('60')
@@ -921,7 +948,7 @@ def defineImageButtonDock(self,fontScale):
     
      
     self.loopTimeBtn = QtWidgets.QPushButton(self.keyFrameToolGrp)
-    self.loopTimeBtn.setGeometry(QtCore.QRect(10, 170, 100, 30))
+    self.loopTimeBtn.setGeometry(QtCore.QRect(10, 170, 80, 30))
     self.loopTimeBtn.setObjectName("loopTimeBtn")
     self.loopTimeBtn.setText(QtWidgets.QApplication.translate("MainWindow", "loop frame", None, -1))
    # self.loopTimeBtn.clicked.connect(self.loopFrames)
@@ -929,41 +956,47 @@ def defineImageButtonDock(self,fontScale):
 
 
     self.loopTimeIn = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.loopTimeIn.setGeometry(QtCore.QRect(110, 170, 70, 30))
+    self.loopTimeIn.setGeometry(QtCore.QRect(90, 170, 60, 30))
     self.loopTimeIn.setObjectName("loopTimeIn")
     self.loopTimeIn.setAlignment(QtCore.Qt.AlignCenter)
     self.loopTimeIn.setText('2')
     self.loopTimeIn.setStyleSheet(lineEditRightBMiddleDark)  
              
     self.loopTimeOut = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.loopTimeOut.setGeometry(QtCore.QRect(180, 170, 70, 30))
+    self.loopTimeOut.setGeometry(QtCore.QRect(150, 170, 60, 30))
     self.loopTimeOut.setObjectName("loopTimeOut")
     self.loopTimeOut.setAlignment(QtCore.Qt.AlignCenter)
     self.loopTimeOut.setText('20')
     self.loopTimeOut.setStyleSheet(lineEditRightBMiddleDark)     
     
     self.loopSpaceFrame = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.loopSpaceFrame.setGeometry(QtCore.QRect(250, 170, 70, 30))
+    self.loopSpaceFrame.setGeometry(QtCore.QRect(210, 170, 60, 30))
     self.loopSpaceFrame.setObjectName("loopSpaceFrame")
     self.loopSpaceFrame.setAlignment(QtCore.Qt.AlignCenter)
     self.loopSpaceFrame.setText('5')
     self.loopSpaceFrame.setStyleSheet(lineEditRightBMiddleDark)     
     
     self.loopTimes = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.loopTimes.setGeometry(QtCore.QRect(320,170, 70, 30))
+    self.loopTimes.setGeometry(QtCore.QRect(270,170, 60, 30))
     self.loopTimes.setObjectName("loopTimes")
     self.loopTimes.setAlignment(QtCore.Qt.AlignCenter)
     self.loopTimes.setText('1')
     self.loopTimes.setStyleSheet(lineEditRightBDark)     
           
     self.checkBox_offsetRandomLoop = QtWidgets.QCheckBox(self.keyFrameToolGrp)
-    self.checkBox_offsetRandomLoop.setGeometry(QtCore.QRect(400, 180, 70, 20))
+    self.checkBox_offsetRandomLoop.setGeometry(QtCore.QRect(340, 180, 70, 20))
     self.checkBox_offsetRandomLoop.setChecked(True)
     self.checkBox_offsetRandomLoop.setObjectName("checkBox_offsetRandomLoop")
     self.checkBox_offsetRandomLoop.setText(QtWidgets.QApplication.translate("MainWindow", "random", None, -1))
     self.checkBox_offsetRandomLoop.setStyleSheet(checkA)   
 
-              
+
+    self.checkBox_seqAni = QtWidgets.QCheckBox(self.keyFrameToolGrp)
+    self.checkBox_seqAni.setGeometry(QtCore.QRect(420, 180, 70, 20))
+    self.checkBox_seqAni.setChecked(False)
+    self.checkBox_seqAni.setObjectName("checkBox_seqAni")
+    self.checkBox_seqAni.setText(QtWidgets.QApplication.translate("MainWindow", "sec ani", None, -1))
+    self.checkBox_seqAni.setStyleSheet(checkA)                 
                                            
     ##### fillet select
     self.filletSelectGrp = QtWidgets.QGroupBox(self.dockWidgetImagesInfo)
@@ -1585,11 +1618,11 @@ def defineImageButtonDock(self,fontScale):
 
     self.imageListTable = QtWidgets.QTableWidget(self.dockWidgetImages)
     self.imageListTable.clear()
-    self.imageListTable.setGeometry(QtCore.QRect(5, 60,280, 570))
+    self.imageListTable.setGeometry(QtCore.QRect(5, 60,280, 670))
     self.imageListTable.setObjectName("tableWidget")
 
-    self.imageListTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-    self.imageListTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+    #self.imageListTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+    self.imageListTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
     self.imageListTable.horizontalHeader().setVisible(False)
     self.imageListTable.verticalHeader().setVisible(False)
     self.imageListTable.setStyleSheet(tableA);
@@ -2447,7 +2480,10 @@ def defineImageButtonDock(self,fontScale):
     self.horizontalSlider_powA = QtWidgets.QSlider(self.groupBox_keysOption)
     self.horizontalSlider_powA.setGeometry(QtCore.QRect(110, 60, 211, 16))
     self.horizontalSlider_powA.setMinimum(1)
-    self.horizontalSlider_powA.setMaximum(100)
+    self.horizontalSlider_powA.setMaximum(50)
+    
+    self.horizontalSlider_powA.setSingleStep(1)
+
     self.horizontalSlider_powA.setProperty("value", 10)
     self.horizontalSlider_powA.setOrientation(QtCore.Qt.Horizontal)
     self.horizontalSlider_powA.setObjectName("horizontalSlider_powA")
@@ -2489,7 +2525,7 @@ def defineImageButtonDock(self,fontScale):
     self.timeStartLEdit = QtWidgets.QLineEdit(self.extraToolGrp)
     self.timeStartLEdit.setGeometry(QtCore.QRect(80, 10, 50, 30))
     self.timeStartLEdit.setObjectName("timeStartLEdit")
-    self.timeStartLEdit.setText(QtWidgets.QApplication.translate("MainWindow", "0.0", None, -1))
+    self.timeStartLEdit.setText(QtWidgets.QApplication.translate("MainWindow", "1.0", None, -1))
     self.timeStartLEdit.setAlignment(QtCore.Qt.AlignCenter)
     self.timeStartLEdit.setStyleSheet(lineEditCMiddle)     
 
@@ -2513,12 +2549,28 @@ def defineImageButtonDock(self,fontScale):
     self.fpsLabel.setText(QtWidgets.QApplication.translate("MainWindow", "  FPS", None, -1))
     self.fpsLabel.setStyleSheet(labelTextA)  
       
-    self.fpsLEdit = QtWidgets.QLineEdit(self.extraToolGrp)
-    self.fpsLEdit.setGeometry(QtCore.QRect(310, 10, 50, 30))
-    self.fpsLEdit.setObjectName("fpsLEdit")
-    self.fpsLEdit.setText(QtWidgets.QApplication.translate("MainWindow", "30.0", None, -1))
-    self.fpsLEdit.setAlignment(QtCore.Qt.AlignCenter)
-    self.fpsLEdit.setStyleSheet(lineEditC)               
+   # self.fpsLEdit = QtWidgets.QLineEdit(self.extraToolGrp)
+    #self.fpsLEdit.setGeometry(QtCore.QRect(310, 10, 50, 30))
+    #self.fpsLEdit.setObjectName("fpsLEdit")
+    #self.fpsLEdit.setText(QtWidgets.QApplication.translate("MainWindow", "30.0", None, -1))
+    #self.fpsLEdit.setAlignment(QtCore.Qt.AlignCenter)
+    #self.fpsLEdit.setStyleSheet(lineEditC)             
+    
+    self.fps_comboBox = QtWidgets.QComboBox(self.extraToolGrp)
+    self.fps_comboBox.setGeometry(QtCore.QRect(290, 10, 70, 30))
+    self.fps_comboBox.setObjectName("fps_comboBoxmboBox")
+    itemNameList = ["15","30","60","120","240"]
+    for i in range(0,len(itemNameList)):
+        self.fps_comboBox.addItem("")
+        self.fps_comboBox.setItemText(i, QtWidgets.QApplication.translate("MainWindow", itemNameList[i], None, -1))
+
+    self.fps_comboBox.setCurrentIndex(1)
+    self.fps_comboBox.setStyleSheet(lineEditRightB)  
+        
+          
+            
+              
+                  
 
     self.exportSpineRootLabel = QtWidgets.QLabel(self.extraToolGrp)
     self.exportSpineRootLabel.setGeometry(QtCore.QRect(10, 50, 110, 30))

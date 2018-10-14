@@ -3,6 +3,66 @@ import maya.cmds as cmds
 import os,shutil
 
 
+def loopKeyFrame(obj,startFrame,endFrame,offsetFrame):
+    print "loopKeyFrame"#,obj,startFrame,endFrame,offsetFrame
+    offsetNewStartFrame = startFrame +offsetFrame
+    dividFrame = float(endFrame -offsetFrame)
+    dividOffsetFrame = dividFrame - 0.01
+    endOffsetFrame = endFrame -0.01
+    offsetNewEndFrame = endFrame +offsetFrame
+    cmds.getAttr('%s.translateX'%obj,t=15.0)
+    keyAbleAttList=["translateX","translateY","translateZ","rotateX","rotateY","rotateZ","scaleX","scaleY","scaleZ","slot_alpha","slot_red","slot_green","slot_blue"] #["translateX","translateY","translateZ","rotateX","rotateY","rotateZ","scaleX","scaleY","scaleZ"]
+
+    #cmds.keyframe(obj,at="translateX",q=True)
+    for attr in keyAbleAttList:
+        cmds.keyTangent(obj,itt ="linear", ott ="linear")
+        keyFramesList = cmds.keyframe(obj,at=attr,q=True)
+        #print attr,keyFramesList
+        if offsetFrame == 0:
+            try:
+                endFrameAttrValue = cmds.getAttr('%s.%s'%(obj,attr),t=endFrame)
+                startFrameAttrValue = cmds.getAttr('%s.%s'%(obj,attr),t=startFrame)
+                cmds.setKeyframe(obj,at=attr,t=startFrame,v=startFrameAttrValue) 
+                cmds.setKeyframe(obj,at=attr,t=endFrame,v=endFrameAttrValue)
+            except:
+                pass
+            
+        else:
+            try:
+                if len(keyFramesList) >0 :
+                   # keyframeListAttr = cmds.keyframe(obj,at=attr)
+                    divideFrameAttrValue = cmds.getAttr('%s.%s'%(obj,attr),t=dividFrame)
+                    endFrameAttrValue = cmds.getAttr('%s.%s'%(obj,attr),t=endFrame)
+                    startFrameAttrValue = cmds.getAttr('%s.%s'%(obj,attr),t=startFrame)
+                    offsetFrameValue = cmds.getAttr('%s.%s'%(obj,attr),t=offsetFrame)
+                    cmds.setKeyframe(obj,at=attr,t=startFrame,v=startFrameAttrValue) 
+                    cmds.setKeyframe(obj,at=attr,t=endFrame,v=endFrameAttrValue) 
+                    cmds.keyTangent(obj,itt ="linear", ott ="linear")
+         
+                    cmds.setKeyframe(obj,at=attr,t=dividFrame,v=divideFrameAttrValue)
+                    cmds.setKeyframe(obj,at=attr,t=dividOffsetFrame,v=divideFrameAttrValue)
+                    cmds.setKeyframe(obj,at=attr,t=endOffsetFrame,v=endFrameAttrValue)
+                    cmds.setKeyframe(obj,at=attr,t=endFrame,v=startFrameAttrValue)
+
+                    cmds.keyTangent(obj,itt ="linear", ott ="linear")
+                    
+                    #
+                    
+                   # print attr,currentAttrValue
+                    
+            except:
+                pass
+    if offsetFrame == 0:
+        pass
+    else:
+        cmds.cutKey(obj,t=(startFrame,endFrame))
+        cmds.pasteKey(obj,t=(offsetNewStartFrame,))
+        cmds.keyTangent(obj,itt ="linear", ott ="linear")
+        cmds.cutKey(obj,t=(endFrame,offsetNewEndFrame))
+        cmds.pasteKey(obj,t=(startFrame,offsetNewStartFrame),o="replace")
+
+
+
 def getNextSaveFileName(currentFileName,fileDir,login):
     print "getNextSaveFileName",currentFileName,login
 
