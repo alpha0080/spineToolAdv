@@ -35,7 +35,7 @@ def buildDock(self):
     self.dockWidgetImagesInfo = QtWidgets.QDockWidget(self)
     self.dockWidgetImagesInfo.setObjectName("dockWidget")
     self.dockWidgetImagesInfo.setMinimumWidth(550)
-    self.dockWidgetImagesInfo.setMinimumHeight(630)
+    self.dockWidgetImagesInfo.setMinimumHeight(675)
     #  self.dockWidgetImagesInfo.setMaximumHeight(330)
 
     self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockWidgetImagesInfo)
@@ -43,7 +43,7 @@ def buildDock(self):
     self.dockImageButton = QtWidgets.QDockWidget(self)
     self.dockImageButton.setObjectName("dockImageButton")
     self.dockImageButton.setMinimumWidth(300)
-    self.dockImageButton.setMinimumHeight(150)
+    self.dockImageButton.setMinimumHeight(120)
 
 
     self.dockSpineMeshProgress = QtWidgets.QDockWidget(self)
@@ -779,6 +779,51 @@ def defineImageButtonDock(self,fontScale):
                      }\
                      "          
         
+                             
+    
+    radioBtnStyleA =  "\
+             QRadioButton {\
+             font-size:%spx;\
+             text-align:left;\
+             }\
+             "%(str(fontScale))  
+    optionLabelA  = "\
+                     QLabel{\
+                     font-size:%spx;\
+                     }\
+                     QLineEdit{\
+                     font-size:%spx;\
+                     };\
+                     "%(str(fontScale),str(fontScale)) 
+    optionEditA  = "\
+                     QLineEdit {\
+                     font-size:%spx;\
+                     background-color:#333333;\
+                     color:#aaaaaa;\
+                     border-radius:3px;\
+                     border-style:solid;\
+                     border-color:#777777;\
+                     text-align:center;\
+                     }\
+                     QLineEdit::hover{\
+                     font-size:%spx;\
+                     background-color:#993333;\
+                     color:#aaaaaa;\
+                     border-radius:3px;\
+                     border-style:solid;\
+                     border-color:#777777;\
+                     text-align:center;\
+                     }\
+                     QLineEdit:read-only {\
+                     font-size:%spx;\
+                     background-color:#777777;\
+                     color:#333333;\
+                     border-radius:3px;\
+                     border-style:solid;\
+                     border-color:#777777;\
+                     text-align:center;\
+                     }\
+                     "%(str(fontScale),str(fontScale),str(fontScale))
 
     
     #### define keyframe tool 
@@ -787,7 +832,7 @@ def defineImageButtonDock(self,fontScale):
     
     
     self.keyFrameToolGrp = QtWidgets.QGroupBox(self.dockWidgetImagesInfo)
-    self.keyFrameToolGrp.setGeometry(QtCore.QRect(10, 20, 530, 210))
+    self.keyFrameToolGrp.setGeometry(QtCore.QRect(10, 20, 530, 260))
     self.keyFrameToolGrp.setObjectName("keyFrameToolGrp")
     self.keyFrameToolGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
     self.keyFrameToolGrp.setStyleSheet(QGroupBoxA)     
@@ -944,11 +989,82 @@ def defineImageButtonDock(self,fontScale):
     self.scaleTimeNewOut.setAlignment(QtCore.Qt.AlignCenter)
     self.scaleTimeNewOut.setText('60')
     self.scaleTimeNewOut.setStyleSheet(lineEditRightBDark)           
+
             
+                        
+    self.stepModAttrBtn = QtWidgets.QPushButton(self.keyFrameToolGrp)
+    self.stepModAttrBtn.setGeometry(QtCore.QRect(10, 170, 80, 30))
+    self.stepModAttrBtn.setObjectName("stepModAttrBtn")
+    self.stepModAttrBtn.setText(QtWidgets.QApplication.translate("MainWindow", "step Attr", None, -1))
+   # self.loopTimeBtn.clicked.connect(self.loopFrames)
+    self.stepModAttrBtn.setStyleSheet(buttonStyleLeftB)                                         
+                                                            
+    self.stepAttrStartFrame = QtWidgets.QLineEdit(self.keyFrameToolGrp)
+    self.stepAttrStartFrame.setGeometry(QtCore.QRect(90, 170, 60, 30))
+    self.stepAttrStartFrame.setObjectName("stepAttrStartFrame")
+    self.stepAttrStartFrame.setAlignment(QtCore.Qt.AlignCenter)
+    self.stepAttrStartFrame.setText('1')
+    self.stepAttrStartFrame.setStyleSheet(lineEditRightBMiddleDark)    
     
-     
+    self.stepAttrStepFrame = QtWidgets.QLineEdit(self.keyFrameToolGrp)
+    self.stepAttrStepFrame.setGeometry(QtCore.QRect(150, 170, 60, 30))
+    self.stepAttrStepFrame.setObjectName("stepAttrStartFrame")
+    self.stepAttrStepFrame.setAlignment(QtCore.Qt.AlignCenter)
+    self.stepAttrStepFrame.setText('10')
+    self.stepAttrStepFrame.setStyleSheet(lineEditRightBMiddleDark)    
+    
+    self.stepAttrScale = QtWidgets.QLineEdit(self.keyFrameToolGrp)
+    self.stepAttrScale.setGeometry(QtCore.QRect(210,170, 60, 30))
+    self.stepAttrScale.setObjectName("loopTimes")
+    self.stepAttrScale.setAlignment(QtCore.Qt.AlignCenter)
+    self.stepAttrScale.setText('1.5')
+    self.stepAttrScale.setStyleSheet(lineEditRightBDark)     
+                      
+    self.stepAttrTx = QtWidgets.QCheckBox(self.keyFrameToolGrp)
+    self.stepAttrTx.setGeometry(QtCore.QRect(280, 180, 40, 20))
+    self.stepAttrTx.setChecked(False)
+    self.stepAttrTx.setObjectName("stepAttrTx")
+    self.stepAttrTx.setText(QtWidgets.QApplication.translate("MainWindow", "tX", None, -1))
+    self.stepAttrTx.setStyleSheet(checkA)                         
+                               
+    self.stepAttrTy = QtWidgets.QCheckBox(self.keyFrameToolGrp)
+    self.stepAttrTy.setGeometry(QtCore.QRect(320, 180, 40, 20))
+    self.stepAttrTy.setChecked(False)
+    self.stepAttrTy.setObjectName("stepAttrTy")
+    self.stepAttrTy.setText(QtWidgets.QApplication.translate("MainWindow", "tY", None, -1))
+    self.stepAttrTy.setStyleSheet(checkA)                                           
+                                                          
+    self.stepAttrTz = QtWidgets.QCheckBox(self.keyFrameToolGrp)
+    self.stepAttrTz.setGeometry(QtCore.QRect(360, 180, 40, 20))
+    self.stepAttrTz.setChecked(False)
+    self.stepAttrTz.setObjectName("stepAttrTz")
+    self.stepAttrTz.setText(QtWidgets.QApplication.translate("MainWindow", "tZ", None, -1))
+    self.stepAttrTz.setStyleSheet(checkA)   
+    
+    self.stepAttrSx = QtWidgets.QCheckBox(self.keyFrameToolGrp)
+    self.stepAttrSx.setGeometry(QtCore.QRect(400, 180, 40, 20))
+    self.stepAttrSx.setChecked(False)
+    self.stepAttrSx.setObjectName("stepAttrSx")
+    self.stepAttrSx.setText(QtWidgets.QApplication.translate("MainWindow", "sX", None, -1))
+    self.stepAttrSx.setStyleSheet(checkA)       
+    
+    self.stepAttrSy = QtWidgets.QCheckBox(self.keyFrameToolGrp)
+    self.stepAttrSy.setGeometry(QtCore.QRect(440, 180, 40, 20))
+    self.stepAttrSy.setChecked(False)
+    self.stepAttrSy.setObjectName("stepAttrSy")
+    self.stepAttrSy.setText(QtWidgets.QApplication.translate("MainWindow", "sY", None, -1))
+    self.stepAttrSy.setStyleSheet(checkA)       
+        
+    self.stepAttrRz = QtWidgets.QCheckBox(self.keyFrameToolGrp)
+    self.stepAttrRz.setGeometry(QtCore.QRect(480, 180, 40, 20))
+    self.stepAttrRz.setChecked(False)
+    self.stepAttrRz.setObjectName("stepAttrSy")
+    self.stepAttrRz.setText(QtWidgets.QApplication.translate("MainWindow", "rZ", None, -1))
+    self.stepAttrRz.setStyleSheet(checkA)        
+    
+         
     self.loopTimeBtn = QtWidgets.QPushButton(self.keyFrameToolGrp)
-    self.loopTimeBtn.setGeometry(QtCore.QRect(10, 170, 80, 30))
+    self.loopTimeBtn.setGeometry(QtCore.QRect(10, 210, 80, 30))
     self.loopTimeBtn.setObjectName("loopTimeBtn")
     self.loopTimeBtn.setText(QtWidgets.QApplication.translate("MainWindow", "loop frame", None, -1))
    # self.loopTimeBtn.clicked.connect(self.loopFrames)
@@ -956,35 +1072,35 @@ def defineImageButtonDock(self,fontScale):
 
 
     self.loopTimeIn = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.loopTimeIn.setGeometry(QtCore.QRect(90, 170, 60, 30))
+    self.loopTimeIn.setGeometry(QtCore.QRect(90, 210, 60, 30))
     self.loopTimeIn.setObjectName("loopTimeIn")
     self.loopTimeIn.setAlignment(QtCore.Qt.AlignCenter)
     self.loopTimeIn.setText('2')
     self.loopTimeIn.setStyleSheet(lineEditRightBMiddleDark)  
              
     self.loopTimeOut = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.loopTimeOut.setGeometry(QtCore.QRect(150, 170, 60, 30))
+    self.loopTimeOut.setGeometry(QtCore.QRect(150, 210, 60, 30))
     self.loopTimeOut.setObjectName("loopTimeOut")
     self.loopTimeOut.setAlignment(QtCore.Qt.AlignCenter)
     self.loopTimeOut.setText('20')
     self.loopTimeOut.setStyleSheet(lineEditRightBMiddleDark)     
     
     self.loopSpaceFrame = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.loopSpaceFrame.setGeometry(QtCore.QRect(210, 170, 60, 30))
+    self.loopSpaceFrame.setGeometry(QtCore.QRect(210, 210, 60, 30))
     self.loopSpaceFrame.setObjectName("loopSpaceFrame")
     self.loopSpaceFrame.setAlignment(QtCore.Qt.AlignCenter)
-    self.loopSpaceFrame.setText('5')
-    self.loopSpaceFrame.setStyleSheet(lineEditRightBMiddleDark)     
+    self.loopSpaceFrame.setText('18')
+    self.loopSpaceFrame.setStyleSheet(lineEditRightBDark)     
     
-    self.loopTimes = QtWidgets.QLineEdit(self.keyFrameToolGrp)
-    self.loopTimes.setGeometry(QtCore.QRect(270,170, 60, 30))
-    self.loopTimes.setObjectName("loopTimes")
-    self.loopTimes.setAlignment(QtCore.Qt.AlignCenter)
-    self.loopTimes.setText('1')
-    self.loopTimes.setStyleSheet(lineEditRightBDark)     
+   # self.loopTimes = QtWidgets.QLineEdit(self.keyFrameToolGrp)
+   # self.loopTimes.setGeometry(QtCore.QRect(270,210, 60, 30))
+  #  self.loopTimes.setObjectName("loopTimes")
+  #  self.loopTimes.setAlignment(QtCore.Qt.AlignCenter)
+   # self.loopTimes.setText('1')
+   # self.loopTimes.setStyleSheet(lineEditRightBDark)     
           
     self.checkBox_offsetRandomLoop = QtWidgets.QCheckBox(self.keyFrameToolGrp)
-    self.checkBox_offsetRandomLoop.setGeometry(QtCore.QRect(340, 180, 70, 20))
+    self.checkBox_offsetRandomLoop.setGeometry(QtCore.QRect(340, 220, 70, 20))
     self.checkBox_offsetRandomLoop.setChecked(True)
     self.checkBox_offsetRandomLoop.setObjectName("checkBox_offsetRandomLoop")
     self.checkBox_offsetRandomLoop.setText(QtWidgets.QApplication.translate("MainWindow", "random", None, -1))
@@ -992,7 +1108,7 @@ def defineImageButtonDock(self,fontScale):
 
 
     self.checkBox_seqAni = QtWidgets.QCheckBox(self.keyFrameToolGrp)
-    self.checkBox_seqAni.setGeometry(QtCore.QRect(420, 180, 70, 20))
+    self.checkBox_seqAni.setGeometry(QtCore.QRect(420, 220, 70, 20))
     self.checkBox_seqAni.setChecked(False)
     self.checkBox_seqAni.setObjectName("checkBox_seqAni")
     self.checkBox_seqAni.setText(QtWidgets.QApplication.translate("MainWindow", "sec ani", None, -1))
@@ -1000,7 +1116,7 @@ def defineImageButtonDock(self,fontScale):
                                            
     ##### fillet select
     self.filletSelectGrp = QtWidgets.QGroupBox(self.dockWidgetImagesInfo)
-    self.filletSelectGrp.setGeometry(QtCore.QRect(10, 490, 530, 130))
+    self.filletSelectGrp.setGeometry(QtCore.QRect(10, 540, 530, 130))
     self.filletSelectGrp.setObjectName("filletSelectGrp")
     self.filletSelectGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
     self.filletSelectGrp.setStyleSheet(QGroupBoxA)     
@@ -1172,7 +1288,7 @@ def defineImageButtonDock(self,fontScale):
     ###### Random Frame keys     
                                                                                                                   
     self.randomFrameKeyGrp = QtWidgets.QGroupBox(self.dockWidgetImagesInfo)
-    self.randomFrameKeyGrp.setGeometry(QtCore.QRect(10, 235, 530, 250))
+    self.randomFrameKeyGrp.setGeometry(QtCore.QRect(10, 285, 530, 250))
     self.randomFrameKeyGrp.setObjectName("randomFrameKeyGrp")
     self.randomFrameKeyGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
     self.randomFrameKeyGrp.setStyleSheet(QGroupBoxA)     
@@ -1869,15 +1985,6 @@ def defineImageButtonDock(self,fontScale):
 
 
 
-   # self.createMeshBtn.setStyleSheet(buttonStyle)             
-   # self.createClippingBtn.setStyleSheet(buttonStyle)             
-
-
-    #self.testABtn.setStyleSheet(buttonStyle)             
-    #self.testBBtn.setStyleSheet(buttonStyle)             
-    #self.testCBtn.setStyleSheet(buttonStyle)             
-
-
 
     #### dockSpineMeshProgress BTN
 
@@ -1915,8 +2022,118 @@ def defineImageButtonDock(self,fontScale):
     self.defineSpineMaskBtn.setStyleSheet(buttonStyleC)          
     
     
+    self.normalDynaBtn = QtWidgets.QPushButton(self.dockSpineMeshProgress)
+    self.normalDynaBtn.setGeometry(QtCore.QRect(10, 538, 80, 30))
+    self.normalDynaBtn.setObjectName("normalDynaBtn")
+    self.normalDynaBtn.setCheckable(True)
+    self.normalDynaBtn.setChecked(True)
+    self.normalDynaBtn.setFlat(False)
+    self.normalDynaBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Normal Dyna", None, -1))
+   # self.characterCreateBtn.clicked.connect(self.defineSpineRootSkeleton)
+    self.normalDynaBtn.setStyleSheet(buttonStyleC)          
+       
+    self.styleDynaBtn = QtWidgets.QPushButton(self.dockSpineMeshProgress)
+    self.styleDynaBtn.setGeometry(QtCore.QRect(95, 538, 80, 30))
+    self.styleDynaBtn.setObjectName("styleDynaBtn")
+    self.styleDynaBtn.setCheckable(True)
+    self.styleDynaBtn.setChecked(False)
+    self.styleDynaBtn.setFlat(False)
+    self.styleDynaBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Style Dyna", None, -1))
+   # self.characterCreateBtn.clicked.connect(self.defineSpineRootSkeleton)
+    self.styleDynaBtn.setStyleSheet(buttonStyleC)          
+    
+    ###    styleDynaGrp  
+    self.styleDynaGrp = QtWidgets.QGroupBox(self.dockSpineMeshProgress )
+    self.styleDynaGrp.setGeometry(QtCore.QRect(20,575, 370, 300))
+    self.styleDynaGrp.setObjectName("styleDynaGrp")
+    self.styleDynaGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
+    self.styleDynaGrp.setStyleSheet(QGroupBoxA)     
+    self.styleDynaGrp.setVisible(False)
+    self.styleDynaGrp.setEnabled(False)               
+                      
+     
+    self.startFrameStyleDyna = QtWidgets.QLabel(self.styleDynaGrp)
+    self.startFrameStyleDyna.setGeometry(QtCore.QRect(20, 10, 60, 20))
+    self.startFrameStyleDyna.setObjectName("startFrameStyleDyna")
+    self.startFrameStyleDyna.setText(QtWidgets.QApplication.translate("MainWindow", "Start Frame", None, -1))  
+    self.startFrameStyleDyna.setStyleSheet(labelTextA)   
+    
+    self.sfStyleDyna = QtWidgets.QLineEdit(self.styleDynaGrp)
+    self.sfStyleDyna.setGeometry(QtCore.QRect(90, 10, 40, 20))
+    self.sfStyleDyna.setObjectName("sfStyleDyna")       
+    self.sfStyleDyna.setText(QtWidgets.QApplication.translate("MainWindow", "1.0", None, -1))  
+    self.sfStyleDyna.setStyleSheet(labelTextA)   
+   
+    
+    self.efStyleDyna = QtWidgets.QLabel(self.styleDynaGrp)
+    self.efStyleDyna.setGeometry(QtCore.QRect(140, 10, 60, 20))
+    self.efStyleDyna.setObjectName("efStyleDyna")
+    self.efStyleDyna.setText(QtWidgets.QApplication.translate("MainWindow", "End Frame", None, -1))  
+    self.efStyleDyna.setStyleSheet(labelTextA)   
+
+    self.endFrameStyleDyna = QtWidgets.QLineEdit(self.styleDynaGrp)
+    self.endFrameStyleDyna.setGeometry(QtCore.QRect(210, 10, 40, 20))
+    self.endFrameStyleDyna.setObjectName("endFrameStyleDyna")
+    self.endFrameStyleDyna.setText(QtWidgets.QApplication.translate("MainWindow", "20.0", None, -1))  
+    self.endFrameStyleDyna.setStyleSheet(labelTextA)   
     
     
+    self.drawLineCheck = QtWidgets.QRadioButton(self.styleDynaGrp)
+    self.drawLineCheck.setGeometry(QtCore.QRect(20, 40, 70, 20))
+    self.drawLineCheck.setChecked(True)
+    self.drawLineCheck.setObjectName("drawLineCheck")
+    self.drawLineCheck.setText(QtWidgets.QApplication.translate("MainWindow", "draw line", None, -1))
+    self.drawLineCheck.setStyleSheet(radioBtnStyleA)     
+    
+    self.lineWidthLabel = QtWidgets.QLabel(self.styleDynaGrp)
+    self.lineWidthLabel.setGeometry(QtCore.QRect(100, 40,60, 20))
+    self.lineWidthLabel.setObjectName("lineWidthLabel")
+    self.lineWidthLabel.setText(QtWidgets.QApplication.translate("MainWindow", "line Width:", None, -1))
+    self.lineWidthLabel.setStyleSheet(optionLabelA)   
+    
+    self.lineWidthLE = QtWidgets.QLineEdit(self.styleDynaGrp)
+    self.lineWidthLE.setEnabled(True)
+    self.lineWidthLE.setGeometry(QtCore.QRect(170, 40, 40, 20))
+    self.lineWidthLE.setText(QtWidgets.QApplication.translate("MainWindow", "1", None, -1))
+    self.lineWidthLE.setObjectName("lineWidthLE") 
+    self.lineWidthLE.setStyleSheet(optionLabelA)   
+   
+
+    self.pointListLabel = QtWidgets.QLabel(self.styleDynaGrp)
+    self.pointListLabel.setGeometry(QtCore.QRect(30,60,60, 20))
+    self.pointListLabel.setObjectName("pointListLabel")
+    self.pointListLabel.setText(QtWidgets.QApplication.translate("MainWindow", "points:", None, -1))
+    self.pointListLabel.setStyleSheet(optionLabelA)   
+
+
+
+  #  self.pointListLE = QtWidgets.QLineEdit(self.styleDynaGrp)
+  #  self.pointListLE.setEnabled(True)
+  #  self.pointListLE.setGeometry(QtCore.QRect(80, 80, 260, 20))
+ #   self.pointListLE.setObjectName("pointListLE")
+ #   self.pointListLE.setText(QtWidgets.QApplication.translate("MainWindow", "", None, -1))
+  #  self.pointListLE.setStyleSheet(optionLabelA)   
+
+
+    self.getPointListBtn = QtWidgets.QToolButton(self.styleDynaGrp)
+    self.getPointListBtn.setEnabled(True)
+    self.getPointListBtn.setGeometry(QtCore.QRect(340, 80, 20, 20))
+    self.getPointListBtn.setObjectName("getPointListBtn")
+    self.getPointListBtn.setText(QtWidgets.QApplication.translate("MainWindow", "...", None, -1))
+    
+    self.pointDataInputPE = QtWidgets.QPlainTextEdit(self.styleDynaGrp)
+    self.pointDataInputPE.setEnabled(True)
+    self.pointDataInputPE.setGeometry(QtCore.QRect(30, 80, 310, 180))
+    self.pointDataInputPE.setObjectName("pointDataInputPE")
+    self.pointDataInputPE.setPlainText(QtWidgets.QApplication.translate("MainWindow", "100,100 200,200 300,300 400,400\n123,123 222,222 333,333 100,123\n500,100 600,700 100,0 256,256", None, -1))
+    self.pointDataInputPE.setStyleSheet(optionLabelA)    
+    
+####                                  
+                                                               
+                                                                                            
+                                                                                                                         
+                                                                                                                                                      
+                                                                                                                                                                                                                
     
     self.exportSpineJsonCheckBtn = QtWidgets.QPushButton(self.dockSpineMeshProgress)
     self.exportSpineJsonCheckBtn.setGeometry(QtCore.QRect(300, 20, 80, 30))
@@ -2155,51 +2372,6 @@ def defineImageButtonDock(self,fontScale):
          
               
                    
-                             
-    
-    radioBtnStyleA =  "\
-             QRadioButton {\
-             font-size:%spx;\
-             text-align:left;\
-             }\
-             "%(str(fontScale))  
-    optionLabelA  = "\
-                     QLabel{\
-                     font-size:%spx;\
-                     }\
-                     QLineEdit{\
-                     font-size:%spx;\
-                     };\
-                     "%(str(fontScale),str(fontScale)) 
-    optionEditA  = "\
-                     QLineEdit {\
-                     font-size:%spx;\
-                     background-color:#333333;\
-                     color:#aaaaaa;\
-                     border-radius:3px;\
-                     border-style:solid;\
-                     border-color:#777777;\
-                     text-align:center;\
-                     }\
-                     QLineEdit::hover{\
-                     font-size:%spx;\
-                     background-color:#993333;\
-                     color:#aaaaaa;\
-                     border-radius:3px;\
-                     border-style:solid;\
-                     border-color:#777777;\
-                     text-align:center;\
-                     }\
-                     QLineEdit:read-only {\
-                     font-size:%spx;\
-                     background-color:#777777;\
-                     color:#333333;\
-                     border-radius:3px;\
-                     border-style:solid;\
-                     border-color:#777777;\
-                     text-align:center;\
-                     }\
-                     "%(str(fontScale),str(fontScale),str(fontScale))
 
     
     self.slotDynaStartFrame = QtWidgets.QLabel(self.dynamicSlotGrp)
@@ -2611,7 +2783,7 @@ def defineImageButtonDock(self,fontScale):
     
 
     self.slotColorGrp = QtWidgets.QGroupBox(self.dockImageButton)
-    self.slotColorGrp.setGeometry(QtCore.QRect(10,20, 530, 120))
+    self.slotColorGrp.setGeometry(QtCore.QRect(10,20, 530, 90))
     self.slotColorGrp.setTitle("")
     self.slotColorGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
 
@@ -2660,9 +2832,10 @@ def defineImageButtonDock(self,fontScale):
     self.delUnusedNode.setObjectName("delUnusedNode")
     self.delUnusedNode.setText(QtWidgets.QApplication.translate("MainWindow", "del unused Node", None, -1))
     self.delUnusedNode.setStyleSheet(buttonStyleB)                             
-   # self.setNewSlot.clicked.connect(self.setSlotNewImage)
-   
-    
-    #lay.addWidget(self.testBtn)
-    #lay.addWidget(self.testLabel)    
 
+           
+    self.testABtn = QtWidgets.QPushButton(self.slotColorGrp)
+    self.testABtn.setGeometry(QtCore.QRect(240, 50, 100, 30))
+    self.testABtn.setObjectName("testABtn")
+    self.testABtn.setText(QtWidgets.QApplication.translate("MainWindow", "testABtn", None, -1))
+    self.testABtn.setStyleSheet(buttonStyleB)                             

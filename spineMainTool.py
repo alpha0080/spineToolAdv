@@ -3,7 +3,69 @@ import maya.cmds as cmds
 import os,shutil
 
    
-   
+def getDrawOrder(objList,fps):  
+    #objList = cmds.ls(sl=True,type='joint')
+
+    allZKeyFrameList = []
+    try:
+        for obj in objList:
+            
+            for f in cmds.keyframe(obj,at='translateZ',q=True):
+                if f in allZKeyFrameList:
+                    pass
+                else:
+                    allZKeyFrameList.append(f)
+
+    
+        zListDict = {}                    
+        for f in allZKeyFrameList:
+            tempZListPreKey = {}
+            for obj in objList:
+                z = cmds.getAttr('%s.translateZ'%obj,t=f)
+                tempZListPreKey.update({obj:z})
+
+            zListPreKey =  sorted(tempZListPreKey.items(), key=lambda kv: kv[1])
+
+            zListDict.update({f:zListPreKey})
+            
+
+        zKeyFrameList =  sorted(zListDict.keys())
+        setupDrawOrder = []
+        animationDrawOrder = []
+        
+        for obj in objList:
+            setupDrawOrder.append(obj)
+        setupDrawOrder = list(reversed(setupDrawOrder))
+        #print 'setupDrawOrder',setupDrawOrder
+        for i in range(0,len(zKeyFrameList)):
+            f = zKeyFrameList[i]
+            pf = zKeyFrameList[0]
+            cL =  zListDict[f]
+            cL = list(reversed(zListDict[f]))
+            pL = zListDict[pf]
+          #  pL = list(reversed(zListDict[pf]))
+            tempObjDrawOrderList = []
+           # print 'cl',cL
+          #  print 'pl',setupDrawOrder
+            for obj in objList:
+                
+                f_el = filter(lambda x:x[0] == obj ,cL)[0]
+                obj_f_index = cL.index(f_el)
+                pr_el =  filter(lambda x:x[0] == obj ,pL)[0]   
+                obj_pf_index = pL.index(pr_el)   
+                obj_setupIndex = setupDrawOrder.index(obj) 
+              #  print obj,obj_f_index,obj_setupIndex
+                modulNum = len(objList)-obj_f_index
+                slotName = cmds.getAttr('%s.bone_slot'%obj)
+                tempObjDrawOrderList.append({"slot":slotName,"offset": (-1*((obj_f_index-obj_setupIndex)))})
+              #  if i == 0:
+                   # setupDrawOrder.append({obj:obj_f_index})
+            animationDrawOrder.append({"time":f/fps, "offsets":tempObjDrawOrderList})   
+        return [setupDrawOrder,animationDrawOrder]
+    except:
+        return [[],[]]
+    
+      
 def createShader(sourceImage,targetDir):    #slotName, imageSort name, image full name
    # print "createShader",imageName, currentImage 
     

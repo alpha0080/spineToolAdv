@@ -224,153 +224,9 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_keys.textChanged.connect(self.changeKeysEdit)
 
         self.alignToSeqFrame.clicked.connect(self.alignSeqAni)
-        self.stepModAttrBtn.clicked.connect(self.stepModifyAttribute)
-        self.testABtn.clicked.connect(self.testA)
-
-
-        self.styleDynaBtn.clicked.connect(self.changeStyleDynaMode)
-        self.normalDynaBtn.clicked.connect(self.changeNormalDynaMode)
-
-        self.getPointListBtn.clicked.connect(self.getPointsList)
-
-    def getPointsList(self):
-        print "getPointsList"
-        objList = cmds.ls(sl=True,type="transform")
-        pointListText = ""
-       # for obj in objList:
-       #     x=cmds.getAttr('%s.translateX'%obj)
-       #     y=cmds.getAttr('%s.translateY'%obj)
-           # print round(x),round(y) 
-        #    pos = "%s"%(str(int(round(x))))+','+"%s"%str(int(round(y)))
-           # print pos
-         #   pointListText = pointListText + pos +" "
-         #   self.pointListLE.setText(pointListText)
-           # print pointListText
-        tempGrpList = cmds.ls(sl=True,type="transform",l=True)
-
-        grpList = filter(lambda x: len(x) > 0, tempGrpList)
-        fullPointData =""
-        for i in grpList:
-            tempBoneList = cmds.listRelatives(i,c=True,type ="transform",f=True)
-           # print tempBoneList
-            pointLineStr = ""
-            for bone in tempBoneList:
-               # print bone
-                tempX =str(int(round(cmds.getAttr('%s.translateX'%bone))))
-                tempY =str(int(round(cmds.getAttr('%s.translateY'%bone))))
-               # print tempX,tempY
-                pointLineStr = pointLineStr + tempX +','+tempY +' '
-           # print pointLineStr 
-            fullPointData = fullPointData + pointLineStr +'\n'  
-        #print  fullPointData 
-        self.pointDataInputPE.setPlainText(fullPointData)   
-    def changeStyleDynaMode(self):
-        print "changeStyleDynaMode"
-
-        self.styleDynaGrp.setVisible(True)
-        self.dynamicSlotGrp.setEnabled(False)
-
-        self.dynamicSlotGrp.setVisible(False)
-        self.styleDynaBtn.setChecked(True)
-        self.normalDynaBtn.setChecked(False)
-        try:
-            if self.enableDynaSlotCheck.isChecked()  ==True:
-                self.styleDynaGrp.setEnabled(True)
-        except:
-            pass
-                
-        self.drawLineCheck.setChecked(True)
-
-            
-        print self.radioButton_createRad.isChecked()
-        print self.radioButton_createSquare.isChecked()
-            
-            
-    def changeNormalDynaMode(self): 
-        print "changeNormalDynaMode"
-        self.styleDynaGrp.setVisible(False)
-        self.dynamicSlotGrp.setVisible(True)
-        self.styleDynaBtn.setChecked(False)
-        self.normalDynaBtn.setChecked(True)    
-        self.styleDynaGrp.setEnabled(False)
-        #self.dynamicSlotGrp.setEnabled(True)
-        if self.enableDynaSlotCheck.isChecked()  ==True:
-            self.dynamicSlotGrp.setEnabled(True)
-            
-        self.drawLineCheck.setChecked(False)
-
-        
-    def testA(self):
-        print "testA"
-        #objList = cmds.ls(sl=True)
-      #  print 'objList',objList
-        data = spineMainTool.getDrawOrder(objList)
-        drawOrder = data[0]
-        setupDrawOrder = data[1]
-       # print 'drawOrder',drawOrder#[0]
-        print 'setupDrawOrder',setupDrawOrder
-      #  for i in drawOrder:
-            
-          #  print i['time']
         
         
         
-        
-        
-        
-    def stepModifyAttribute(self):
-        print 'stepModifyAttribute'
-        startFrame = float(self.stepAttrStartFrame.text())
-        stepFrame = float(self.stepAttrStepFrame.text())
-        scaleValue = float(self.stepAttrScale.text())
- 
-        attrList = []
-        if self.stepAttrTx.isChecked() == True:
-            attrList.append('translateX')
-        if self.stepAttrTy.isChecked() == True:
-            attrList.append('translateY')   
-        if self.stepAttrTz.isChecked() == True:
-            attrList.append('translateZ')              
-        if self.stepAttrSx.isChecked() == True:
-            attrList.append('scaleX')       
-        if self.stepAttrSy.isChecked() == True:
-            attrList.append('scaleY')               
-        if self.stepAttrRz.isChecked() == True:
-            attrList.append('rotateZ')               
-                      
-                          
-        print 'attrList',attrList,startFrame,stepFrame,scaleValue
-              
-        objList = cmds.ls(sl=True)
-        objCount = len(objList)
-
-        for attr in attrList:
-            for obj in objList:
-                
-                originalValue = cmds.getAttr('%s.%s'%(obj,attr),t=startFrame)
-               # if self.stepAttrRz.isChecked() == True:
-                originalZValue =  cmds.getAttr('%s.translateZ'%obj,t=startFrame)
-                print attr,obj,originalValue,originalZValue
-
-                
-                setValue = originalValue 
-               # print obj
-                #z=10
-                z = originalZValue
-                for i in range(0,objCount):
-                     
-                    f= startFrame + i  *stepFrame
-                   # currentValue = cmds.getAttr('%s.%s'%(obj,attr),t=)
-                    cmds.setKeyframe(obj,at = attr,t=(f,f),v=setValue,e=True)
-                    if self.stepAttrTz.isChecked() == True:
-
-                        cmds.setKeyframe(obj,at = 'translateZ',t=(f,f),v=z,e=True)
-                        z=z +10
-
-                    setValue = setValue * scaleValue
-                
-                 
-                   
     def alignSeqAni(self):
         print 'alignSeqAni'
         alignStartFrame = float(self.alignSeqStartFrame.text())
@@ -383,7 +239,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             obj = objList[i]
             cmds.cutKey(obj)
             cmds.pasteKey(obj,t=(startFrame,))
-          #  cmds.keyTangent(obj,itt ="linear", ott ="linear")
+            cmds.keyTangent(obj,itt ="linear", ott ="linear")
 
         
         
@@ -792,12 +648,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.enableDynaSlotCheck.isChecked() == True:
            # print "aaaaaa"
             self.dynamicSlotGrp.setEnabled(True)
-            self.styleDynaGrp.setEnabled(True)
 
         else:
           #  print "bbbbb"
             self.dynamicSlotGrp.setEnabled(False)
-            self.styleDynaGrp.setEnabled(False)
 
 
 
@@ -1317,6 +1171,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         startFrame = int(float(self.loopTimeIn.text()))
         endFrame = int(float(self.loopTimeOut.text()))
         getOffsetFrame = int(float(self.loopSpaceFrame.text()))
+        loopTimes = int(float(self.loopTimes.text()))    
         objList = cmds.ls(sl=True)
         
         objCount = 1
@@ -1338,26 +1193,20 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 elif self.checkBox_offsetRandom.isChecked() == True:
                     offsetFrame = random.randint(1,getOffsetFrame)
           #random.randint(1,19)
-            spineExtraTool.loopKeyFrameB(obj,startFrame,endFrame,offsetFrame)
-           # offsetSartFrame = float(startFrame + offsetFrame)
-            #cmds.keyTangent(obj,t=(offsetSartFrame,offsetSartFrame),ott ="stepnext",e=True)
-           # cmds.keyTangent(obj,itt ="linear", ott ="linear")
-            '''
-            if self.checkBox_seqAni.isChecked() == True:
-                loopTimes =1
-            else:
-                    loopTimes = int(float(self.loopTimes.text()))    
-
+            spineExtraTool.loopKeyFrame(obj,startFrame,endFrame,offsetFrame)
+            cmds.keyTangent(obj,itt ="linear", ott ="linear")
             if loopTimes == 0:
                 pass
             else:
+                cmds.copyKey(obj)
                 cmds.copyKey(obj,t=(startFrame,endFrame))
                 
                 for i in range(1,loopTimes):
                     ns = startFrame + i*((endFrame-startFrame)) +i
                     cmds.pasteKey(obj,t=(ns,))
                 
-            '''
+            
+        #divideNextFrame  = divideFrame +1 divideFrame
     
     def alignKeys(self):
         objList = self.getObjList()
@@ -2509,11 +2358,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             slotAnimLayerDict = animDict['slotRegionTimeLineDict']
             boneAnimLayerDict = animDict['boneRegionTimeLineDict']
             deformAnimLayerDict = animDict['deformTimeLineDict'] 
-            draworderAnimList = animDict['drawOrder'] 
-            if len(draworderAnimList) == 0:
-                allAnimDict.update({i:{"slots":slotAnimLayerDict,"bones":boneAnimLayerDict,"deform":deformAnimLayerDict}})
-            else:
-                allAnimDict.update({"default":{"slots":slotAnimLayerDict,"bones":boneAnimLayerDict,"deform":deformAnimLayerDict,"drawOrder":draworderAnimList}})
+            allAnimDict.update({"default":{"slots":slotAnimLayerDict,"bones":boneAnimLayerDict,"deform":deformAnimLayerDict}})
         else:
             for i in animLayerList:
                 if i == "BaseAnimation":
@@ -2527,13 +2372,9 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 slotAnimLayerDict = animDict['slotRegionTimeLineDict']
                 boneAnimLayerDict = animDict['boneRegionTimeLineDict']
                 deformAnimLayerDict = animDict['deformTimeLineDict'] 
-                draworderAnimList = animDict['drawOrder'] 
-                if len(draworderAnimList) == 0:
-                    allAnimDict.update({i:{"slots":slotAnimLayerDict,"bones":boneAnimLayerDict,"deform":deformAnimLayerDict}})
-              #  print 'draworderAnimList',draworderAnimList
-                else:
-                    allAnimDict.update({i:{"slots":slotAnimLayerDict,"bones":boneAnimLayerDict,"deform":deformAnimLayerDict,"drawOrder":draworderAnimList}})
-        #print 'slotList___________0',slotList
+
+                allAnimDict.update({i:{"slots":slotAnimLayerDict,"bones":boneAnimLayerDict,"deform":deformAnimLayerDict}})
+
         exportData = {"skeleton":{"images": "../images/"},"bones":boneList,"slots":slotList,"skins":skinDict,"animations":allAnimDict}
         writeData = json.dumps(exportData, sort_keys=True , indent =4) 
         with open(fileName, 'w') as the_file:
@@ -2620,27 +2461,19 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         boneRegionTimeLineDict = self.defineBoneAnimation(boneInAnimLayer,boneNotInAnimLayer,animLayerName)
         deformerDict = self.defineDeformAnimation(boneInAnimLayer,boneNotInAnimLayer,animLayerName)
         
-       # data = spineMainTool.getDrawOrder(allBoneList)
-      #  drawOrder = data[0]
-      #  setupDrawOrder = data[1]
-        #print 'allBoneList______________________________1',allBoneList
-        aniDrawOrder= []
-        for i in allBoneList:
-            try:
-                keyCount = len(cmds.keyframe(i,at="translateZ",q=True))
+        
+        #print 'slotRegionTimeLineDict____7',animLayerName,slotRegionTimeLineDict
+       # print 'boneRegionTimeLineDict____8',animLayerName,boneRegionTimeLineDict
+       # print 'deformerDict',deformerDict
+  
+  
+       # print 'slotInAnimLayer',animLayerName,slotInAnimLayer
+       # print 'slotNotInAnimLayer',animLayerName,slotNotInAnimLayer
 
-                if keyCount >0:
-                    aniDrawOrder.append(i)
-                else:
-                    pass
-            except:
-                pass
-        fps =  float(self.fps_comboBox.currentText())        
-        data = spineMainTool.getDrawOrder(aniDrawOrder,fps)
-        drawOrder = data[1]
-        setupDrawOrder = data[0]
-        print 'drawOrder',drawOrder
-        return {'slotRegionTimeLineDict':slotRegionTimeLineDict,'boneRegionTimeLineDict':boneRegionTimeLineDict,'deformTimeLineDict':deformerDict,"drawOrder":drawOrder}
+       # print 'boneInAnimLayer',animLayerName,boneInAnimLayer
+       # print 'boneNotInAnimLayer',animLayerName,boneNotInAnimLayer
+
+        return {'slotRegionTimeLineDict':slotRegionTimeLineDict,'boneRegionTimeLineDict':boneRegionTimeLineDict,'deformTimeLineDict':deformerDict}
     
 
 
@@ -2800,7 +2633,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 frame = float(f)/float(fps)
                 print f,frame
                 meshDeformDict[skinName][slotName][attachmentName].append({"time":float('{:.3f}'.format(frame)),"vertices":deltaVertexPositionPreFrameList})
-       # print 'meshDeformDict__',meshDeformDict
+        print 'meshDeformDict__',meshDeformDict
         return meshDeformDict
                          
 
@@ -3007,7 +2840,13 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 slot_sequence = cmds.getAttr('%s.slot_sequence'%slotName)
                 slotTimeLineDict.update({slotName:{"color":[]}})
 
-
+                #slotTimeLineDict = {slotName:{"color":[],"attachment":[]}}
+                
+                #soltsAnimationDict.update(tempSlotDict)
+                
+               # print 'attr',slotName,boneName,attachment,slotColor,slotAlpha,slotDark,slot_frequenceCheck
+               # attachment = slot["attachment"]    
+               
                 slotColorKeyFrameList = [0.0,startFrame,endFrame] 
                # visibilityList = []
                 
@@ -3019,7 +2858,16 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     baseAnimationLayerKeys = self.findKeysBaseAnimationLayer(boneName,attr,startFrame,endFrame)
                   #  print 'allLayerKeys',allLayerKeys,baseAnimationLayerKeys
                     for f in allLayerKeys:
-
+                     #   if attr == "visibility":
+                           # if (f-0.01) not in slotColorKeyFrameList:
+                             #   slotColorKeyFrameList.append((f-0.01))
+                           # if f not in slotColorKeyFrameList:
+                               # slotColorKeyFrameList.append(f)
+                           # elif (f-0.01) not in visibilityList:
+                          #      visibilityList.append((f-0.01))
+                          #  elif f not in visibilityList:
+                           #     visibilityList.append(f)
+                       # else:
                         if f in slotColorKeyFrameList:
                             pass
                         else:
@@ -3029,7 +2877,18 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                             
                     for f in baseAnimationLayerKeys:
                         
-   
+                       # if attr == "visibility":
+                            #if (f-0.01) not in slotColorKeyFrameList:
+                           #     slotColorKeyFrameList.append((f-0.01))
+                         #   if f not in slotColorKeyFrameList:
+                          #      slotColorKeyFrameList.append(f)
+                           # elif (f-0.01) not in visibilityList:
+                           #     visibilityList.append((f-0.01))
+                          #  elif f not in visibilityList:
+                          #      visibilityList.append(f)
+                                
+                                
+                      #  else:    
                         if f in slotColorKeyFrameList:
                             pass
                         else:
@@ -3039,7 +2898,14 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 
 
                 slotColorKeyFrameList = sorted(slotColorKeyFrameList)
-    
+                #visibilityList.remove(startFrame)
+               # visibilityList.remove(endFrame)
+                
+                #visibilityList = sorted(visibilityList)
+             #   print 'visibilityList_______________________0',visibilityList
+                #for f in slotColorKeyFrameList                 
+                #frameValue = cmds.keyframe(obj,at=attr,t=(frame,frame),q=True,eval=True)[0]    starFrame                 
+               # print 'slotColorKeyFrameList_____4',slotColorKeyFrameList
                 try:
                     visibilityList = cmds.keyframe(boneName,at='visibility',q=True)
                     visibilityList =sorted(visibilityList)
@@ -3306,7 +3172,9 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                             indexOfVislist = visibilityList.index(f)
                        
                             print 'visibilityList_____________1',f,indexOfVislist
-
+                           # print 'slotColorKeyFrameList______1',slotColorKeyFrameList
+                           #vis = cmds.getAttr('%s.visibility'%boneName,t=f)
+                           # print 'vis____________________2',vis
                             if indexOfVislist == 0:
                                 if f ==1 :
                                     pass
@@ -3661,14 +3529,6 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     y = Fy -Oy #cmds.getAttr('%s.translateY'%bone,t = f)
                     sx = Fsx/Osx #cmds.getAttr('%s.scaleX'%bone,t = f)
                     sy = Fsy/Osy #cmds.getAttr('%s.scaleY'%bone,t = f)
-                    
-                    #getTranslateTangent
-                   # tanTranslate = cmds.keyTangent(obj,t=(frame,frame),at='translateX',ott =True,q=True)[0]
-                  #  tanScale = cmds.keyTangent(obj,t=(frame,frame),at='scaleX',ott =True,q=True)[0]
-                  #  tanRotate = cmds.keyTangent(obj,t=(frame,frame),at='rotateZ',ott =True,q=True)[0]
-                    
-                  #  if tanTranslate == ""
-                    
                     boneTimeLineDict[bone]['rotate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"angle":float('{:.3f}'.format(float(rotate)))})
                     boneTimeLineDict[bone]['translate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(x))),"y":float('{:.3f}'.format(float(y)))})
                     boneTimeLineDict[bone]['scale'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(sx))),"y":float('{:.3f}'.format(float(sy)))})
@@ -4559,26 +4419,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print "createSlotBtn" 
         
         newBoneCreatedList = []
-        if self.drawLineCheck.isChecked() ==True:
-           # tempPointList = self.pointListLE.text().split(' ')
-            tempPointList = self.pointDataInputPE.toPlainText()
-            print 'tempPointList____1',tempPointList
-            lineList = tempPointList.split('\n')
-            lineList = filter(lambda x: len(x) > 0, lineList)
-            print 'lineList',lineList
-            pointList = []
-            for line in lineList:
-              #  print 'line',line
-                for i in line.split(' '):
-                    if len(i.split(',')) ==2:
-                       # print 'iiiiii',i
-                        pointList .append((int(i.split(',')[0]),int(i.split(',')[1])))
-                        
-            slotAmount =len(pointList) - len(lineList) + len(pointList)
-            print 'slotAmount',slotAmount
-            self.amountSliderNumLEdit.setText(str(slotAmount))
-        else:
-            slotAmount = int(self.amountSliderNumLEdit.text())
+        slotAmount = int(self.amountSliderNumLEdit.text())
 
         selectedImageCount = 0
         try:
@@ -4679,48 +4520,34 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #print 'newBoneCreatedList' ,newBoneCreatedList
         for i in newBoneCreatedList:
             cmds.keyTangent(i,itt ="linear", ott ="linear")
-            
     def defineDynamicKeys(self,boneList):
         print 'defineDynamicKeys'
-     #   print 'aaaaaaaaaaaaaaaaaa',self.dynamicSlotGrp.isEnabled()
-
         print boneList
         
-        if self.dynamicSlotGrp.isEnabled() ==True:
+        if self.radioButton_createRad.isChecked() ==True:
+            print "Radiation shape"
+                
+            self.setToRadiation(boneList)
+                
+                
+        elif self.radioButton_createSquare.isChecked() == True:
+            self.setSquare(boneList)
             
-            if self.radioButton_createRad.isChecked() ==True:
-                print "Radiation shape"
-                    
-                self.setToRadiation(boneList)
-                    
-                    
-            elif self.radioButton_createSquare.isChecked() == True:
-                self.setSquare(boneList)
-                
-                
-                
-           
-            elif self.radioButton_createSector.isChecked() == True:
-                print "Sector shape"
-                self.setSector(boneList)
-                
-                
-            elif self.radioButton_createDirection.isChecked() == True:
-                self.setDirection(boneList)
-                
-            elif self.radioButton_createFollowCurve.isChecked() == True:
-                self.setAlongCurve(boneList)
-        elif  self.styleDynaGrp.isEnabled() == True:
+            
+            
+       
+        elif self.radioButton_createSector.isChecked() == True:
+            print "Sector shape"
+            self.setSector(boneList)
+            
+            
+        elif self.radioButton_createDirection.isChecked() == True:
+            self.setDirection(boneList)
+            
+        elif self.radioButton_createFollowCurve.isChecked() == True:
+            self.setAlongCurve(boneList)
 
-            if self.drawLineCheck.isChecked() == True:
-               # pointList = self.pointListLE.text()
-                pointList = self.pointDataInputPE.toPlainText()
-                lineWidth = float(self.lineWidthLE.text())
-                startTime = float(self.sfStyleDyna.text())
-                endTime =   float(self.endFrameStyleDyna.text())
-                
-                spineExtraTool.drawline(boneList,pointList,lineWidth,startTime,endTime)
-                
+    
     def getDagPath(self,node=None):
         sel = om.MSelectionList()
         sel.add(node)
@@ -5426,7 +5253,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 
-def spineTool2Main():
+def spineToolMain():
 #def main():
     global ui
     app = QtWidgets.QApplication.instance()
