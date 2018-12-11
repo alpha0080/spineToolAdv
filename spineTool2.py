@@ -18,7 +18,7 @@ except:
     pass
 
 try:
-    import spineUI_A
+    import spineUI_A ## spineUI_A.py
     reload(spineUI_A)    
 except:
     pass
@@ -42,7 +42,9 @@ reload(spineExtraTool)
 import spineMainTool
 reload(spineMainTool)
                        
-         
+import spineAlignImage
+reload(spineAlignImage)
+                                
                                          
                                                                                                                          
 from PySide2 import QtCore, QtGui, QtWidgets#.QFileSystemModel
@@ -233,6 +235,242 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.getPointListBtn.clicked.connect(self.getPointsList)
 
+        self.defineClippingBtn.clicked.connect(self.defineMask)
+
+        self.setAllCvsKeysBtn.clicked.connect(self.setAllCVsKey)
+        self.deleteCvsKeysBtn.clicked.connect(self.deleteAllCVsKey)
+        
+                
+                        
+                                        
+        self.btnChinese()
+        self.initialOption()
+        
+    def initialOption(self):
+        self.drawLineCheck.setChecked(False)
+        self.styleDynaGrp.setEnabled(False)      
+
+    def btnChinese(self):
+        print "btnChinese"
+        self.selectImageFolderBtn.setText("資料庫".decode('MS950'))
+        self.selectImageFolderBtn.setToolTip(("素材來源選擇資料庫").decode('big5'))   
+        
+        self.selectImageFromDiskBTN.setText("磁碟".decode('MS950'))
+        self.selectImageFromDiskBTN.setToolTip(("素材來源選擇檔案夾位置").decode('big5')) 
+        
+        self.selectSpineJobBtn.setText("Spine 專案".decode('MS950'))
+        self.selectSpineJobBtn.setToolTip(("素材來源選擇現在開啟的檔案專案位置").decode('big5'))     
+            
+        self.slotAmountLabel.setText("Bone 數量".decode('MS950'))
+        self.slotAmountLabel.setToolTip(("設定 Bone，包含Slot的數量").decode('big5'))   
+
+        self.enableDynaSlotCheck.setText("賦予動態".decode('MS950'))
+        self.enableDynaSlotCheck.setToolTip(("創建Bone時，賦予內建的基本動態").decode('big5'))   
+
+        self.changeParentBoneBtn.setText("改變 Parent 層級".decode('MS950'))
+        self.changeParentBoneBtn.setToolTip(("先選所要改變層級的Bone，最後選擇要Parent 的Bone").decode('big5'))   
+
+        self.createBoneBtn.setText("創建 空的 Bone".decode('MS950'))
+        self.createBoneBtn.setToolTip(("創建乾淨的Bone，需賦予名稱").decode('big5'))   
+        
+        self.createSlotBtn.setText("創建 Slot".decode('MS950'))
+        self.createSlotBtn.setToolTip(("創建 spine 中的 Slot， 可以配合選擇下方的 數量，與是否為動態").decode('big5'))   
+
+        self.duplicateSlotBtn.setText("複製 Bone".decode('MS950'))
+        self.duplicateSlotBtn.setToolTip(("複製 Bone，會連帶的複製Bone中的Slot，與更改其附屬的屬性，複製完可以配合更改名稱與更改Parent的功能").decode('big5'))   
+        
+        
+        
+        
+
+        self.openSpineMayaFileBtn.setText("開啟檔案".decode('MS950'))
+        self.openSpineMayaFileBtn.setToolTip(("在資料夾中開啟檔案，可以點選 ... 由資料庫中撈取之前所做的檔案").decode('big5'))   
+        
+        self.saveMayaFileBtn.setText("儲存檔案".decode('MS950'))
+        self.saveMayaFileBtn.setToolTip(("將檔案儲存於現行專案資料夾").decode('big5'))   
+        
+        self.selectSpineWorkSpaceBtn.setText("專案資料夾".decode('MS950'))
+        self.selectSpineWorkSpaceBtn.setToolTip(("所開啟的檔案的專案資料夾位置").decode('big5')) 
+         
+        self.selectImageDitBtn.setText("圖檔位置".decode('MS950'))
+        self.selectImageDitBtn.setToolTip(("spine專案圖檔所在位置").decode('big5'))   
+
+        self.selectExportFolderBtn.setText("輸出位置".decode('MS950'))
+        self.selectExportFolderBtn.setToolTip(("所輸出spine JSON檔案的位置").decode('big5'))   
+        
+        
+        self.trimBeforeFrameBtn.setText("清除前Key".decode('MS950'))
+        self.trimBeforeFrameBtn.setToolTip(("清除設定的Key 之前的所有Key").decode('big5'))      
+        self.trimBeforeFrameLEdit.setToolTip(("為INDEX，也就是第N個KEY，這功能為清除第N個Key之前的所有KEY").decode('big5'))          
+    
+        self.trimAfterFrameBtn.setText("清除後Key".decode('MS950'))
+        self.trimAfterFrameBtn.setToolTip(("清除設定的Key 之前的所有Key").decode('big5'))      
+        self.trimAfterFrameLEdit.setToolTip(("為INDEX，也就是第N個KEY，這功能為清除第N個Key之後的所有KEY").decode('big5'))               
+        
+        self.trimBetweenFrameBTN.setText("清除之間Key".decode('MS950'))
+        self.trimBetweenFrameBTN.setToolTip(("清除設定的frame區間 之前的所有Key").decode('big5'))      
+        self.trimBetweenFrameStartLEdit.setToolTip(("為 起始 frame，清除起始frame 到結尾frame之間所有key").decode('big5'))     
+        self.trimBetweenFrameEndLEdit.setToolTip(("為 結尾 frame，清除起始frame 到結尾frame之間所有key").decode('big5'))     
+
+        self.alignToFrameBtn.setText("對齊".decode('MS950'))
+        self.alignToFrameBtn.setToolTip(("對齊到所設定的frame，選擇需要的Bone，對齊到設定的frame數").decode('big5'))  
+        
+        self.alignToSeqFrame.setText("順序對齊".decode('MS950'))
+        self.alignToSeqFrame.setToolTip(("順序對齊到所設定的frame，選擇需要的Bone，對齊到設定的frame數").decode('big5'))  
+        self.alignSeqStartFrame.setToolTip(("起始frame").decode('big5'))       
+        self.alignSeqStepFrame.setToolTip(("間隔frame").decode('big5'))       
+        self.alignToSeqFrame.setToolTip(("群組，如果要把所選定的Bone分三組對齊，則設定為3。").decode('big5'))       
+
+        self.scaleTimeBtn.setText("縮放key".decode('MS950'))
+        self.scaleTimeBtn.setToolTip(("縮放指定區間的key，到新的指定區間").decode('big5'))  
+        self.scaleTimeOriginIN.setToolTip(("原始區間起始frame").decode('big5'))       
+        self.scaleTimeOriginOut.setToolTip(("原始區間結尾frame").decode('big5'))       
+        self.scaleTimeNewIn.setToolTip(("新區間起始frame").decode('big5'))       
+        self.scaleTimeNewOut.setToolTip(("新區間結尾frame").decode('big5'))       
+          
+        self.stepModAttrBtn.setText("步進縮放".decode('MS950'))
+        self.stepModAttrBtn.setToolTip(("步進縮放所選定的屬性。例如 第1frame 開始，每隔10frame，放大1.5倍，第一次為 1*1.5 第二次為 1*1.5*1.5").decode('big5'))   
+        self.stepAttrStartFrame.setToolTip(("起始frame").decode('big5'))       
+        self.stepAttrStepFrame.setToolTip(("間隔frame數").decode('big5'))       
+        self.stepAttrScale.setToolTip(("放大倍率").decode('big5'))    
+        
+        self.loopTimeBtn.setText("定義Loop".decode('MS950'))
+        self.loopTimeBtn.setToolTip(("為所選定的Bone定義Loop 區間，例如在2-20frame 之間，將bone的動態設定成loop，最大的錯位為18，以亂數方式做錯位").decode('big5'))  
+        
+        self.checkBox_offsetRandomLoop.setText("亂數".decode('MS950'))
+        self.checkBox_offsetRandomLoop.setToolTip(("以亂數模式在指定的區間，與最大錯位範圍內製作成loop").decode('big5'))  
+        self.checkBox_seqAni.setText("順序".decode('MS950'))
+        self.checkBox_seqAni.setToolTip(("以順序模式在指定的區間，與最大錯位範圍內製作成loop，第一格為起始frame，第二格為結束frame，第三格為間隔frame").decode('big5')) 
+        self.loopTimeIn.setToolTip(("起始frame").decode('big5')) 
+        self.loopTimeOut.setToolTip(("結尾frame").decode('big5')) 
+        self.loopSpaceFrame.setToolTip(("間隔frame").decode('big5')) 
+
+        self.setModAllFrameBTN.setToolTip("修改所有的key".decode('big5'))
+        self.setModFirstFrameBTN.setToolTip("修改第一個key".decode('MS950'))
+        self.setModLastFrameBTN.setToolTip("修改最後一個key".decode('MS950'))
+        self.modFrameIndxLEdt.setToolTip("輸入要修改的key 的index，例如要修改第一個 第三個 最後一個，則輸入 0,2,-1".decode('MS950'))
+        self.modReplaceModBtn.setToolTip("置換，將選定的keyframe的數值用置換的方式替換數值".decode('MS950'))
+        self.modOffsetBtn.setToolTip("疊加，將選定的keyframe的數值用疊加的方式替換數值，在原有的數值上再增加".decode('MS950'))
+            
+        self.modTransXBtn.setText("位移X".decode('MS950'))
+        self.modTransXBtn.setToolTip(("修改所選定的keyframe 位移數量，內建選擇疊加方式增加，給予最小值，與最大值做亂數變動，如要固定數值，則為兩個相同數字。例如要固定全部移動100，則輸入 100,100").decode('big5'))  
+        
+        self.modTransYBtn.setText("位移Y".decode('MS950'))
+        self.modTransYBtn.setToolTip(("修改所選定的keyframe 位移數量，內建選擇疊加方式增加，給予最小值，與最大值做亂數變動，如要固定數值，則為兩個相同數字。例如要固定全部移動100，則輸入 100,100").decode('big5'))  
+                                                        
+        self.modTransZBtn.setText("位移Z".decode('MS950'))
+        self.modTransZBtn.setToolTip(("修改所選定的keyframe 位移數量，內建選擇疊加方式增加，給予最小值，與最大值做亂數變動，如要固定數值，則為兩個相同數字。例如要固定全部移動100，則輸入 100,100").decode('big5'))  
+                                                                                               
+        self.modRotateXBtn.setText("旋轉X".decode('MS950'))
+        self.modRotateXBtn.setToolTip(("修改所選定的keyframe 對X軸做旋轉，內建選擇疊加方式增加，給予最小值，與最大值做亂數變動，如要固定數值，則為兩個相同數字。例如要固定全部移動100，則輸入 100,100").decode('big5'))  
+                                                                                                                                          
+        self.modRotateYBtn.setText("旋轉Y".decode('MS950'))
+        self.modRotateYBtn.setToolTip(("修改所選定的keyframe 對Y軸做旋轉，內建選擇疊加方式增加，給予最小值，與最大值做亂數變動，如要固定數值，則為兩個相同數字。例如要固定全部移動100，則輸入 100,100").decode('big5'))  
+          
+        self.modRotateZBtn.setText("旋轉Z".decode('MS950'))
+        self.modRotateZBtn.setToolTip(("修改所選定的keyframe 對Z軸做旋轉，內建選擇疊加方式增加，給予最小值，與最大值做亂數變動，如要固定數值，則為兩個相同數字。例如要固定全部移動100，則輸入 100,100").decode('big5'))  
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+        self.modScaleXBtn.setText("縮放X".decode('MS950'))
+        self.modScaleXBtn.setToolTip(("修改所選定的keyframe 對X軸做放大，內建選擇疊加方式增加，給予最小值，與最大值做亂數變動，如要固定數值，則為兩個相同數字。例如要固定全部移動100，則輸入 100,100").decode('big5'))  
+                                                                                                                                          
+        self.modScaleYBtn.setText("縮放Y".decode('MS950'))
+        self.modScaleYBtn.setToolTip(("修改所選定的keyframe 對Y軸做放大，內建選擇疊加方式增加，給予最小值，與最大值做亂數變動，如要固定數值，則為兩個相同數字。例如要固定全部移動100，則輸入 100,100").decode('big5'))  
+          
+        self.modScaleZBtn.setText("縮放Z".decode('MS950'))
+        self.modScaleZBtn.setToolTip(("修改所選定的keyframe 對Z軸做放大，內建選擇疊加方式增加，給予最小值，與最大值做亂數變動，如要固定數值，則為兩個相同數字。例如要固定全部移動100，則輸入 100,100").decode('big5'))  
+
+        self.modScaleAllBtn.setText("縮放XY".decode('MS950'))
+        self.modScaleAllBtn.setToolTip(("修改所選定的keyframe 對XY做放大，內建選擇疊加方式增加，給予最小值，與最大值做亂數變動，如要固定數值，則為兩個相同數字。例如要固定全部移動100，則輸入 100,100").decode('big5'))  
+        self.defineSelectObjBtn.setText("選取Bone".decode('MS950'))
+        self.defineSelectObjBtn.setToolTip(("如需要做過濾選擇，則需選定bone，再使用下方過濾功能").decode('big5'))  
+        self.renameAllSelectBtn.setText("更改Bone的名稱".decode('MS950'))
+        self.renameAllSelectBtn.setToolTip(("如需要更改Bone 的名稱，則在選定Bone之後，輸入新的名稱").decode('big5'))  
+        self.optionalSelctBt.setText("條件選擇".decode('MS950'))
+        self.optionalSelctBt.setToolTip(("點選右方的條件").decode('big5'))  
+        self.fillet_odd_btn.setText("奇數".decode('MS950'))
+        self.fillet_even_btn.setText("偶數".decode('MS950'))
+        
+        self.setSlotColor.setText("指定顏色".decode('MS950'))
+        self.setSlotColor.setToolTip(("選擇指定的Bone，賦予新的Slot顏色").decode('big5'))  
+        self.setNewSlotBtn.setText("置換素材".decode('MS950'))
+        self.setNewSlotBtn.setToolTip(("選擇指定的Bone，與新的素材，賦予新的Slot素材").decode('big5'))    
+         
+        self.radioButton_createRad.setText("放射狀".decode('MS950'))
+        self.radioButton_createRad.setToolTip(("將指定的Bone賦予放射狀的動態，指定最大位移半徑").decode('big5'))  
+      #  self.RValueLabel.setText("半徑".decode('MS950'))
+        self.RValueLabel.setToolTip(("bone移動的最大半徑").decode('big5'))  
+        self.radioButton_createSquare.setText("矩形".decode('MS950'))
+        self.radioButton_createSquare.setToolTip(("選擇指定的Bone，賦予移動成為方形動態，指定方形的長與寬").decode('big5'))  
+        self.radioButton_createSector.setText("扇形".decode('MS950'))
+        self.radioButton_createSector.setToolTip(("選擇指定的Bone，旋轉成扇形，指定最小角度與最大角度").decode('big5'))  
+        self.radioButton_createDirection.setText("方向性".decode('MS950'))
+        self.radioButton_createDirection.setToolTip(("選擇指定的Bone，賦予單一方向的位移，指定起始點，方向角度，發散角度").decode('big5'))  
+        self.radioButton_createFollowCurve.setText("跟隨曲線".decode('MS950'))
+        self.radioButton_createFollowCurve.setToolTip(("選擇指定的Bone，依照曲線做動態，選擇曲線，可多選，再按下...").decode('big5'))   
+        self.label_dynCurveKeys.setToolTip(("bone在曲線上，所需要的key數量").decode('big5'))         
+        self.label_dynCurveNoise.setToolTip(("bone在曲線上，額外給予的亂數位移").decode('big5'))  
+        self.label_dynCurvePow.setToolTip(("bone在曲線上，速度遞增或是遞減，pow大於1則速度遞減，小於則遞增").decode('big5'))
+
+        #self.defineSpineMaskBtn.setText("更改Bone的名稱".decode('MS950'))
+        self.defineSpineMaskBtn.setToolTip(("創建 spine中的clipping").decode('big5'))  
+ 
+        self.defineClippingBtn.setText("定義 Clipping".decode('MS950'))
+        self.defineClippingBtn.setToolTip(("使用 Mesh Tools > Create Polygon 功能先創建一個多邊形，後將多邊形拉入 spine root 中，點選 定義 Clipping").decode('big5'))     
+      
+          
+    def defineMask(self):
+        print "defineMask"
+        mashObj = cmds.ls(sl=True,type="transform")
+        parentBone = cmds.listRelatives(mashObj,p=True,type="transform")
+        print mashObj
+        if parentBone == None:
+            self.errorMsgLEdit.setText('current Selected Mesh Not In Root')
+        else:
+            if len(mashObj) > 1:
+                self.errorMsgLEdit.setText('select Only One Mask Pls')
+            elif len(mashObj) == 0:
+                self.errorMsgLEdit.setText('select Mask mesh Pls')
+            else:
+               # print mashObj[0]
+                spineMainTool.defineMask(mashObj[0])
+            boneName = "bone_clipping_#"    
+            bone = self.createBone(boneName)
+
+            cmds.parent(bone,parentBone[0])
+            cmds.parent(mashObj,bone)
+            cmds.setAttr("%s.bone_parent"%bone,parentBone[0],type='string')
+            cmds.setAttr("%s.bone_slot"%bone,mashObj[0],type='string')
+            cmds.setAttr("%s.slot_attachment"%bone,mashObj[0],type='string')
+            
+            
+            cmds.setAttr("%s.clipping_bone"%mashObj[0],bone,type='string') #Redefine slot,clipping mesh ,ClippingBone
+
+       # 
+        '''
+        "skins": {
+        "default": {
+		"clipping": {
+			"clipping": {
+				"type": "clipping",
+				"end": "dust",
+				"vertexCount": 9,
+				"vertices": [ 66.76, 509.48, 19.98, 434.54, 5.34, 336.28, 22.19, 247.93, 77.98, 159.54, 182.21, -97.56, 1452.26, -99.8, 1454.33, 843.61, 166.57, 841.02 ],
+				"color": "ce3a3aff"
+			}
+		},
+        '''     
+        
+
+        
+    def setAllCVsKey(self):  
+        spineExtraTool.setAllVertexKeys()
+        
+    def deleteAllCVsKey(self):
+        spineExtraTool.delAllVertexKeysCurrentFrame()
+        
+
+    
     def getPointsList(self):
         print "getPointsList"
         objList = cmds.ls(sl=True,type="transform")
@@ -302,17 +540,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def testA(self):
         print "testA"
-        #objList = cmds.ls(sl=True)
-      #  print 'objList',objList
-        data = spineMainTool.getDrawOrder(objList)
-        drawOrder = data[0]
-        setupDrawOrder = data[1]
-       # print 'drawOrder',drawOrder#[0]
-        print 'setupDrawOrder',setupDrawOrder
-      #  for i in drawOrder:
-            
-          #  print i['time']
-        
+
+        spineMainTool.createBone("test")
         
         
         
@@ -350,7 +579,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 originalValue = cmds.getAttr('%s.%s'%(obj,attr),t=startFrame)
                # if self.stepAttrRz.isChecked() == True:
                 originalZValue =  cmds.getAttr('%s.translateZ'%obj,t=startFrame)
-                print attr,obj,originalValue,originalZValue
+              #  print attr,obj,originalValue,originalZValue
 
                 
                 setValue = originalValue 
@@ -366,7 +595,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
                         cmds.setKeyframe(obj,at = 'translateZ',t=(f,f),v=z,e=True)
                         z=z +10
-
+                       # print "ZZZZZZZZZZZZZZZZZ",z
                     setValue = setValue * scaleValue
                 
                  
@@ -506,24 +735,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
      
         
-    def defineMask(self):
-        print "defineMask"
-        '''
-        "skins": {
-        "default": {
-		"clipping": {
-			"clipping": {
-				"type": "clipping",
-				"end": "dust",
-				"vertexCount": 9,
-				"vertices": [ 66.76, 509.48, 19.98, 434.54, 5.34, 336.28, 22.19, 247.93, 77.98, 159.54, 182.21, -97.56, 1452.26, -99.8, 1454.33, 843.61, 166.57, 841.02 ],
-				"color": "ce3a3aff"
-			}
-		},
-        '''      
-                 
-                       
-        
+
     def fileOpenItemClick(self ):
         print "fileOpenItemClick"
         currentRow =  self.mayaRecentFileTable.currentRow()
@@ -561,10 +773,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         cursor3 = conn3.cursor()
         cursor3.execute("SELECT * FROM spine_maya")
         tempSpineMayaData = cursor3.fetchall()
-        spineMayaData = list((sorted(tempSpineMayaData, key = lambda x: x[0],reverse=True)))
-        spineMayaDataByUser = filter(lambda x:x[1] == login ,spineMayaData)
+        spineMayaData = list((sorted(tempSpineMayaData, key = lambda x: x[3],reverse=True)))
+        spineMayaDataByUser = filter(lambda x:x[1] == login ,spineMayaData)#[-10:-1]
         #cursor3.execute( "UPDATE shots set icon_url = '%s' where name = '%s';" % ( iconURL, itemName))
-        
+       # spinMayaDataSortdByTime = list((sorted(spineMayaDataByUser, key = lambda x: x[2],reverse=True)))
         conn3.commit()
         conn3.close() 
         fileCount = len(spineMayaDataByUser)
@@ -581,12 +793,18 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.mayaRecentFileTable.setRowHeight(i, 30) 
             fileName = spineMayaDataByUser[i][0].split('/')[-1]
             fileUrl = spineMayaDataByUser[i][0]
-            self.mayaRecentFileTable.setItem(i,1,QtWidgets.QTableWidgetItem())
-            self.mayaRecentFileTable.item(i, 1).setText(QtWidgets.QApplication.translate("MainWindow",fileName, None,-1))
-            self.mayaRecentFileTable.setItem(i,2,QtWidgets.QTableWidgetItem())
-            self.mayaRecentFileTable.item(i, 2).setText(QtWidgets.QApplication.translate("MainWindow",fileUrl, None,-1))
+         #   print fileUrl,fileName
+            try:
+                self.mayaRecentFileTable.setItem(i,1,QtWidgets.QTableWidgetItem())
+                self.mayaRecentFileTable.item(i, 1).setText(QtWidgets.QApplication.translate("MainWindow",fileName, None,-1))
+                self.mayaRecentFileTable.setItem(i,2,QtWidgets.QTableWidgetItem())
+                self.mayaRecentFileTable.item(i, 2).setText(QtWidgets.QApplication.translate("MainWindow",fileUrl, None,-1))
+            except:
+                pass
 
-        print spineMayaDataByUser    
+      #  print spinMayaDataSortdByTime 
+       # for i in spinMayaDataSortdByTime:
+          #  print i[2]
                    
     def initialWorkSpace(self):
         print "initialWorkSpace"
@@ -1044,7 +1262,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def defineModRZ(self):
         min = float(self.modRotateZminLedit.text())
-        max = float(self.modRotateYMaxLedit.text())
+        max = float(self.modRotateZMaxLedit.text())
 
         self.defineModByAttr("rotateZ",min,max)                                                
 
@@ -1082,6 +1300,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.defineModByAttr("slot_alpha",min,max)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 
     def defineModByAttr(self,attr,minValue,maxValue):
+        print "defineModByAttrdefineModByAttrdefineModByAttr",attr,minValue,maxValue
         frameList = self.modFrameIndxLEdt.text().split(",")
         objList = cmds.ls(sl=True,l=True)
         for obj in objList:  
@@ -1338,7 +1557,9 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 elif self.checkBox_offsetRandom.isChecked() == True:
                     offsetFrame = random.randint(1,getOffsetFrame)
           #random.randint(1,19)
+           # spineExtraTool.loopKeyFrameB(obj,startFrame,endFrame,offsetFrame)
             spineExtraTool.loopKeyFrameB(obj,startFrame,endFrame,offsetFrame)
+
            # offsetSartFrame = float(startFrame + offsetFrame)
             #cmds.keyTangent(obj,t=(offsetSartFrame,offsetSartFrame),ott ="stepnext",e=True)
            # cmds.keyTangent(obj,itt ="linear", ott ="linear")
@@ -2440,6 +2661,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             rootBoneList = [{ "name":rootCtrlName}]
             boneList = self.getAllBoneList(allBoneList,rootBoneList)
             slotList = self.getAllRegionSlotList(allBoneList) 
+            print "slotListslotListslotListslotList_____1",slotList
             initSkinList= {"default":{}}
 
             skinDict = self.getAllRegionSkinList(slotList,initSkinList)
@@ -2535,17 +2757,30 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     allAnimDict.update({i:{"slots":slotAnimLayerDict,"bones":boneAnimLayerDict,"deform":deformAnimLayerDict,"drawOrder":draworderAnimList}})
         #print 'slotList___________0',slotList
         exportData = {"skeleton":{"images": "../images/"},"bones":boneList,"slots":slotList,"skins":skinDict,"animations":allAnimDict}
-        writeData = json.dumps(exportData, sort_keys=True , indent =4) 
+        
+        if self.checkBox_prettyPrint.isChecked() == True:
+            
+            writeData = json.dumps(exportData, sort_keys=True , indent =4) 
+            
+        else:
+            writeData = json.dumps(exportData) 
+            
         with open(fileName, 'w') as the_file:
             the_file.write(writeData)
 
-           # slotRegionTimeLineDict = self.defineRegionSlotAnimation(regionSlotList)
-            #boneTimeLineDict = self.defineBoneAnimation(allBoneList)
-           # slotList = regionSlotList
-           # boneAnimDict = boneTimeLineDict
-          #  slotAnimDict= slotRegionTimeLineDict
-
-
+        
+        
+        
+        
+        if self.checkBox_texturePackage.isChecked() == True:
+            print "do texture package"
+            maxImageW = int(self.textureWidthLEdit.text())
+            maxImageH = int(self.textureWidthLEdit.text())
+            imageName = self.selectExportFileBTnLEdit.text().split('/')[-1].split('.json')[0]
+            exportDir = self.selectExportFileBTnLEdit.text().split(imageName)[0][:-1]
+            
+           # print "textureImageName",textureImageName,textureWidth,textureHeight,textureExportDir
+            spineAlignImage.checkAlignImageMode(maxImageW,maxImageH,imageName,exportDir)   
 
     def defineAllAnimLayerDict(self,animLayerName,slotList,allBoneList,allMeshSlotList,characterSetGrp):
         print "animLayerName________",animLayerName
@@ -2570,51 +2805,53 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             for i in range(0,len(slotList)):
                 cmds.select(cl=True)
                 slotName=slotList[i]['name']
-                boneName = cmds.getAttr('%s.slot_bone'%slotName)
-               # print 'slotName',slotName,boneName
+                spineTag = cmds.getAttr("%s.spine_tag"%slotName)
+                if spineTag == "spine_slot":
+                    boneName = cmds.getAttr('%s.slot_bone'%slotName)
+                   # print 'slotName',slotName,boneName
 
-                cmds.select(boneName)
-                ableSlotInAnimLayer = []
-                ableSlotInAnimLayer = cmds.animLayer(afl=True,q=True)
-              
-               # print 'tempAbleSlotInAnimLayer',tempAbleSlotInAnimLayer
-               
-                
-                
-              #  print 'ableSlotInAnimLayer',ableSlotInAnimLayer
-                cmds.select(cl=True)
-                if ableSlotInAnimLayer == None:
-                    print '%s not in animationLayer'%slotName
-                    if slotName in slotNotInAnimLayer:
-                        pass
-                    else:
-                        slotNotInAnimLayer.append(slotName)
-                    if boneName in boneNotInAnimLayer:
-                        pass
-                    else:
-                        boneNotInAnimLayer.append(boneName)
-                else:
-                    if animLayerName in ableSlotInAnimLayer:
-                        if slotName in slotInAnimLayer:
-                            pass
-                        else:
-                            slotInAnimLayer.append(slotName)
-                        if boneName in boneInAnimLayer:
-                            pass
-                        else:
-                            boneInAnimLayer.append(boneName)    
-                            
-                            
-                    else:
+                    cmds.select(boneName)
+                    ableSlotInAnimLayer = []
+                    ableSlotInAnimLayer = cmds.animLayer(afl=True,q=True)
+                  
+                   # print 'tempAbleSlotInAnimLayer',tempAbleSlotInAnimLayer
+                   
+                    
+                    
+                  #  print 'ableSlotInAnimLayer',ableSlotInAnimLayer
+                    cmds.select(cl=True)
+                    if ableSlotInAnimLayer == None:
+                        print '%s not in animationLayer'%slotName
                         if slotName in slotNotInAnimLayer:
                             pass
                         else:
                             slotNotInAnimLayer.append(slotName)
-                            
                         if boneName in boneNotInAnimLayer:
                             pass
                         else:
-                            boneNotInAnimLayer.append(boneName)   
+                            boneNotInAnimLayer.append(boneName)
+                    else:
+                        if animLayerName in ableSlotInAnimLayer:
+                            if slotName in slotInAnimLayer:
+                                pass
+                            else:
+                                slotInAnimLayer.append(slotName)
+                            if boneName in boneInAnimLayer:
+                                pass
+                            else:
+                                boneInAnimLayer.append(boneName)    
+                                
+                                
+                        else:
+                            if slotName in slotNotInAnimLayer:
+                                pass
+                            else:
+                                slotNotInAnimLayer.append(slotName)
+                                
+                            if boneName in boneNotInAnimLayer:
+                                pass
+                            else:
+                                boneNotInAnimLayer.append(boneName)   
       #  print 
         slotRegionTimeLineDict = self.defineRegionSlotAnimation(slotInAnimLayer,slotNotInAnimLayer,animLayerName)  
         boneRegionTimeLineDict = self.defineBoneAnimation(boneInAnimLayer,boneNotInAnimLayer,animLayerName)
@@ -2646,7 +2883,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     #### 輸出     
     def defineDeformAnimation(self,boneInAnimLayer,boneNotInAnimLayer,animLayerName):
-        print "defineDeformAnimation",boneInAnimLayer,boneNotInAnimLayer
+        print "defineDeformAnimation"#,boneInAnimLayer,boneNotInAnimLayer
         chaInAnimLayer = []
         chaNotInAnimLayer =[]
         
@@ -2923,8 +3160,26 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     else:
                         slotDict.update({"dark":darkHex})
                     slotList.append(slotDict)  #additive
-
-                       
+                    
+                if cmds.getAttr('%s.spine_tag'%j) == 'spine_clipping':
+                    print "spine_clipping",j
+                    
+                    
+                    slotName = cmds.getAttr('%s.clipping_slot'%j)
+                    boneName = cmds.getAttr('%s.clipping_bone'%j)#i["name"]
+                    color = cmds.getAttr('%s.slot_color'%boneName)[0]
+                    alpha = float(cmds.getAttr('%s.slot_alpha'%boneName))
+                    attachment = cmds.getAttr('%s.clipping_attachment'%j)
+                    alphaHex = "%02x"%int((alpha/1)*255)
+                    colorHex = "%02x"%int((color[0]/1)*255) + "%02x"%int((color[1]/1)*255) +"%02x"%int((color[2]/1)*255)
+                    exportColorHex = str(colorHex + alphaHex)
+                    print "slotName,boneName",slotName,boneName,exportColorHex,
+                    slotDict =  {"name":slotName,
+                                 "bone":boneName,
+                                 "color":exportColorHex,
+                                 "attachment":attachment}
+                    slotList.append(slotDict)  #additive
+                    
         return slotList    
  
 
@@ -2935,37 +3190,93 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         
        # print "slotList",slotList
        # print "slotListLength",len(slotList)
-            
+        tempSpineRootList = cmds.ls(type="transform")
+        spineRootList = []
+        allSpineSlotList = []
+        for i in tempSpineRootList:
+            try:
+                if cmds.getAttr('%s.spine_tag'%i)== 'spine_RootSkeleton':
+                    spineRootList.append(i)
+                    
+            except:
+                pass
+        for i in spineRootList:        
+            tempSpineList = cmds.listRelatives(i,c=True,f=True)
+            try:
+                for bone in tempSpineList:
+                    slot = cmds.getAttr('%s.bone_slot'%bone)
+                    allSpineSlotList.append(slot)
+            except:
+                pass
+       # allSpineSlotList = list(reversed(allSpineSlotList))          
+       # print allSpineSlotList
         for i in regionSlotList:
             slotName = i["name"]
-            attachment = cmds.getAttr('%s.slot_attachment'%slotName)
-            width = int(cmds.getAttr( "%s.slot_width"%slotName))
-            height = int(cmds.getAttr( "%s.slot_height"%slotName))
-           # attachment = cmds.getAttr('%s.slot_attachment'%slotName)
-            slot_sequence = cmds.getAttr('%s.slot_sequence'%slotName)
-            seqAmount = int(float(cmds.getAttr('%s.slot_sequenceAmount'%slotName)))
+            spineTag = cmds.getAttr("%s.spine_tag"%slotName)
+           # print "slotName__________________________3",slotName,spineTag
+            if spineTag == "spine_slot":
+                attachment = cmds.getAttr('%s.slot_attachment'%slotName)
+                width = int(cmds.getAttr( "%s.slot_width"%slotName))
+                height = int(cmds.getAttr( "%s.slot_height"%slotName))
+               # attachment = cmds.getAttr('%s.slot_attachment'%slotName)
+                slot_sequence = cmds.getAttr('%s.slot_sequence'%slotName)
+                seqAmount = int(float(cmds.getAttr('%s.slot_sequenceAmount'%slotName)))
 
-            x = int(cmds.getAttr( "%s.translateX"%slotName))
-            y = int(cmds.getAttr( "%s.translateY"%slotName))
-            r = float(cmds.getAttr( "%s.rotateZ"%slotName))
+                x = int(cmds.getAttr( "%s.translateX"%slotName))
+                y = int(cmds.getAttr( "%s.translateY"%slotName))
+                r = float(cmds.getAttr( "%s.rotateZ"%slotName))
 
-            if slot_sequence == 1:
-                regionSlotSkinDict={}
+                if slot_sequence == 1:
+                    regionSlotSkinDict={}
 
-                for i in range(0,seqAmount):
-                    attachmentSeq = attachment.split('.')[0] 
-                    atchmentName = attachmentSeq+ '.' + str('{0:04d}'.format(i+1))
-                    regionSlotSkinDict.update({atchmentName:{"width": width,"height": height, "x":x,"y":y }})
-            else:
-           
-                regionSlotSkinDict = {attachment:{"width": width,"height": height, "x":x,"y":y }}
+                    for i in range(0,seqAmount):
+                        attachmentSeq = attachment.split('.')[0] 
+                        atchmentName = attachmentSeq+ '.' + str('{0:04d}'.format(i+1))
+                        regionSlotSkinDict.update({atchmentName:{"width": width,"height": height, "x":x,"y":y }})
+                else:
+               
+                    regionSlotSkinDict = {attachment:{"width": width,"height": height, "x":x,"y":y }}
 
-            if r == 0.0:
-                pass
-            else:
-                regionSlotSkinDict[attachment].update({"rotation":'{:.2f}'.format(r)})
-             
-            skinList["default"].update({slotName:regionSlotSkinDict})                                                                                                              
+                if r == 0.0:
+                    pass
+                else:
+                    regionSlotSkinDict[attachment].update({"rotation":'{:.2f}'.format(r)})
+                 
+                skinList["default"].update({slotName:regionSlotSkinDict})  
+            if spineTag == "spine_clipping":     
+                #print "slotName______________________4",slotName
+                attachment = cmds.getAttr('%s.clipping_attachment'%slotName)
+                vetexCount = int(cmds.getAttr('%s.clipping_vertexCount'%slotName))
+                end = str(cmds.getAttr('%s.clipping_lastSlot'%slotName))
+                verticesStringList =( str(cmds.getAttr('%s.clipping_vertexsData'%slotName))).split(',')
+                verticesList = []
+                for i in verticesStringList:
+                    if len(i) > 0:
+                        verticesList.append(float(i))
+                color = cmds.getAttr('%s.clipping_color'%slotName)
+              #  print "attachment____clip",attachment,vetexCount,verticesList,color,end
+              
+                #cmds.
+                print "allSpineSlotList________________1",allSpineSlotList
+
+                clippingMeshIndex = allSpineSlotList.index(slotName)
+                print "clippingMeshIndex________________1",clippingMeshIndex
+                if end == "":
+                    preEndIndex = clippingMeshIndex -1
+                    end = allSpineSlotList[-1]#allSpineSlotList[preEndIndex]
+                    print "clippingEnd________________________None",end
+                    clippingSlotSkinDict = {attachment:{"type": "clipping","end": end,"vertexCount": vetexCount,"vertices":verticesList,"color":str(color)}}
+                elif end == "None":
+                    preEndIndex = clippingMeshIndex -1
+                    end = allSpineSlotList[-1]#allSpineSlotList[preEndIndex]
+                    print "clippingEnd________________________None",end
+                    clippingSlotSkinDict = {attachment:{"type": "clipping","end": end,"vertexCount": vetexCount,"vertices":verticesList,"color":str(color)}}
+                else:
+                    print "clippingEnd________________________2",end
+                    clippingSlotSkinDict = {attachment:{"type": "clipping","end": end,"vertexCount": vetexCount,"vertices":verticesList,"color":str(color)}}
+               # print "clippingSlotSkinDict__________________1",clippingSlotSkinDict
+                skinList["default"].update({slotName:clippingSlotSkinDict})  
+                #clippingSlotSkinDict=
         return skinList
                 
 
@@ -2995,116 +3306,63 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #print regionSlotList
         for slot in regionSlotList:  
         
-        
-            slotName = slot#str(slot["name"])
-            boneName = str(cmds.getAttr('%s.slot_bone'%slotName))
             
-            if cmds.getAttr('%s.spine_tag'%boneName) == "spine_characterSet":
-                pass
-            elif cmds.getAttr('%s.spine_tag'%boneName) == "spine_bone":
-                attachment = cmds.getAttr('%s.slot_attachment'%slotName)
-
-                slot_sequence = cmds.getAttr('%s.slot_sequence'%slotName)
-                slotTimeLineDict.update({slotName:{"color":[]}})
-
-
-                slotColorKeyFrameList = [0.0,startFrame,endFrame] 
-               # visibilityList = []
+            slotName = slot#str(slot["name"])
+            spineTag = cmds.getAttr("%s.spine_tag"%slotName)
+            if spineTag == "spine_slot":
+                boneName = str(cmds.getAttr('%s.slot_bone'%slotName))
                 
-                
-               # print "animLayerList",animLayerList
+                if cmds.getAttr('%s.spine_tag'%boneName) == "spine_characterSet":
+                    pass
+                elif cmds.getAttr('%s.spine_tag'%boneName) == "spine_bone":
+                    attachment = cmds.getAttr('%s.slot_attachment'%slotName)
 
-                for attr in slotColorAttr:
-                    allLayerKeys = self.findKeysAllAnimLayer(boneName,attr,startFrame,endFrame) ## without baseAnimationLayer
-                    baseAnimationLayerKeys = self.findKeysBaseAnimationLayer(boneName,attr,startFrame,endFrame)
-                  #  print 'allLayerKeys',allLayerKeys,baseAnimationLayerKeys
-                    for f in allLayerKeys:
+                    slot_sequence = cmds.getAttr('%s.slot_sequence'%slotName)
+                    slotTimeLineDict.update({slotName:{"color":[]}})
 
-                        if f in slotColorKeyFrameList:
-                            pass
-                        else:
-                                                        
-                            slotColorKeyFrameList.append(f)
-                           
-                            
-                    for f in baseAnimationLayerKeys:
-                        
-   
-                        if f in slotColorKeyFrameList:
-                            pass
-                        else:
-                            slotColorKeyFrameList.append(f)
-                            
-                
-                
 
-                slotColorKeyFrameList = sorted(slotColorKeyFrameList)
-    
-                try:
-                    visibilityList = cmds.keyframe(boneName,at='visibility',q=True)
-                    visibilityList =sorted(visibilityList)
-                    visCount = len(visibilityList)
-                except:
-                    visCount = 0
-                    print "visCount",visCount
-                if visCount == 0:
-                    for i in range(0,len(slotColorKeyFrameList)) :
-                        f = slotColorKeyFrameList[i]
-                        if f == 0.0:
-
-                            color = cmds.getAttr('%s.slot_color'%boneName,t=0.0)[0]
-
-                            slotAlpha = cmds.getAttr('%s.slot_alpha'%boneName,t=0.0)
-
-                            dark = cmds.getAttr('%s.slot_dark'%boneName,t=0.0)[0]
-
-                            fade = cmds.getAttr('%s.slot_fade'%boneName,t=0.0)
-                        
+                    slotColorKeyFrameList = [0.0,startFrame,endFrame] 
+                   # visibilityList = []
                     
-                            alpha = slotAlpha * fade #* visValue
-                            alphaHex = "%02x"%int((alpha/1)*255)
-                            colorHex = "%02x"%int((color[0]/1)*255) + "%02x"%int((color[1]/1)*255) +"%02x"%int((color[2]/1)*255)
-                            darkHex = "%02x"%int((dark[0]/1)*255) + "%02x"%int((dark[1]/1)*255) +"%02x"%int((dark[2]/1)*255)
-                            exportColorHex = str(colorHex + alphaHex)
-                            exportDarkHex = str(darkHex + alphaHex)
-                            slotTimeLineDict[slotName]["color"].append({ "time": 0.0, "color":exportColorHex,"dark": exportDarkHex })
                     
-                        else:
-                           # for attr in slotColorAttr:
-                            tempSlorColordTdict = {}
-                            colorF = cmds.getAttr('%s.slot_color'%boneName,t=f)[0]
-                            slotAlphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)
-                            darkF = cmds.getAttr('%s.slot_dark'%boneName,t=f)[0]
-                            fadeF = cmds.getAttr('%s.slot_fade'%boneName,t=f)
-                                                    
-             
-                                
-                            alphaF = slotAlphaF * fadeF 
-                                
-                            colorHex = "%02x"%int((colorF[0]/1)*255) + "%02x"%int((colorF[1]/1)*255) +"%02x"%int((colorF[2]/1)*255)
-                            alphaHex = "%02x"%int((alphaF/1)*255)
-                            darkHex = "%02x"%int((darkF[0]/1)*255) + "%02x"%int((darkF[1]/1)*255) +"%02x"%int((darkF[2]/1)*255)
-                        
-                            exportColorHexF = str(colorHex + alphaHex)
-                            exportDarkHexF = str(darkHex + alphaHex)
-                        
-                            tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"color":exportColorHexF})
+                   # print "animLayerList",animLayerList
 
-                            tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"dark":exportDarkHexF})
-                            slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict)     
-                            
+                    for attr in slotColorAttr:
+                        allLayerKeys = self.findKeysAllAnimLayer(boneName,attr,startFrame,endFrame) ## without baseAnimationLayer
+                        baseAnimationLayerKeys = self.findKeysBaseAnimationLayer(boneName,attr,startFrame,endFrame)
+                      #  print 'allLayerKeys',allLayerKeys,baseAnimationLayerKeys
+                        for f in allLayerKeys:
 
-                              
-                        
-                else:
-                    print 'slotColorKeyFrameList________3',slotColorKeyFrameList
-                    for i in range(0,len(slotColorKeyFrameList)) :
-                        f = slotColorKeyFrameList[i]
+                            if f in slotColorKeyFrameList:
+                                pass
+                            else:
+                                                            
+                                slotColorKeyFrameList.append(f)
+                               
                                 
-                      # print 'fffffffffffffffffffff______3',f
-                        
-                        if f not in visibilityList:
+                        for f in baseAnimationLayerKeys:
                             
+       
+                            if f in slotColorKeyFrameList:
+                                pass
+                            else:
+                                slotColorKeyFrameList.append(f)
+                                
+                    
+                    
+
+                    slotColorKeyFrameList = sorted(slotColorKeyFrameList)
+        
+                    try:
+                        visibilityList = cmds.keyframe(boneName,at='visibility',q=True)
+                        visibilityList =sorted(visibilityList)
+                        visCount = len(visibilityList)
+                    except:
+                        visCount = 0
+                        print "visCount",visCount
+                    if visCount == 0:
+                        for i in range(0,len(slotColorKeyFrameList)) :
+                            f = slotColorKeyFrameList[i]
                             if f == 0.0:
 
                                 color = cmds.getAttr('%s.slot_color'%boneName,t=0.0)[0]
@@ -3124,160 +3382,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                                 exportDarkHex = str(darkHex + alphaHex)
                                 slotTimeLineDict[slotName]["color"].append({ "time": 0.0, "color":exportColorHex,"dark": exportDarkHex })
                         
-                            elif f == 1.0:
-                                colorF = cmds.getAttr('%s.slot_color'%boneName,t=1)[0]
-
-
-                                darkF = cmds.getAttr('%s.slot_dark'%boneName,t=1)[0]
-
-                                #fade = cmds.getAttr('%s.slot_fade'%boneName,t=1)
-                                VisF = cmds.getAttr('%s.visibility'%boneName,t=1)
-                                colorHexF = "%02x"%int((colorF[0]/1)*255) + "%02x"%int((colorF[1]/1)*255) +"%02x"%int((colorF[2]/1)*255)
-                                darkHexF = "%02x"%int((darkF[0]/1)*255) + "%02x"%int((darkF[1]/1)*255) +"%02x"%int((darkF[2]/1)*255)
-
-                                if VisF == True:
-                                    visFValue = 1.0
-                                    
-                                elif VisF == False:
-                                    visFValue = 0.0        
-                               # slotAlphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)
-                               # fadeF = cmds.getAttr('%s.slot_fade'%boneName,t=f)
-                                                                                                  
-                               # alphaF = slotAlphaF * fadeF * visFValue
-                                alphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)*cmds.getAttr('%s.slot_fade'%boneName,t=f)*visFValue
-
-                                alphaFHex = "%02x"%int((alphaF/1)*255)  
-                                exportColorHexF = str(colorHexF + alphaFHex) 
-                                exportDarkHexF = str(darkHexF + alphaFHex)
-
-                                tempSlorColordTdict = {}   
-                                     
-                                tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(1.0)/fps)),"color":exportColorHexF})
-                                tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(1.0)/fps)),"dark":exportDarkHexF})
-                                slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict) 
-                                
                             else:
                                # for attr in slotColorAttr:
-                               #indexOfVislist = visibilityList.index(f)
-                               #fv = visibilityList[0] nearStFvList
-                                if f < visibilityList[0]:
-                                    colorF = cmds.getAttr('%s.slot_color'%boneName,t=f)[0]
-
-
-                                    darkF = cmds.getAttr('%s.slot_dark'%boneName,t=f)[0]
-
-                                    #fade = cmds.getAttr('%s.slot_fade'%boneName,t=1)
-                                    VisF = cmds.getAttr('%s.visibility'%boneName,t=visibilityList[0])
-                                    if VisF == True:
-                                        visFValue = 1.0
-                                        
-                                    elif VisF == False:
-                                        visFValue = 0.0  
-                                           
-                                    colorHexF = "%02x"%int((colorF[0]/1)*255) + "%02x"%int((colorF[1]/1)*255) +"%02x"%int((colorF[2]/1)*255)
-                                    darkHexF = "%02x"%int((darkF[0]/1)*255) + "%02x"%int((darkF[1]/1)*255) +"%02x"%int((darkF[2]/1)*255)
-                                    alphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)*cmds.getAttr('%s.slot_fade'%boneName,t=f)*visFValue
-                                    alphaFHex = "%02x"%int((alphaF/1)*255)  
-                                    exportColorHexF = str(colorHexF + alphaFHex) 
-                                    exportDarkHexF = str(darkHexF + alphaFHex)
-
-                                    tempSlorColordTdict = {}   
-                                         
-                                    tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"color":exportColorHexF})
-                                    tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"dark":exportDarkHexF})
-                                    slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict) 
-                                    
-                                    
-                                elif f > visibilityList[0] and f < visibilityList[-1]:
-                                    #print 'ffffffffffffffffffffff____1212',f
-                                    
-                                    tempFVList = {}
-                                    for fv in visibilityList:
-                                        print 'fv',fv,f
-                                        indexOfVislist = visibilityList.index(fv)
-                                        print 'indexOfVislist',indexOfVislist
-                                        if f < fv:
-                                            tempFVList.update({str(fv-f):indexOfVislist})
-                                    print 'tempFVList',tempFVList
-                                    tempNearstFVKeyList = tempFVList.keys()
-                                    nearStFvKeyList = []
-                                    for k in tempNearstFVKeyList:
-                                        if float(k) in nearStFvKeyList:
-                                            pass
-                                        else:
-                                            nearStFvKeyList.append(float(k))
-                                    
-                                    nearStFvKeyList = sorted(nearStFvKeyList)
-                                    print ';nearStFvKeyList',nearStFvKeyList
-                                    nearstFvKey = str(nearStFvKeyList[0])
-                                    tempNearstFV =   tempFVList[nearstFvKey]  
-                                    nearstFV = visibilityList[tempNearstFV-1]  
-                                    print  'tempNearstFV_______________________'  ,f,nearstFV
-                                    
-                                    colorF = cmds.getAttr('%s.slot_color'%boneName,t=f)[0]
-
-
-                                    darkF = cmds.getAttr('%s.slot_dark'%boneName,t=f)[0]
-
-                                    #fade = cmds.getAttr('%s.slot_fade'%boneName,t=1)
-                                    VisF = cmds.getAttr('%s.visibility'%boneName,t=nearstFV)
-                                    if VisF == True:
-                                        visFValue = 1.0
-                                        
-                                    elif VisF == False:
-                                        visFValue = 0.0  
-                                           
-                                    colorHexF = "%02x"%int((colorF[0]/1)*255) + "%02x"%int((colorF[1]/1)*255) +"%02x"%int((colorF[2]/1)*255)
-                                    darkHexF = "%02x"%int((darkF[0]/1)*255) + "%02x"%int((darkF[1]/1)*255) +"%02x"%int((darkF[2]/1)*255)
-                                    alphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)*cmds.getAttr('%s.slot_fade'%boneName,t=f)*visFValue
-                                    alphaFHex = "%02x"%int((alphaF/1)*255)  
-                                    exportColorHexF = str(colorHexF + alphaFHex) 
-                                    exportDarkHexF = str(darkHexF + alphaFHex)
-
-                                    tempSlorColordTdict = {}   
-                                         
-                                    tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"color":exportColorHexF})
-                                    tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"dark":exportDarkHexF})
-                                    slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict) 
-                                    
-                                    
-                                    
-                                    
-                                    
-                                    
-                                    
-                                    
-                                elif f > visibilityList[-1]:
-                                    colorF = cmds.getAttr('%s.slot_color'%boneName,t=f)[0]
-
-
-                                    darkF = cmds.getAttr('%s.slot_dark'%boneName,t=f)[0]
-
-                                    #fade = cmds.getAttr('%s.slot_fade'%boneName,t=1)
-                                    VisF = cmds.getAttr('%s.visibility'%boneName,t=visibilityList[-1])
-                                    if VisF == True:
-                                        visFValue = 1.0
-                                        
-                                    elif VisF == False:
-                                        visFValue = 0.0  
-                                           
-                                    colorHexF = "%02x"%int((colorF[0]/1)*255) + "%02x"%int((colorF[1]/1)*255) +"%02x"%int((colorF[2]/1)*255)
-                                    darkHexF = "%02x"%int((darkF[0]/1)*255) + "%02x"%int((darkF[1]/1)*255) +"%02x"%int((darkF[2]/1)*255)
-                                    alphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)*cmds.getAttr('%s.slot_fade'%boneName,t=f)*visFValue
-                                    alphaFHex = "%02x"%int((alphaF/1)*255)  
-                                    exportColorHexF = str(colorHexF + alphaFHex) 
-                                    exportDarkHexF = str(darkHexF + alphaFHex)
-
-                                    tempSlorColordTdict = {}   
-                                         
-                                    tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"color":exportColorHexF})
-                                    tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"dark":exportDarkHexF})
-                                    slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict) 
-                                    
-                                    
-                                
-                                
-                                '''
                                 tempSlorColordTdict = {}
                                 colorF = cmds.getAttr('%s.slot_color'%boneName,t=f)[0]
                                 slotAlphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)
@@ -3299,27 +3405,291 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
                                 tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"dark":exportDarkHexF})
                                 slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict)     
-                                '''
-                        
-                        elif f in visibilityList:
-                
-                            indexOfVislist = visibilityList.index(f)
-                       
-                            print 'visibilityList_____________1',f,indexOfVislist
+                                
 
-                            if indexOfVislist == 0:
-                                if f ==1 :
-                                    pass
+                                  
+                            
+                    else:
+                        print 'slotColorKeyFrameList________3',slotColorKeyFrameList
+                        for i in range(0,len(slotColorKeyFrameList)) :
+                            f = slotColorKeyFrameList[i]
+                                    
+                          # print 'fffffffffffffffffffff______3',f
+                            
+                            if f not in visibilityList:
+                                
+                                if f == 0.0:
+
+                                    color = cmds.getAttr('%s.slot_color'%boneName,t=0.0)[0]
+
+                                    slotAlpha = cmds.getAttr('%s.slot_alpha'%boneName,t=0.0)
+
+                                    dark = cmds.getAttr('%s.slot_dark'%boneName,t=0.0)[0]
+
+                                    fade = cmds.getAttr('%s.slot_fade'%boneName,t=0.0)
+                                
+                            
+                                    alpha = slotAlpha * fade #* visValue
+                                    alphaHex = "%02x"%int((alpha/1)*255)
+                                    colorHex = "%02x"%int((color[0]/1)*255) + "%02x"%int((color[1]/1)*255) +"%02x"%int((color[2]/1)*255)
+                                    darkHex = "%02x"%int((dark[0]/1)*255) + "%02x"%int((dark[1]/1)*255) +"%02x"%int((dark[2]/1)*255)
+                                    exportColorHex = str(colorHex + alphaHex)
+                                    exportDarkHex = str(darkHex + alphaHex)
+                                    slotTimeLineDict[slotName]["color"].append({ "time": 0.0, "color":exportColorHex,"dark": exportDarkHex })
+                            
+                                elif f == 1.0:
+                                    colorF = cmds.getAttr('%s.slot_color'%boneName,t=1)[0]
+
+
+                                    darkF = cmds.getAttr('%s.slot_dark'%boneName,t=1)[0]
+
+                                    #fade = cmds.getAttr('%s.slot_fade'%boneName,t=1)
+                                    VisF = cmds.getAttr('%s.visibility'%boneName,t=1)
+                                    colorHexF = "%02x"%int((colorF[0]/1)*255) + "%02x"%int((colorF[1]/1)*255) +"%02x"%int((colorF[2]/1)*255)
+                                    darkHexF = "%02x"%int((darkF[0]/1)*255) + "%02x"%int((darkF[1]/1)*255) +"%02x"%int((darkF[2]/1)*255)
+
+                                    if VisF == True:
+                                        visFValue = 1.0
+                                        
+                                    elif VisF == False:
+                                        visFValue = 0.0        
+                                   # slotAlphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)
+                                   # fadeF = cmds.getAttr('%s.slot_fade'%boneName,t=f)
+                                                                                                      
+                                   # alphaF = slotAlphaF * fadeF * visFValue
+                                    alphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)*cmds.getAttr('%s.slot_fade'%boneName,t=f)*visFValue
+
+                                    alphaFHex = "%02x"%int((alphaF/1)*255)  
+                                    exportColorHexF = str(colorHexF + alphaFHex) 
+                                    exportDarkHexF = str(darkHexF + alphaFHex)
+
+                                    tempSlorColordTdict = {}   
+                                         
+                                    tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(1.0)/fps)),"color":exportColorHexF})
+                                    tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(1.0)/fps)),"dark":exportDarkHexF})
+                                    slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict) 
+                                    
                                 else:
-                                    pf = f-0.01
-                                    pff = 1
+                                   # for attr in slotColorAttr:
+                                   #indexOfVislist = visibilityList.index(f)
+                                   #fv = visibilityList[0] nearStFvList
+                                    if f < visibilityList[0]:
+                                        colorF = cmds.getAttr('%s.slot_color'%boneName,t=f)[0]
+
+
+                                        darkF = cmds.getAttr('%s.slot_dark'%boneName,t=f)[0]
+
+                                        #fade = cmds.getAttr('%s.slot_fade'%boneName,t=1)
+                                        VisF = cmds.getAttr('%s.visibility'%boneName,t=visibilityList[0])
+                                        if VisF == True:
+                                            visFValue = 1.0
+                                            
+                                        elif VisF == False:
+                                            visFValue = 0.0  
+                                               
+                                        colorHexF = "%02x"%int((colorF[0]/1)*255) + "%02x"%int((colorF[1]/1)*255) +"%02x"%int((colorF[2]/1)*255)
+                                        darkHexF = "%02x"%int((darkF[0]/1)*255) + "%02x"%int((darkF[1]/1)*255) +"%02x"%int((darkF[2]/1)*255)
+                                        alphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)*cmds.getAttr('%s.slot_fade'%boneName,t=f)*visFValue
+                                        alphaFHex = "%02x"%int((alphaF/1)*255)  
+                                        exportColorHexF = str(colorHexF + alphaFHex) 
+                                        exportDarkHexF = str(darkHexF + alphaFHex)
+
+                                        tempSlorColordTdict = {}   
+                                             
+                                        tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"color":exportColorHexF})
+                                        tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"dark":exportDarkHexF})
+                                        slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict) 
+                                        
+                                        
+                                    elif f > visibilityList[0] and f < visibilityList[-1]:
+                                        #print 'ffffffffffffffffffffff____1212',f
+                                        
+                                        tempFVList = {}
+                                        for fv in visibilityList:
+                                            print 'fv',fv,f
+                                            indexOfVislist = visibilityList.index(fv)
+                                            print 'indexOfVislist',indexOfVislist
+                                            if f < fv:
+                                                tempFVList.update({str(fv-f):indexOfVislist})
+                                        print 'tempFVList',tempFVList
+                                        tempNearstFVKeyList = tempFVList.keys()
+                                        nearStFvKeyList = []
+                                        for k in tempNearstFVKeyList:
+                                            if float(k) in nearStFvKeyList:
+                                                pass
+                                            else:
+                                                nearStFvKeyList.append(float(k))
+                                        
+                                        nearStFvKeyList = sorted(nearStFvKeyList)
+                                        print ';nearStFvKeyList',nearStFvKeyList
+                                        nearstFvKey = str(nearStFvKeyList[0])
+                                        tempNearstFV =   tempFVList[nearstFvKey]  
+                                        nearstFV = visibilityList[tempNearstFV-1]  
+                                        print  'tempNearstFV_______________________'  ,f,nearstFV
+                                        
+                                        colorF = cmds.getAttr('%s.slot_color'%boneName,t=f)[0]
+
+
+                                        darkF = cmds.getAttr('%s.slot_dark'%boneName,t=f)[0]
+
+                                        #fade = cmds.getAttr('%s.slot_fade'%boneName,t=1)
+                                        VisF = cmds.getAttr('%s.visibility'%boneName,t=nearstFV)
+                                        if VisF == True:
+                                            visFValue = 1.0
+                                            
+                                        elif VisF == False:
+                                            visFValue = 0.0  
+                                               
+                                        colorHexF = "%02x"%int((colorF[0]/1)*255) + "%02x"%int((colorF[1]/1)*255) +"%02x"%int((colorF[2]/1)*255)
+                                        darkHexF = "%02x"%int((darkF[0]/1)*255) + "%02x"%int((darkF[1]/1)*255) +"%02x"%int((darkF[2]/1)*255)
+                                        alphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)*cmds.getAttr('%s.slot_fade'%boneName,t=f)*visFValue
+                                        alphaFHex = "%02x"%int((alphaF/1)*255)  
+                                        exportColorHexF = str(colorHexF + alphaFHex) 
+                                        exportDarkHexF = str(darkHexF + alphaFHex)
+
+                                        tempSlorColordTdict = {}   
+                                             
+                                        tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"color":exportColorHexF})
+                                        tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"dark":exportDarkHexF})
+                                        slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict) 
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    elif f > visibilityList[-1]:
+                                        colorF = cmds.getAttr('%s.slot_color'%boneName,t=f)[0]
+
+
+                                        darkF = cmds.getAttr('%s.slot_dark'%boneName,t=f)[0]
+
+                                        #fade = cmds.getAttr('%s.slot_fade'%boneName,t=1)
+                                        VisF = cmds.getAttr('%s.visibility'%boneName,t=visibilityList[-1])
+                                        if VisF == True:
+                                            visFValue = 1.0
+                                            
+                                        elif VisF == False:
+                                            visFValue = 0.0  
+                                               
+                                        colorHexF = "%02x"%int((colorF[0]/1)*255) + "%02x"%int((colorF[1]/1)*255) +"%02x"%int((colorF[2]/1)*255)
+                                        darkHexF = "%02x"%int((darkF[0]/1)*255) + "%02x"%int((darkF[1]/1)*255) +"%02x"%int((darkF[2]/1)*255)
+                                        alphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)*cmds.getAttr('%s.slot_fade'%boneName,t=f)*visFValue
+                                        alphaFHex = "%02x"%int((alphaF/1)*255)  
+                                        exportColorHexF = str(colorHexF + alphaFHex) 
+                                        exportDarkHexF = str(darkHexF + alphaFHex)
+
+                                        tempSlorColordTdict = {}   
+                                             
+                                        tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"color":exportColorHexF})
+                                        tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"dark":exportDarkHexF})
+                                        slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict) 
+                                        
+                                        
+                                    
+                                    
+                                    '''
+                                    tempSlorColordTdict = {}
+                                    colorF = cmds.getAttr('%s.slot_color'%boneName,t=f)[0]
+                                    slotAlphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)
+                                    darkF = cmds.getAttr('%s.slot_dark'%boneName,t=f)[0]
+                                    fadeF = cmds.getAttr('%s.slot_fade'%boneName,t=f)
+                                                            
+                     
+                                        
+                                    alphaF = slotAlphaF * fadeF 
+                                        
+                                    colorHex = "%02x"%int((colorF[0]/1)*255) + "%02x"%int((colorF[1]/1)*255) +"%02x"%int((colorF[2]/1)*255)
+                                    alphaHex = "%02x"%int((alphaF/1)*255)
+                                    darkHex = "%02x"%int((darkF[0]/1)*255) + "%02x"%int((darkF[1]/1)*255) +"%02x"%int((darkF[2]/1)*255)
+                                
+                                    exportColorHexF = str(colorHex + alphaHex)
+                                    exportDarkHexF = str(darkHex + alphaHex)
+                                
+                                    tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"color":exportColorHexF})
+
+                                    tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"dark":exportDarkHexF})
+                                    slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict)     
+                                    '''
+                            
+                            elif f in visibilityList:
+                    
+                                indexOfVislist = visibilityList.index(f)
+                           
+                                print 'visibilityList_____________1',f,indexOfVislist
+
+                                if indexOfVislist == 0:
+                                    if f ==1 :
+                                        pass
+                                    else:
+                                        pf = f-0.01
+                                        pff = 1
+                                        colorPF = cmds.getAttr('%s.slot_color'%boneName,t=pff)[0]
+
+
+                                        darkPF = cmds.getAttr('%s.slot_dark'%boneName,t=pff)[0]
+
+                                        #fade = cmds.getAttr('%s.slot_fade'%boneName,t=1)
+                                        VisPF = cmds.getAttr('%s.visibility'%boneName,t=pff)
+                                        colorHexPF = "%02x"%int((colorPF[0]/1)*255) + "%02x"%int((colorPF[1]/1)*255) +"%02x"%int((colorPF[2]/1)*255)
+                                        darkHexPF = "%02x"%int((darkPF[0]/1)*255) + "%02x"%int((darkPF[1]/1)*255) +"%02x"%int((darkPF[2]/1)*255)
+
+                                        if VisPF == True:
+                                            visPFValue = 1.0
+                                            
+                                        elif VisPF == False:
+                                            visPFValue = 0.0   
+                                 
+
+                                        alphaPF = float(cmds.getAttr('%s.slot_alpha'%boneName,t=pf)) *float(cmds.getAttr('%s.slot_fade'%boneName,t=pf))*visPFValue
+                                        alphaHexPF = "%02x"%int((alphaPF/1)*255)  
+                                        exportColorHexPF = str(colorHexPF + alphaHexPF) 
+                                        exportDarkHexPF = str(darkHexPF + alphaHexPF)
+
+                                        tempSlorColordTdict = {}   
+                                             
+                                      # tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(pff)/fps)),"color":exportColorHexPF})
+                                      # tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(pff)/fps)),"dark":exportDarkHexPF})
+                                      # slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict) 
+                                        
+                                        colorF = cmds.getAttr('%s.slot_color'%boneName,t=f)[0]
+
+
+                                        darkF = cmds.getAttr('%s.slot_dark'%boneName,t=f)[0]
+                                        VisF = cmds.getAttr('%s.visibility'%boneName,t=f)
+                                        colorHexF = "%02x"%int((colorF[0]/1)*255) + "%02x"%int((colorF[1]/1)*255) +"%02x"%int((colorF[2]/1)*255)
+                                        darkHexF = "%02x"%int((darkF[0]/1)*255) + "%02x"%int((darkF[1]/1)*255) +"%02x"%int((darkF[2]/1)*255)
+
+                                        if VisF == True:
+                                            visFValue = 1.0
+                                            
+                                        elif VisF == False:
+                                            visFValue = 0.0                                                                  
+                                        alphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f) *cmds.getAttr('%s.slot_fade'%boneName,t=f)*visFValue
+                                        
+                                        alphaFHex = "%02x"%int((alphaF/1)*255)  
+                                        exportColorHexF = str(colorHexF + alphaFHex) 
+                                        exportDarkHexF = str(darkHexF + alphaFHex)
+
+                                        tempSlorColordTdict = {}   
+                                             
+                                        tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"color":exportColorHexF})
+                                        tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"dark":exportDarkHexF})
+                                        slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict) 
+                                
+                            
+                                else:     
+                                    pf = visibilityList[indexOfVislist-1]    
+                                    pff = f-0.01
                                     colorPF = cmds.getAttr('%s.slot_color'%boneName,t=pff)[0]
 
 
                                     darkPF = cmds.getAttr('%s.slot_dark'%boneName,t=pff)[0]
 
-                                    #fade = cmds.getAttr('%s.slot_fade'%boneName,t=1)
-                                    VisPF = cmds.getAttr('%s.visibility'%boneName,t=pff)
+                                        #fade = cmds.getAttr('%s.slot_fade'%boneName,t=1)
+                                    VisPF = cmds.getAttr('%s.visibility'%boneName,t=pf)
                                     colorHexPF = "%02x"%int((colorPF[0]/1)*255) + "%02x"%int((colorPF[1]/1)*255) +"%02x"%int((colorPF[2]/1)*255)
                                     darkHexPF = "%02x"%int((darkPF[0]/1)*255) + "%02x"%int((darkPF[1]/1)*255) +"%02x"%int((darkPF[2]/1)*255)
 
@@ -3330,155 +3700,100 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                                         visPFValue = 0.0   
                              
 
-                                    alphaPF = float(cmds.getAttr('%s.slot_alpha'%boneName,t=pf)) *float(cmds.getAttr('%s.slot_fade'%boneName,t=pf))*visPFValue
+                                    alphaPF = float(cmds.getAttr('%s.slot_alpha'%boneName,t=pff)) *float(cmds.getAttr('%s.slot_fade'%boneName,t=pff))*visPFValue
                                     alphaHexPF = "%02x"%int((alphaPF/1)*255)  
                                     exportColorHexPF = str(colorHexPF + alphaHexPF) 
                                     exportDarkHexPF = str(darkHexPF + alphaHexPF)
 
                                     tempSlorColordTdict = {}   
-                                         
-                                  # tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(pff)/fps)),"color":exportColorHexPF})
-                                  # tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(pff)/fps)),"dark":exportDarkHexPF})
-                                  # slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict) 
+                                             
+                                    tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(pff)/fps)),"color":exportColorHexPF})
+                                    tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(pff)/fps)),"dark":exportDarkHexPF})
+                                    slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict) 
                                     
+                                    
+                                      
+                                          
+                                    tempSlorColordTdict = {}
                                     colorF = cmds.getAttr('%s.slot_color'%boneName,t=f)[0]
-
-
+                                    slotAlphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)
                                     darkF = cmds.getAttr('%s.slot_dark'%boneName,t=f)[0]
+                                    fadeF = cmds.getAttr('%s.slot_fade'%boneName,t=f)
+                                                            
                                     VisF = cmds.getAttr('%s.visibility'%boneName,t=f)
-                                    colorHexF = "%02x"%int((colorF[0]/1)*255) + "%02x"%int((colorF[1]/1)*255) +"%02x"%int((colorF[2]/1)*255)
-                                    darkHexF = "%02x"%int((darkF[0]/1)*255) + "%02x"%int((darkF[1]/1)*255) +"%02x"%int((darkF[2]/1)*255)
 
                                     if VisF == True:
                                         visFValue = 1.0
                                         
                                     elif VisF == False:
-                                        visFValue = 0.0                                                                  
-                                    alphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f) *cmds.getAttr('%s.slot_fade'%boneName,t=f)*visFValue
-                                    
-                                    alphaFHex = "%02x"%int((alphaF/1)*255)  
-                                    exportColorHexF = str(colorHexF + alphaFHex) 
-                                    exportDarkHexF = str(darkHexF + alphaFHex)
-
-                                    tempSlorColordTdict = {}   
+                                        visFValue = 0.0   
+                             
                                          
+                                    alphaF = slotAlphaF * fadeF * visFValue
+                                        
+                                    colorHex = "%02x"%int((colorF[0]/1)*255) + "%02x"%int((colorF[1]/1)*255) +"%02x"%int((colorF[2]/1)*255)
+                                    alphaHex = "%02x"%int((alphaF/1)*255)
+                                    darkHex = "%02x"%int((darkF[0]/1)*255) + "%02x"%int((darkF[1]/1)*255) +"%02x"%int((darkF[2]/1)*255)
+                                
+                                    exportColorHexF = str(colorHex + alphaHex)
+                                    exportDarkHexF = str(darkHex + alphaHex)
+                                
                                     tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"color":exportColorHexF})
+
                                     tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"dark":exportDarkHexF})
-                                    slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict) 
-                            
-                        
-                            else:     
-                                pf = visibilityList[indexOfVislist-1]    
-                                pff = f-0.01
-                                colorPF = cmds.getAttr('%s.slot_color'%boneName,t=pff)[0]
-
-
-                                darkPF = cmds.getAttr('%s.slot_dark'%boneName,t=pff)[0]
-
-                                    #fade = cmds.getAttr('%s.slot_fade'%boneName,t=1)
-                                VisPF = cmds.getAttr('%s.visibility'%boneName,t=pf)
-                                colorHexPF = "%02x"%int((colorPF[0]/1)*255) + "%02x"%int((colorPF[1]/1)*255) +"%02x"%int((colorPF[2]/1)*255)
-                                darkHexPF = "%02x"%int((darkPF[0]/1)*255) + "%02x"%int((darkPF[1]/1)*255) +"%02x"%int((darkPF[2]/1)*255)
-
-                                if VisPF == True:
-                                    visPFValue = 1.0
+                                    slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict)   
                                     
-                                elif VisPF == False:
-                                    visPFValue = 0.0   
-                         
-
-                                alphaPF = float(cmds.getAttr('%s.slot_alpha'%boneName,t=pff)) *float(cmds.getAttr('%s.slot_fade'%boneName,t=pff))*visPFValue
-                                alphaHexPF = "%02x"%int((alphaPF/1)*255)  
-                                exportColorHexPF = str(colorHexPF + alphaHexPF) 
-                                exportDarkHexPF = str(darkHexPF + alphaHexPF)
-
-                                tempSlorColordTdict = {}   
-                                         
-                                tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(pff)/fps)),"color":exportColorHexPF})
-                                tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(pff)/fps)),"dark":exportDarkHexPF})
-                                slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict) 
-                                
-                                
-                                  
                                       
-                                tempSlorColordTdict = {}
-                                colorF = cmds.getAttr('%s.slot_color'%boneName,t=f)[0]
-                                slotAlphaF = cmds.getAttr('%s.slot_alpha'%boneName,t=f)
-                                darkF = cmds.getAttr('%s.slot_dark'%boneName,t=f)[0]
-                                fadeF = cmds.getAttr('%s.slot_fade'%boneName,t=f)
-                                                        
-                                VisF = cmds.getAttr('%s.visibility'%boneName,t=f)
-
-                                if VisF == True:
-                                    visFValue = 1.0
-                                    
-                                elif VisF == False:
-                                    visFValue = 0.0   
-                         
-                                     
-                                alphaF = slotAlphaF * fadeF * visFValue
-                                    
-                                colorHex = "%02x"%int((colorF[0]/1)*255) + "%02x"%int((colorF[1]/1)*255) +"%02x"%int((colorF[2]/1)*255)
-                                alphaHex = "%02x"%int((alphaF/1)*255)
-                                darkHex = "%02x"%int((darkF[0]/1)*255) + "%02x"%int((darkF[1]/1)*255) +"%02x"%int((darkF[2]/1)*255)
+                                          
+                           
                             
-                                exportColorHexF = str(colorHex + alphaHex)
-                                exportDarkHexF = str(darkHex + alphaHex)
+                    if slot_sequence == 1:
+                        #slotTimeLineDict.update({slotName:{"color":[],"attachment":[]}})
+                        slotTimeLineDict[slotName].update({"attachment":[]})
+                        print "frequenceImageMode"
+                        seqAmount = int(float(cmds.getAttr('%s.slot_sequenceAmount'%slotName)))
+                        seqSpeed = float(cmds.getAttr('%s.slot_sequenceSpeed'%slotName))
+                       # keyframeList = [] slot_frequenceCheck
+                        randomCheck = cmds.getAttr('%s.slot_sequence_random'%slotName)
+                        if randomCheck == 0:
+                            fileNumCount = 1
+                        else:
+                            fileNumCount = random.randint(0,seqAmount)
+                        f = startFrame
+                        attachmentSeq = attachment.split('.')[0]
+                        #fileNumCount = 1
+                        while f < endFrame:
+                           # print f,type(f)
+                            if seqSpeed <= 1.0:  ###low speed f= 0,5,10,15; fileNum= 0,1,2,3,4,5...seqAmount
                             
-                                tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"color":exportColorHexF})
-
-                                tempSlorColordTdict.update({"time":float('{:.4f}'.format(float(f)/fps)),"dark":exportDarkHexF})
-                                slotTimeLineDict[slotName]["color"].append(tempSlorColordTdict)   
-                                
-                                  
-                                      
-                       
-                        
-                if slot_sequence == 1:
-                    #slotTimeLineDict.update({slotName:{"color":[],"attachment":[]}})
-                    slotTimeLineDict[slotName].update({"attachment":[]})
-                    print "frequenceImageMode"
-                    seqAmount = int(float(cmds.getAttr('%s.slot_sequenceAmount'%slotName)))
-                    seqSpeed = float(cmds.getAttr('%s.slot_sequenceSpeed'%slotName))
-                   # keyframeList = [] slot_frequenceCheck
-                    randomCheck = cmds.getAttr('%s.slot_sequence_random'%slotName)
-                    if randomCheck == 0:
-                        fileNumCount = 1
-                    else:
-                        fileNumCount = random.randint(0,seqAmount)
-                    f = startFrame
-                    attachmentSeq = attachment.split('.')[0]
-                    #fileNumCount = 1
-                    while f < endFrame:
-                       # print f,type(f)
-                        if seqSpeed <= 1.0:  ###low speed f= 0,5,10,15; fileNum= 0,1,2,3,4,5...seqAmount
-                        
-                            fSpace = int(1.0/seqSpeed)
-                            atchmentName = attachmentSeq+ '.' + str('{0:04d}'.format(int(fileNumCount)))
-                            slotTimeLineDict[slotName]["attachment"].append({"time":float('{:.3f}'.format(float(f)/fps)),"name":str(atchmentName)})
-       
-                            f = f+fSpace
-                            fileNumCount = (fileNumCount )%seqAmount +1
-                        else:  ##highSpeed, f = 0,1,2,3,4,5,.....endFrame ;fileNum 1,5,9,13.....
-                            atchmentName = attachmentSeq+ '.' + str('{0:04d}'.format(int(fileNumCount)))
-                            slotTimeLineDict[slotName]["attachment"].append({"time":float('{:.3f}'.format(float(f)/fps)),"name":str(atchmentName)}) 
-                            f= f+1
-                            fileNumCount = (fileNumCount + seqSpeed)%seqAmount
-        
+                                fSpace = int(1.0/seqSpeed)
+                                atchmentName = attachmentSeq+ '.' + str('{0:04d}'.format(int(fileNumCount)))
+                                slotTimeLineDict[slotName]["attachment"].append({"time":float('{:.3f}'.format(float(f)/fps)),"name":str(atchmentName)})
+           
+                                f = f+fSpace
+                                fileNumCount = (fileNumCount )%seqAmount +1
+                            else:  ##highSpeed, f = 0,1,2,3,4,5,.....endFrame ;fileNum 1,5,9,13.....
+                                atchmentName = attachmentSeq+ '.' + str('{0:04d}'.format(int(fileNumCount)))
+                                slotTimeLineDict[slotName]["attachment"].append({"time":float('{:.3f}'.format(float(f)/fps)),"name":str(atchmentName)}) 
+                                f= f+1
+                                fileNumCount = (fileNumCount + seqSpeed)%seqAmount
             
+                
                 
         for slot in slotNotInAnimLayer:
             slotName = slot#str(slot["name"])
-            boneName = str(cmds.getAttr('%s.slot_bone'%slotName))
-            
-           # if cmds.getAttr('%s.spine_tag'%boneName) == "spine_characterSet":
-            tempSlorColordTdict = {slotName:{"color": [{'color': 'ffffff00', 'dark': '000000ff', 'time': 0.0}]}}
+            spineTag = cmds.getAttr("%s.spine_tag"%slotName)
+            if spineTag == "spine_slot":
+                boneName = str(cmds.getAttr('%s.slot_bone'%slotName))
                 
-               # pass
-          #  elif cmds.getAttr('%s.spine_tag'%boneName) == "spine_bone":
-               # tempSlorColordTdict = {slotName:{"color": [{'color': 'ffffff00', 'dark': '000000ff', 'time': 0.0}]}}
-            slotTimeLineDict.update(tempSlorColordTdict)
-        
+               # if cmds.getAttr('%s.spine_tag'%boneName) == "spine_characterSet":
+                tempSlorColordTdict = {slotName:{"color": [{'color': 'ffffff00', 'dark': '000000ff', 'time': 0.0}]}}
+                    
+                   # pass
+              #  elif cmds.getAttr('%s.spine_tag'%boneName) == "spine_bone":
+                   # tempSlorColordTdict = {slotName:{"color": [{'color': 'ffffff00', 'dark': '000000ff', 'time': 0.0}]}}
+                slotTimeLineDict.update(tempSlorColordTdict)
+            
         return slotTimeLineDict                                           
     
 
@@ -3524,7 +3839,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         return keyframeList
 
     def findKeysBaseAnimationLayer(self,obj,attr,startFrame,endFrame):  
-        print "findKeysBaseAnimationLayer"
+      #  print "findKeysBaseAnimationLayer"
       #  print 'obj,attr,startFrame,endFrame',obj,attr,startFrame,endFrame,type(obj),type(attr),type(startFrame),type(endFrame)
         try:
             animLayerList = cmds.ls(type ="animLayer")
@@ -3585,8 +3900,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def defineBoneAnimation(self,boneInAnimLayer,boneNotInAnimLayer,animLayerName):
         print "defineBoneAnimation",animLayerName
-        print "boneInAnimLayer",boneInAnimLayer
-        print "boneNotInAnimLayer",boneNotInAnimLayer
+       # print "boneInAnimLayer",boneInAnimLayer
+       # print "boneNotInAnimLayer",boneNotInAnimLayer
         animLayerList = cmds.ls(type ="animLayer")
               
         for j in animLayerList:
@@ -3631,7 +3946,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                       #  pass
                             
                 boneKeyFrameList = sorted(boneKeyFrameList)
-                print 'boneKeyFrameList_________5',boneKeyFrameList
+                #print 'boneKeyFrameList_________5',boneKeyFrameList
                 self.deSelectAllAnimationLayer()
                 try:              
                     cmds.animLayer( animLayerName, e=True, selected=True,l=false)    
@@ -3663,15 +3978,88 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     sy = Fsy/Osy #cmds.getAttr('%s.scaleY'%bone,t = f)
                     
                     #getTranslateTangent
-                   # tanTranslate = cmds.keyTangent(obj,t=(frame,frame),at='translateX',ott =True,q=True)[0]
-                  #  tanScale = cmds.keyTangent(obj,t=(frame,frame),at='scaleX',ott =True,q=True)[0]
-                  #  tanRotate = cmds.keyTangent(obj,t=(frame,frame),at='rotateZ',ott =True,q=True)[0]
+                    try:
+                        tanTranslate = cmds.keyTangent(bone,t=(f,f),at='translateX',ott =True,q=True)[0]
+                        #print "tanTranslate",bone,f,tanTranslate# ,tanScale,tanRotate
+                        if tanTranslate == "step":
+                            boneTimeLineDict[bone]['translate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(x))),"y":float('{:.3f}'.format(float(y))),"curve":"stepped"})    
+                        elif tanTranslate == "linear":
+                            boneTimeLineDict[bone]['translate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(x))),"y":float('{:.3f}'.format(float(y)))})
+                            
+                        elif tanTranslate == "auto":
+                            boneTimeLineDict[bone]['translate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(x))),"y":float('{:.3f}'.format(float(y)))})                            
+                        elif tanTranslate == "spline":
+                            boneTimeLineDict[bone]['translate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(x))),"y":float('{:.3f}'.format(float(y)))})                           
+                 
+                        elif tanTranslate == "flat":
+                            boneTimeLineDict[bone]['translate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(x))),"y":float('{:.3f}'.format(float(y)))})                    
+                       
+                        elif tanTranslate == "plateau":
+                            boneTimeLineDict[bone]['translate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(x))),"y":float('{:.3f}'.format(float(y)))})        
+                            
+                                                                
+                                                                          
+                    except:
+                        boneTimeLineDict[bone]['translate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(x))),"y":float('{:.3f}'.format(float(y)))})
+                        
                     
+                    try:
+                        tanRotate = cmds.keyTangent(bone,t=(f,f),at='rotateZ',ott =True,q=True)[0]
+                        
+                        if tanRotate == "step":
+                        
+                            boneTimeLineDict[bone]['rotate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"angle":float('{:.3f}'.format(float(rotate))),"curve":"stepped"})
+                        elif tanRotate == "linear":
+                            boneTimeLineDict[bone]['rotate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"angle":float('{:.3f}'.format(float(rotate)))})
+                            
+                            
+                        elif tanRotate == "auto":
+                            boneTimeLineDict[bone]['rotate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"angle":float('{:.3f}'.format(float(rotate)))})                            
+                            
+                        elif tanRotate == "spline":
+                            boneTimeLineDict[bone]['rotate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"angle":float('{:.3f}'.format(float(rotate)))})                           
+                            
+                        elif tanRotate == "flat":
+                            boneTimeLineDict[bone]['rotate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"angle":float('{:.3f}'.format(float(rotate)))})                            
+                        elif tanRotate == "plateau":
+                            boneTimeLineDict[bone]['rotate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"angle":float('{:.3f}'.format(float(rotate)))})                           
+                            
+                    except:
+                        boneTimeLineDict[bone]['rotate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"angle":float('{:.3f}'.format(float(rotate)))})
+                    
+                    try:
+                        tanScale = cmds.keyTangent(bone,t=(f,f),at='scaleX',ott =True,q=True)[0]
+                        if tanScale == "step":
+                            boneTimeLineDict[bone]['scale'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(sx))),"y":float('{:.3f}'.format(float(sy))),"curve":"stepped"})
+                        elif tanScale == "linear":
+                            boneTimeLineDict[bone]['scale'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(sx))),"y":float('{:.3f}'.format(float(sy)))})
+                            
+                        elif tanScale == "auto":
+                            boneTimeLineDict[bone]['scale'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(sx))),"y":float('{:.3f}'.format(float(sy)))})                           
+                        elif tanScale == "spline":
+                            boneTimeLineDict[bone]['scale'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(sx))),"y":float('{:.3f}'.format(float(sy)))})                           
+                        elif tanScale == "flat":
+                            boneTimeLineDict[bone]['scale'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(sx))),"y":float('{:.3f}'.format(float(sy)))})                           
+                        elif tanScale == "plateau":
+                            boneTimeLineDict[bone]['scale'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(sx))),"y":float('{:.3f}'.format(float(sy)))})                           
+                                                                                                   
+                      
+                                            
+                    except:
+                        boneTimeLineDict[bone]['scale'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(sx))),"y":float('{:.3f}'.format(float(sy)))})
+                     #  tanRotate = cmds.keyTangent(bone,t=(f,f),at='rotateZ',ott =True,q=True)[0]
+                    
+                    
+                   # except:
+                     #   pass
+                   # tanScale = cmds.keyTangent(bone,t=(f,f),at='scaleX',ott =True,q=True)[0]
+                   # tanRotate = cmds.keyTangent(bone,t=(f,f),at='rotateZ',ott =True,q=True)[0]
+                       
                   #  if tanTranslate == ""
                     
-                    boneTimeLineDict[bone]['rotate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"angle":float('{:.3f}'.format(float(rotate)))})
-                    boneTimeLineDict[bone]['translate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(x))),"y":float('{:.3f}'.format(float(y)))})
-                    boneTimeLineDict[bone]['scale'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(sx))),"y":float('{:.3f}'.format(float(sy)))})
+                   # boneTimeLineDict[bone]['rotate'].append({"time":float('{:.3f}'.format(float(f)/fps)),"angle":float('{:.3f}'.format(float(rotate)))})
+                    
+                   # boneTimeLineDict[bone]['scale'].append({"time":float('{:.3f}'.format(float(f)/fps)),"x":float('{:.3f}'.format(float(sx))),"y":float('{:.3f}'.format(float(sy)))})
                     #  print "boneTimeLineDict_______1",boneTimeLineDict
     
         for bone in boneNotInAnimLayer:
@@ -3802,19 +4190,22 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     
     def renameSelectedBone(self):
         print "renameSelectedBone"
+        currentSelBones = cmds.ls(sl=True,l=True,type="transform")
         newName = self.newNameSelectedLEdit.text()
        # print newName,self.currentSelectBone
-        fileCount = len(self.currentSelectBone)
+        #fileCount = len(self.currentSelectBone)
+        fileCount = len(currentSelBones)
+
         #try:
         for i in range(0,fileCount):
            # print #'{:04d}'.format(i)
-            newBoneName = str(newName+'_'+'{:04d}'.format(i))
-            newSlotName = str(newName+'_S_'+'{:04d}'.format(i))
-            newShapeName = str(newName+'_S_Shape_'+'{:04d}'.format(i))
-            bone = self.currentSelectBone[i]
-            childSlot = cmds.listRelatives(bone,c=True)[0]
+            newBoneName = str(newName+'_'+'{:03d}'.format(i))
+            newSlotName = str(newName+'_S_'+'{:03d}'.format(i))
+            newShapeName = str(newName+'_S_Shape_'+'{:03d}'.format(i))
+            bone = currentSelBones[i]
+            childSlot = cmds.listRelatives(bone,c=True,f=True)[0]
 
-            slot = cmds.listRelatives(bone,c=True,type ='transform')[0]
+           # slot = cmds.listRelatives(bone,c=True,type ='transform',f=True)[0]
            # shape = cmds.listRelatives(slot,c=True,type ='mesh')[0]
            # print bone,slot,shape,newBoneName,newSlotName,newShapeName
             cmds.setAttr('%s.bone_name'%bone,newBoneName,type='string')
@@ -3824,9 +4215,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             cmds.setAttr('%s.slot_bone'%childSlot,newBoneName,type='string')
                         
             
-            
-            cmds.rename('%s'%bone,'%s'%newBoneName)
-            cmds.rename('%s'%slot,'%s'%newSlotName)
+            print bone,newBoneName,childSlot,newSlotName
+            cmds.rename(childSlot,newSlotName)
+
+            cmds.rename(bone,newBoneName)
+            #obj= cmds.select(childSlot)
             
             
             #cmds.rename('%s'%shape,'%s'%newShapeName)
@@ -4360,7 +4753,10 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 else:
                     
                     print 'parentBone',parentBone
-                bone = str(self.createBone(boneName))
+               # bone = str(self.createBone(boneName))
+                bone = str(spineMainTool.createBone(boneName))
+                
+               # spineMainTool.createBone
                 cmds.setAttr('%s.bone_name'%bone,boneName,type='string')
 
                 cmds.setAttr('%s.bone_parent'%bone,parentBone,type='string')
@@ -4480,7 +4876,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def duplicateSlot(self):
         print "duplicateSlot"
         cmds.currentTime(0.0,e=True)
-        tempSourceBoneSelected = cmds.ls(sl=True) 
+        tempSourceBoneSelected = cmds.ls(sl=True,l=True) 
         sourceBoneSelected = filter(lambda x: cmds.getAttr('%s.spine_tag'%x)== 'spine_bone' ,tempSourceBoneSelected)
         
         sourceBoneCount = len(sourceBoneSelected)
@@ -4490,11 +4886,17 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         for i in range(0,sourceBoneCount):
             sourceBoneName = cmds.getAttr('%s.bone_name'%sourceBoneSelected[i])
             sourceSlotName = cmds.getAttr('%s.bone_slot'%sourceBoneSelected[i])
-            cmds.setAttr('%s.translateX'%sourceBoneName,0)
-            cmds.setAttr('%s.translateY'%sourceBoneName,0)            
-            cmds.setAttr('%s.rotateZ'%sourceBoneName,90)           
-            cmds.setAttr('%s.scaleX'%sourceBoneName,1)           
-            cmds.setAttr('%s.scaleZ'%sourceBoneName,1)           
+           # setupX_Value = cmds.getAttr('%s.translateX'%sourceBoneName,t= 0.0)
+          #  setupY_Value = cmds.getAttr('%s.translateY'%sourceBoneName,t= 0.0)
+          #  setupSX_Value = cmds.getAttr('%s.scaleX'%sourceBoneName,t= 0.0)
+           # setupSY_Value = cmds.getAttr('%s.scaleY'%sourceBoneName,t= 0.0)
+          #  setupRZ_Value = cmds.getAttr('%s.rotateZ'%sourceBoneName,t= 0.0)
+
+           # cmds.setAttr('%s.translateX'%sourceBoneName,0)
+           # cmds.setAttr('%s.translateY'%sourceBoneName,0)            
+          #  cmds.setAttr('%s.rotateZ'%sourceBoneName,90)           
+           # cmds.setAttr('%s.scaleX'%sourceBoneName,1)           
+           # cmds.setAttr('%s.scaleZ'%sourceBoneName,1)           
 
              
                                        
@@ -4512,9 +4914,11 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             except:
                 slotName = sourceBoneName +'_s_'+'{:02}'.format(newBoneCount) + '{:02}'.format(i)
             #cmds.setAttr('%s.slot_attachment'%bone,attachmentFile,type='string')
-            print 'parentBone',parentBone,'boneName',boneName,'slotName',slotName,'attachmentFile',attachmentFile 
+          #  print 'parentBone',parentBone,'boneName',boneName,'slotName',slotName,'attachmentFile',attachmentFile 
             
-            self.createBone(boneName)
+           # self.createBone(boneName)
+            spineMainTool.createBone(boneName)
+
             slotPlane = str(cmds.polyPlane(n='%s'%slotName,sx=1,sy=1)[0])
 
             cmds.setAttr('%s.bone_parent'%boneName,parentBone,type='string')
@@ -4532,12 +4936,30 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                # (slotPlane,boneName,targetDir) ,sourceDir,targetDir
             except:
                 pass
+                
+            slotX = cmds.getAttr("%s.translateX"%sourceSlotName)
+            slotY = cmds.getAttr("%s.translateY"%sourceSlotName)
+
+            #sourceSlotY_value = cmds.getAttr('%s.translateY',%sourceSlotName)
+           # sourceSlotSX_value = cmds.getAttr('%s.scaleX',%sourceSlotName)
+          #  sourceSlotSY_value = cmds.getAttr('%s.scaleY',%sourceSlotName)
+          #  sourceSlotRX_value = cmds.getAttr('%s.rotateX',%sourceSlotName)
+          #  sourceSlotRY_value = cmds.getAttr('%s.rotateY',%sourceSlotName)
+          #  sourceSlotRZ_value = cmds.getAttr('%s.rotateZ',%sourceSlotName)
+
             cmds.setAttr('%s.slot_width'%slotPlane,float(newSlotW))
             cmds.setAttr('%s.slot_height'%slotPlane,float(newSlotH))
             cmds.setAttr('%s.slot_attachment'%slotPlane,attachmentFile,type='string')
             cmds.setAttr('%s.scaleX'%slotPlane,float(newSlotW))
             cmds.setAttr('%s.scaleZ'%slotPlane,float(newSlotH))
             cmds.setAttr('%s.rotateX'%slotPlane,90)
+            cmds.setAttr('%s.translateX'%slotPlane,slotX)
+            cmds.setAttr('%s.translateY'%slotPlane,slotY)
+
+
+            
+            
+            
             
             slotPlaneShape = cmds.listRelatives(sourceSlotName,c=True,p=False)[0]
             shadingGrps = cmds.listConnections(slotPlaneShape,type='shadingEngine')[0]
@@ -4559,13 +4981,13 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print "createSlotBtn" 
         
         newBoneCreatedList = []
-        if self.drawLineCheck.isChecked() ==True:
+        if self.drawLineCheck.isChecked() ==True and self.enableDynaSlotCheck.isChecked() == True:
            # tempPointList = self.pointListLE.text().split(' ')
             tempPointList = self.pointDataInputPE.toPlainText()
             print 'tempPointList____1',tempPointList
             lineList = tempPointList.split('\n')
             lineList = filter(lambda x: len(x) > 0, lineList)
-            print 'lineList',lineList
+          #  print 'lineList',lineList
             pointList = []
             for line in lineList:
               #  print 'line',line
@@ -4575,7 +4997,7 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                         pointList .append((int(i.split(',')[0]),int(i.split(',')[1])))
                         
             slotAmount =len(pointList) - len(lineList) + len(pointList)
-            print 'slotAmount',slotAmount
+          #  print 'slotAmount',slotAmount
             self.amountSliderNumLEdit.setText(str(slotAmount))
         else:
             slotAmount = int(self.amountSliderNumLEdit.text())
@@ -4640,7 +5062,8 @@ class mod_MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
                             boneName = "bone_%s"%slotPlane # + '{:04d}'.format(0)
 
-                            self.createBone(boneName)
+                           # self.createBone(boneName)
+                            spineMainTool.createBone(boneName)
 
                             cmds.setAttr('%s.bone_parent'%boneName,parentBone[0],type='string')
                             cmds.setAttr('%s.bone_slot'%boneName,slotPlane,type='string')

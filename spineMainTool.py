@@ -2,6 +2,111 @@
 import maya.cmds as cmds
 import os,shutil
 
+
+def defineMask(maskObj):
+    print "defineMask",maskObj
+    vertexCount = cmds.polyEvaluate(maskObj,v=True)
+    parentBone = cmds.listRelatives(p=True,type="transform")[0]
+    print "parentBone",parentBone
+    try:
+        cmds.addAttr(maskObj, ln='spineClipping', numberOfChildren=8, attributeType='compound' )
+
+        cmds.addAttr(maskObj, ln='spine_tag', sn='stag' , dt="string", parent='spineClipping'  ) #1
+        cmds.addAttr(maskObj, ln='clipping_slot', sn='slot' , dt="string", parent='spineClipping'  )
+        cmds.addAttr(maskObj, ln='clipping_vertexCount', parent='spineClipping'  )
+        cmds.addAttr(maskObj, ln='clipping_vertexsData', sn='data' , dt="string", parent='spineClipping'  )
+        cmds.addAttr(maskObj, ln='clipping_bone', sn='bone' , dt="string", parent='spineClipping'  )
+        cmds.addAttr(maskObj, ln='clipping_attachment', sn='attachment' , dt="string", parent='spineClipping'  )
+        cmds.addAttr(maskObj, ln='clipping_lastSlot', sn='slot' , dt="string", parent='spineClipping'  )
+        cmds.addAttr(maskObj, ln='clipping_color', sn='color' , dt="string", parent='spineClipping'  )
+
+
+    except:
+        pass
+
+    cmds.setAttr('%s.spine_tag'%maskObj,'spine_clipping',type='string')
+    cmds.setAttr('%s.clipping_slot'%maskObj,maskObj,type='string')
+    cmds.setAttr('%s.clipping_vertexCount'%maskObj,int(vertexCount))
+    cmds.setAttr('%s.clipping_bone'%maskObj,parentBone,type='string')
+    cmds.setAttr('%s.clipping_attachment'%maskObj,maskObj,type='string')
+    cmds.setAttr('%s.clipping_color'%maskObj,"ce3a3aff",type='string')
+    vertexList = ""
+    for i in range(0,vertexCount):
+        vertexP = "%s.vtx[%s]"%(maskObj,str(i))
+        x = float('{:.2f}'.format(cmds.pointPosition(vertexP)[0]))
+        y = float('{:.2f}'.format(cmds.pointPosition(vertexP)[1]))
+        vertexList += (str(x) +","+str(y)+",") 
+       # vertexList.append(x)
+       # vertexList.append(y)
+        
+    cmds.setAttr('%s.clipping_vertexsData'%maskObj,str(vertexList),type='string')
+    shader = cmds.shadingNode("blinn",asShader=True,n="clipping_shader_#")   
+    shading_group= cmds.sets(renderable=True,noSurfaceShader=True,empty=True,n="clipping_SG_#")
+    cmds.connectAttr('%s.color' %shader ,'%s.surfaceShader' %shading_group)
+
+    cmds.select(cl=True) 
+    cmds.select(maskObj)
+    cmds.hyperShade( assign=shader )
+    
+    cmds.setAttr('%s.transparency'%shader,0,1,0.9,type='double3')  ### set to normal blend mode
+    cmds.setAttr('%s.ambientColor'%shader,1,1,1,type='double3')  ### set to normal blend mode
+    cmds.setAttr('%s.diffuse'%shader,0)  ### set to normal blend mode
+
+    #print vertexList
+ #  (cmds.pointPosition(i)[0
+
+
+def createBone(boneName):
+    print "createBone"
+    
+
+    cmds.select(cl=True)
+      
+    bone = cmds.joint(p=(0,0,0),n=boneName)
+
+    cmds.addAttr(bone, ln='spineBone', numberOfChildren=25, attributeType='compound' )
+    cmds.addAttr(bone, ln='spine_tag', sn='stag' , dt="string", parent='spineBone'  ) #1
+    
+    cmds.addAttr(bone, ln='bone_name', sn='name' , dt="string", parent='spineBone'  )
+    cmds.addAttr(bone, ln='bone_parent', sn='parent' , dt="string", parent='spineBone'  )
+    cmds.addAttr(bone, ln='bone_slot', sn='slot' , dt="string", parent='spineBone'  )
+    cmds.addAttr(bone, ln='bone_length', sn='length' , at="float", dv=0,parent='spineBone' ,k=False ) #5
+    cmds.addAttr(bone, ln='bone_transform', sn='transform' , at="enum",en="normal:onlyTranslation:noRotationOrReflection:noScale:noScaleOrReflection", parent='spineBone' ,k=False )
+    cmds.addAttr(bone, ln='bone_x', sn='x' , at="float", dv=0,parent='spineBone' ,k=False )
+    cmds.addAttr(bone, ln='bone_y', sn='y' , at="float", dv=0,parent='spineBone' ,k=False )
+    cmds.addAttr(bone, ln='bone_rotation', sn='rotation' , at="float", dv=0,parent='spineBone' ,k=False )
+    cmds.addAttr(bone, ln='bone_scaleX',  at="float", dv=0,parent='spineBone' ,k=False )#10
+    cmds.addAttr(bone, ln='bone_scaleY',  at="float", dv=0,parent='spineBone' ,k=False )
+    cmds.addAttr(bone, ln='bone_shearX', sn='shearX' , at="float", dv=0,parent='spineBone' ,k=False )
+    cmds.addAttr(bone, ln='bone_shearY', sn='shearY' , at="float", dv=0,parent='spineBone' ,k=False )
+    cmds.addAttr(bone, ln='bone_inheritScale', sn='inheritScale' , at="bool", dv=1,parent='spineBone' ,k=False )
+    cmds.addAttr(bone, ln='bone_inheritRotation', sn='inheritRotation' , at="bool", dv=1,parent='spineBone' ,k=False )
+    cmds.addAttr(bone, ln='set_path', sn='s_path' , at="bool", dv=0,parent='spineBone' ,k=True )
+   
+    cmds.addAttr(bone, ln='slot_width', sn='s_w', parent='spineBone',k=False   )#16
+    cmds.addAttr(bone, ln='slot_height', sn='s_h', parent='spineBone',k=False   )
+        
+    cmds.addAttr(bone, ln='slot_color', usedAsColor=True, attributeType='float3',parent='spineBone' ,k=True )
+    cmds.addAttr(bone, ln='slot_red', attributeType='float',dv=1.0, parent='slot_color',k=True )
+    cmds.addAttr(bone, ln='slot_green', attributeType='float',dv=1.0, parent='slot_color',k=True )
+    cmds.addAttr(bone, ln='slot_blue', attributeType='float',dv=1.0, parent='slot_color',k=True )
+    
+    cmds.addAttr(bone, ln='slot_alpha', attributeType='float',dv=1.0, parent='spineBone',k=True )
+    cmds.addAttr(bone, ln='slot_fade', attributeType='float',dv=1.0, parent='spineBone',k=True )
+
+    cmds.addAttr(bone, ln='slot_dark', usedAsColor=True, attributeType='float3',parent='spineBone' ,k=False )
+    cmds.addAttr(bone, ln='slot_darkRed', attributeType='float', parent='slot_dark',k=False )
+    cmds.addAttr(bone, ln='slot_darkGreen', attributeType='float', parent='slot_dark',k=False )
+    cmds.addAttr(bone, ln='slot_darkBlue', attributeType='float', parent='slot_dark',k=False )                
+    cmds.addAttr(bone, ln='slot_attachment', sn='s_att' , dt="string", parent='spineBone',k=False  )
+    cmds.addAttr(bone, ln='slot_blend', sn='s_blend' , at="enum",en="normal:additive:multiply:screen", parent='spineBone' ,k=True )
+    cmds.addAttr(bone, ln='curvature', sn='s_curve' , at="enum",en="Linear:Stepped:Cycle:------:BC(0.25,0,0.75,0):BC(0.5,0.5,0.5,0.5)", parent='spineBone' ,k=True )
+    
+
+    cmds.setAttr('%s.spine_tag'%bone,'spine_bone',type='string')
+    cmds.setAttr('%s.bone_name'%bone,bone,type='string')
+    return bone
+
    
 def getDrawOrder(objList,fps):  
     #objList = cmds.ls(sl=True,type='joint')

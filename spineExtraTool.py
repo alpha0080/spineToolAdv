@@ -2,6 +2,99 @@
 import maya.cmds as cmds
 import os,shutil,math
 
+
+
+def setAllVertexKeys():
+    objList = cmds.ls(sl=True,type="transform")
+
+    for i in objList:
+        currentVertexCount = cmds.polyEvaluate(i,v=True)
+       # print currentVertexCount
+       # print i
+       # cmds.select('%s.vtx[%s]'%(i,))
+       # for j in range(0,currentVertexCount):
+           # print i,j
+      #  cmds.setKeyframe("%s.pt[%s]"%(i,str(j)),at="px")
+       # cmds.setKeyframe("%s.pt[%s]"%(i,str(j)),at="py")
+      #  cmds.setKeyframe("%s.pt[%s]"%(i,str(j)),at="pz")
+        cmds.setKeyframe("%s.pt[0:%s]"%(i,str(currentVertexCount-1)),at="px")
+        cmds.setKeyframe("%s.pt[0:%s]"%(i,str(currentVertexCount-1)),at="py")
+        cmds.setKeyframe("%s.pt[0:%s]"%(i,str(currentVertexCount-1)),at="pz")
+    cmds.select(objList)
+
+def delAllVertexKeysCurrentFrame():
+   # currentSelect = cmds.ls(sl=True)
+    objList = cmds.ls(sl=True,type="transform")
+    currentFrame = cmds.currentTime(q=True)  
+    for i in objList:
+        currentVertexCount = cmds.polyEvaluate(i,v=True)
+        
+        cmds.cutKey("%s.pt[0:%s]"%(i,str(currentVertexCount-1)),t=(currentFrame,currentFrame))
+    cmds.select(objList)
+
+
+
+def setObjVertexKey():
+    startFrame = 0
+    endFrame=20
+                
+    objList = cmds.ls(sl=True,type="transform")
+    for obj in objList:
+        objShape =  cmds.listRelatives(obj,c=True,type="mesh")[0]
+        #print objShape
+
+        vertexCount = cmds.polyEvaluate(objShape, v=True)
+       # print vertexCount
+        for i in range(startFrame,endFrame):
+            for p in range(0,vertexCount):
+                cmds.currentTime(i,e=True)
+                #px = cmds.getAttr("%s.pt[%s]"%(objShape,str(p)))
+               # print px
+                cmds.setKeyframe("%s.pt[%s]"%(objShape,str(p)))
+
+def loopKeyFrameC(obj,startFrame,endFrame,offsetFrame):
+    print "loopKeyFrameC"#,obj,startFrame,endFrame,offsetFrame
+    keyAbleAttList=["translateX","translateY","translateZ","rotateX","rotateY","rotateZ","scaleX","scaleY","scaleZ","slot_alpha","slot_red","slot_green","slot_blue"] #["translateX","translateY","translateZ","rotateX","rotateY","rotateZ","scaleX","scaleY","scaleZ"]
+    SOframe = float(startFrame +offsetFrame)
+    EOframe = float(endFrame + offsetFrame)
+    #cmds.keyframe(obj,at="translateX",q=True)
+    for attr in keyAbleAttList:
+        try:
+            keyframeList = cmds.keyframe(obj,at=attr,q=True)
+            keyframeListCount = len(keyframeList)
+        except:
+            keyframeListCount = 0
+        print attr,obj,SOframe,EOframe,keyframeList
+        if keyframeListCount > 0:
+            if startFrame < keyframeList[0]:
+              #  print  "startFrame"    
+                firstFrame = float(keyframeList[0])               
+                startFrameValue = cmds.getAttr('%s.%s'%(obj,attr),t= firstFrame)
+                cmds.setKeyframe(t=(startFrame,startFrame),e=True,at=attr,v=startFrameValue)
+            if endFrame > keyframeList[-1]:
+              #  print  "endFrame"  
+                lastFrame =  float(keyframeList[-1])                   
+                endFrameValue  = cmds.getAttr('%s.%s'%(obj,attr),t = lastFrame)
+
+                cmds.setKeyframe(t=(endFrame,endFrame),e=True,at=attr,v=endFrameValue)
+
+            cmds.cutKey(obj,at=attr,t= (startFrame,endFrame))
+            cmds.pasteKey(obj,at=attr , t= (SOframe,))
+            newKeyframeList = cmds.keyframe(obj,at=attr,q=True)
+            newLastFrame = newKeyframeList[-1]
+           # print "newKeyframeList,newLastFrame",newKeyframeList,newLastFrame
+            cmds.setInfinity( obj,pri='cycle', poi='cycle' ,at=attr)
+            cmds.keyTangent(obj,t=(newLastFrame,newLastFrame),ott ="step",e=True)
+     #   else:
+        #    pass
+        #try:
+
+     #   except:
+     #       pass
+
+
+
+
 def loopKeyFrameB(obj,startFrame,endFrame,offsetFrame):
     print "loopKeyFrame22",obj,startFrame,endFrame,offsetFrame
     offsetSartFrame = float(startFrame +offsetFrame)   ##os
@@ -28,7 +121,9 @@ def loopKeyFrameB(obj,startFrame,endFrame,offsetFrame):
                 startFrameAttrValue = cmds.getAttr('%s.%s'%(obj,attr),t=startFrame)
                 cmds.setKeyframe(obj,at=attr,t=startFrame,v=startFrameAttrValue) 
                 cmds.setKeyframe(obj,at=attr,t=endFrame,v=endFrameAttrValue)
+                cmds.keyTangent(obj,itt ="linear", ott ="linear")
             except:
+            
                 pass
             
         else:
@@ -79,13 +174,106 @@ def loopKeyFrameB(obj,startFrame,endFrame,offsetFrame):
     else:
         cmds.cutKey(obj,t=((DVPframe+offsetFrame),offsetNewEndFrame) )
        # cmds.pasteKey('bone_candy01_28',t=(2,10),o="scaleReplace")
+        pastedFrameEnd = offsetSartFrame-0.01
+        cmds.pasteKey(obj,t=(startFrame,pastedFrameEnd),o="scaleReplace")
+        cmds.keyTangent(obj,t=(pastedFrameEnd,pastedFrameEnd),ott ="step",e=True)
+        try:
+            cmds.cutKey(obj,at="translateZ",t=(pastedFrameEnd,pastedFrameEnd))
+            cmds.keyTangent(obj,ott ="step",e=True,at="translateZ")
+        except:
+            pass
+       # cmds.cutKey("bone_freegameFx_1_7_0706",at="translateZ",t=(70.99,70.99))
+
+        #cmds.cutKey(obj,t=((endFrame+1),))
+       # cmds.keyTangent(obj,t=(offsetSartFrame,offsetSartFrame),ott ="stepnext",e=True) startFrame offsetSartFrame
+    
+        
+#def drawCircle():    
+def loopKeyFrameD(obj,startFrame,endFrame,offsetFrame):
+    print "loopKeyFrame22",obj,startFrame,endFrame,offsetFrame
+    offsetSartFrame = float(startFrame +offsetFrame)   ##os
+    #offsetNewStartFrame = float(startFrame +offsetFrame+0.000001)
+    #dividOffsetFrame = dividFrame - 0.01
+    #endOffsetFrame = endFrame -0.01
+    offsetNewEndFrame =float (endFrame +offsetFrame)
+   # dividFrame = float(offsetNewEndFrame -offsetFrame)
+    SOframe = float(startFrame +offsetFrame)
+    EOframe = float(endFrame + offsetFrame)
+    DVframe = float(endFrame - offsetFrame)
+    DVPframe = float(endFrame - offsetFrame + 0.01)
+    cmds.getAttr('%s.translateX'%obj,t=15.0)
+    keyAbleAttList=["translateX","translateY","translateZ","rotateX","rotateY","rotateZ","scaleX","scaleY","scaleZ","slot_alpha","slot_red","slot_green","slot_blue"] #["translateX","translateY","translateZ","rotateX","rotateY","rotateZ","scaleX","scaleY","scaleZ"]
+
+    #cmds.keyframe(obj,at="translateX",q=True)
+    for attr in keyAbleAttList:
+        cmds.keyTangent(obj,itt ="linear", ott ="linear")
+        keyFramesList = cmds.keyframe(obj,at=attr,q=True)
+        #print attr,keyFramesList
+        if offsetFrame == 0:
+            try:
+                endFrameAttrValue = cmds.getAttr('%s.%s'%(obj,attr),t=endFrame)
+                startFrameAttrValue = cmds.getAttr('%s.%s'%(obj,attr),t=startFrame)
+                cmds.setKeyframe(obj,at=attr,t=startFrame,v=startFrameAttrValue) 
+                cmds.setKeyframe(obj,at=attr,t=endFrame,v=endFrameAttrValue)
+                cmds.keyTangent(obj,itt ="linear", ott ="linear")
+            except:
+            
+                pass
+            
+        else:
+            try:
+                if len(keyFramesList) >0 :
+                   # keyframeListAttr = cmds.keyframe(obj,at=attr)
+                   # print "aaaaaaaaaaaa",offsetNewStartFrame,startFrame,endFrame,dividFrame
+                   # cmds.keyTangent(obj,itt ="linear", ott ="linear")
+                   
+                    startFrameValue = cmds.getAttr('%s.%s'%(obj,attr),t=startFrame)
+                    endFrameValue  = cmds.getAttr('%s.%s'%(obj,attr),t=endFrame)
+
+                    DVframeValue = cmds.getAttr('%s.%s'%(obj,attr),t=DVframe)
+                    
+                    cmds.setKeyframe(obj,at=attr,t=DVframe,v=DVframeValue)  #setKey to Divide Frame
+                    cmds.setKeyframe(obj,at=attr,t=DVPframe,v=DVframeValue) #setKey to Divide Frame Offset 0.01
+                    cmds.setKeyframe(obj,at=attr,t=startFrame,v=startFrameValue)  #setKey to Divide Frame
+                    cmds.setKeyframe(obj,at=attr,t=endFrame,v=endFrameValue)  #setKey to Divide Frame
+                  
+                   # cmds.setKeyframe(obj,at=arrt,t=DVframe)
+                   # cmds.setKeyframe('bone_candy01_10',at='translateX',t=10.0)
+                    
+                    cmds.cutKey(obj,at=attr,t= (startFrame,endFrame))
+                    cmds.pasteKey(obj,at=attr, t= (SOframe,))
+                   # cmds.keyTangent(obj,itt ="linear", ott ="linear")
+                   # offsetNewStartFrameValue = cmds.getAttr('%s.%s'%(obj,attr),t=offsetNewStartFrame)
+                   # offsetNewEndFrameValue  = cmds.getAttr('%s.%s'%(obj,attr),t=offsetNewEndFrame)
+                    
+                   # dividFrameValue = cmds.getAttr('%s.%s'%(obj,attr),t=endFrame)
+                   # cmds.setKeyframe(obj,at=attr,t=endFrame,v=dividFrameValue)
+                   # cmds.setKeyframe(obj,at=attr,t=offsetNewStartFrame,v=offsetNewStartFrameValue)
+                   # cmds.setKeyframe(obj,at=attr,t=offsetNewEndFrame,v=offsetNewEndFrameValue)
+                  #      
+                    
+                  #  cmds.keyTangent(obj,itt ="linear", ott ="linear")
+                    
+                    #
+                    
+                   # print attr,currentAttrValue
+                    
+            except:
+                pass
+                
+                
+    '''
+    if offsetFrame == 0:
+        pass
+    else:
+        cmds.cutKey(obj,t=((DVPframe+offsetFrame),offsetNewEndFrame) )
+       # cmds.pasteKey('bone_candy01_28',t=(2,10),o="scaleReplace")
         cmds.pasteKey(obj,t=(startFrame,(offsetSartFrame-0.01)),o="scaleReplace")
         #cmds.cutKey(obj,t=((endFrame+1),))
        # cmds.keyTangent(obj,t=(offsetSartFrame,offsetSartFrame),ott ="stepnext",e=True) startFrame offsetSartFrame
 
-        
-#def drawCircle():    
-        
+    '''    
+#def drawCircle():            
 
 def drawline(boneList,pointListString,lineWidth,startTime,endTime):
     print "drawline________1",boneList,pointListString

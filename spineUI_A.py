@@ -11,20 +11,20 @@ def test():
 def buildDock(self):
     
     print "buildDock"
-    self.dockWidgetImages = QtWidgets.QDockWidget(self)
+    self.dockWidgetImages = QtWidgets.QDockWidget(self.tr("image List"),self)
     self.dockWidgetImages.setObjectName("dockWidget")
     self.dockWidgetImages.setMinimumWidth(280)
     self.dockWidgetImages.setMinimumHeight(700)
 
     self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockWidgetImages)
 
-    self.previewImageDock = QtWidgets.QDockWidget(self)
+    self.previewImageDock = QtWidgets.QDockWidget(self.tr("image preview"),self)
     self.previewImageDock.setObjectName("previewImageDock")
     self.previewImageDock.setMinimumWidth(290)
     self.previewImageDock.setMinimumHeight(300)
     
     
-    self.workSpaceInfoDock = QtWidgets.QDockWidget(self)
+    self.workSpaceInfoDock = QtWidgets.QDockWidget(self.tr("project Info"),self)
     self.workSpaceInfoDock.setObjectName("workSpaceInfoDock")
     self.workSpaceInfoDock.setMinimumWidth(550)
     self.workSpaceInfoDock.setMinimumHeight(300)
@@ -32,7 +32,7 @@ def buildDock(self):
     
     
     
-    self.dockWidgetImagesInfo = QtWidgets.QDockWidget(self)
+    self.dockWidgetImagesInfo = QtWidgets.QDockWidget(self.tr("modify keys"),self)
     self.dockWidgetImagesInfo.setObjectName("dockWidget")
     self.dockWidgetImagesInfo.setMinimumWidth(550)
     self.dockWidgetImagesInfo.setMinimumHeight(675)
@@ -40,13 +40,13 @@ def buildDock(self):
 
     self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockWidgetImagesInfo)
 
-    self.dockImageButton = QtWidgets.QDockWidget(self)
+    self.dockImageButton = QtWidgets.QDockWidget(self.tr("mist"),self)
     self.dockImageButton.setObjectName("dockImageButton")
     self.dockImageButton.setMinimumWidth(300)
     self.dockImageButton.setMinimumHeight(120)
 
 
-    self.dockSpineMeshProgress = QtWidgets.QDockWidget(self)
+    self.dockSpineMeshProgress = QtWidgets.QDockWidget(self.tr("spine Main"),self)
     self.dockSpineMeshProgress.setObjectName("dockMeshProgress")
     self.dockSpineMeshProgress.setMinimumWidth(400)
     self.dockSpineMeshProgress.setMinimumHeight(100)
@@ -62,7 +62,7 @@ def buildDock(self):
 #dockWidgetImages workSpaceInfoDock dockSpineMeshProgress dockSpineItemTree
 
 #dockSpineItemTree dockCamview
-    self.dockSpineItemTree = QtWidgets.QDockWidget(self)
+    self.dockSpineItemTree = QtWidgets.QDockWidget(self.tr("data Info"),self)
     self.dockSpineItemTree.setObjectName("dockSpineItemTree")
     self.dockSpineItemTree.setMinimumWidth(300)
     self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dockSpineItemTree)
@@ -1008,7 +1008,7 @@ def defineImageButtonDock(self,fontScale):
     
     self.stepAttrStepFrame = QtWidgets.QLineEdit(self.keyFrameToolGrp)
     self.stepAttrStepFrame.setGeometry(QtCore.QRect(150, 170, 60, 30))
-    self.stepAttrStepFrame.setObjectName("stepAttrStartFrame")
+    self.stepAttrStepFrame.setObjectName("stepAttrStepFrame")
     self.stepAttrStepFrame.setAlignment(QtCore.Qt.AlignCenter)
     self.stepAttrStepFrame.setText('10')
     self.stepAttrStepFrame.setStyleSheet(lineEditRightBMiddleDark)    
@@ -1342,25 +1342,25 @@ def defineImageButtonDock(self,fontScale):
    # self.modOffsetBtn.clicked.connect(self.changeOffsetMode)
     self.modOffsetBtn.setStyleSheet(buttonStyleC)              
     
-    self.modSinBtn = QtWidgets.QPushButton(self.randomFrameKeyGrp)
-    self.modSinBtn.setGeometry(QtCore.QRect(440, 10, 30, 30))
-    self.modSinBtn.setObjectName("modSinBtn")
-    self.modSinBtn.setCheckable(True)
-    self.modSinBtn.setChecked(False)
-    self.modSinBtn.setFlat(False)
-    self.modSinBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Sin", None, -1))
+   # self.modSinBtn = QtWidgets.QPushButton(self.randomFrameKeyGrp)
+   # self.modSinBtn.setGeometry(QtCore.QRect(440, 10, 30, 30))
+   # self.modSinBtn.setObjectName("modSinBtn")
+   # self.modSinBtn.setCheckable(True)
+   # self.modSinBtn.setChecked(False)
+   # self.modSinBtn.setFlat(False)
+   # self.modSinBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Sin", None, -1))
    # self.modSinBtn.clicked.connect(self.changeOffsetMode)
-    self.modSinBtn.setStyleSheet(buttonStyleC)               
+   # self.modSinBtn.setStyleSheet(buttonStyleC)               
     
-    self.modStepBtn = QtWidgets.QPushButton(self.randomFrameKeyGrp)
-    self.modStepBtn.setGeometry(QtCore.QRect(475, 10, 30, 30))
-    self.modStepBtn.setObjectName("modStepBtn")
-    self.modStepBtn.setCheckable(True)
-    self.modStepBtn.setChecked(False)
-    self.modStepBtn.setFlat(False)
-    self.modStepBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Step", None, -1))
+   # self.modStepBtn = QtWidgets.QPushButton(self.randomFrameKeyGrp)
+   # self.modStepBtn.setGeometry(QtCore.QRect(475, 10, 30, 30))
+  #  self.modStepBtn.setObjectName("modStepBtn")
+  #  self.modStepBtn.setCheckable(True)
+  #  self.modStepBtn.setChecked(False)
+   # self.modStepBtn.setFlat(False)
+   # self.modStepBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Step", None, -1))
    # self.modSinBtn.clicked.connect(self.changeOffsetMode)
-    self.modStepBtn.setStyleSheet(buttonStyleC)               
+   # self.modStepBtn.setStyleSheet(buttonStyleC)               
                             
     self.modTransXBtn = QtWidgets.QPushButton(self.randomFrameKeyGrp)
     self.modTransXBtn.setGeometry(QtCore.QRect(10, 50, 60, 30))
@@ -1410,7 +1410,7 @@ def defineImageButtonDock(self,fontScale):
     self.modTransZBtn.setGeometry(QtCore.QRect(350, 50, 60, 30))
     self.modTransZBtn.setObjectName("modTransZBtn")
     self.modTransZBtn.setText(QtWidgets.QApplication.translate("MainWindow", "mod Z", None, -1))
-   # self.modTransZBtn.clicked.connect(self.defineModZ)
+    self.modTransZBtn.clicked.connect(self.defineModZ)
     self.modTransZBtn.setStyleSheet(buttonStyleLeftB)     
 
 
@@ -2017,13 +2017,13 @@ def defineImageButtonDock(self,fontScale):
     self.defineSpineMaskBtn.setCheckable(True)
     self.defineSpineMaskBtn.setChecked(False)
     self.defineSpineMaskBtn.setFlat(False)
-    self.defineSpineMaskBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Mask", None, -1))
+    self.defineSpineMaskBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Clipping", None, -1))
    # self.characterCreateBtn.clicked.connect(self.defineSpineRootSkeleton)
     self.defineSpineMaskBtn.setStyleSheet(buttonStyleC)          
     
     
     self.normalDynaBtn = QtWidgets.QPushButton(self.dockSpineMeshProgress)
-    self.normalDynaBtn.setGeometry(QtCore.QRect(10, 538, 80, 30))
+    self.normalDynaBtn.setGeometry(QtCore.QRect(10, 450, 80, 30))
     self.normalDynaBtn.setObjectName("normalDynaBtn")
     self.normalDynaBtn.setCheckable(True)
     self.normalDynaBtn.setChecked(True)
@@ -2033,7 +2033,7 @@ def defineImageButtonDock(self,fontScale):
     self.normalDynaBtn.setStyleSheet(buttonStyleC)          
        
     self.styleDynaBtn = QtWidgets.QPushButton(self.dockSpineMeshProgress)
-    self.styleDynaBtn.setGeometry(QtCore.QRect(95, 538, 80, 30))
+    self.styleDynaBtn.setGeometry(QtCore.QRect(95, 450, 80, 30))
     self.styleDynaBtn.setObjectName("styleDynaBtn")
     self.styleDynaBtn.setCheckable(True)
     self.styleDynaBtn.setChecked(False)
@@ -2044,7 +2044,7 @@ def defineImageButtonDock(self,fontScale):
     
     ###    styleDynaGrp  
     self.styleDynaGrp = QtWidgets.QGroupBox(self.dockSpineMeshProgress )
-    self.styleDynaGrp.setGeometry(QtCore.QRect(20,575, 370, 300))
+    self.styleDynaGrp.setGeometry(QtCore.QRect(20,490, 370, 300))
     self.styleDynaGrp.setObjectName("styleDynaGrp")
     self.styleDynaGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
     self.styleDynaGrp.setStyleSheet(QGroupBoxA)     
@@ -2125,7 +2125,7 @@ def defineImageButtonDock(self,fontScale):
     self.pointDataInputPE.setEnabled(True)
     self.pointDataInputPE.setGeometry(QtCore.QRect(30, 80, 310, 180))
     self.pointDataInputPE.setObjectName("pointDataInputPE")
-    self.pointDataInputPE.setPlainText(QtWidgets.QApplication.translate("MainWindow", "100,100 200,200 300,300 400,400\n123,123 222,222 333,333 100,123\n500,100 600,700 100,0 256,256", None, -1))
+    self.pointDataInputPE.setPlainText(QtWidgets.QApplication.translate("MainWindow", "", None, -1))
     self.pointDataInputPE.setStyleSheet(optionLabelA)    
     
 ####                                  
@@ -2158,7 +2158,7 @@ def defineImageButtonDock(self,fontScale):
 
     
     self.defineSpineCharacterGrpBox = QtWidgets.QGroupBox(self.dockSpineMeshProgress)
-    self.defineSpineCharacterGrpBox.setGeometry(QtCore.QRect(10, 120, 370, 260))
+    self.defineSpineCharacterGrpBox.setGeometry(QtCore.QRect(10, 120, 370, 290))
     self.defineSpineCharacterGrpBox.setObjectName("defineSpineCharacterGrpBox")
     self.defineSpineCharacterGrpBox.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
     self.defineSpineCharacterGrpBox.setStyleSheet(QGroupBoxA)     
@@ -2245,7 +2245,25 @@ def defineImageButtonDock(self,fontScale):
    # self.defineMeshBtn.clicked.connect(self.getSkinData)
     self.defineMeshBtn.setStyleSheet(buttonStyleB)     
     
-    
+ 
+ 
+ 
+ 
+ 
+    self.setAllCvsKeysBtn = QtWidgets.QPushButton(self.defineSpineCharacterGrpBox)
+    self.setAllCvsKeysBtn.setGeometry(QtCore.QRect(30, 250, 130, 30))
+    self.setAllCvsKeysBtn.setObjectName("setAllCvsKeysBtn")
+    self.setAllCvsKeysBtn.setText(QtWidgets.QApplication.translate("MainWindow", "set CVs Keys", None, -1))
+   # self.defineMeshBtn.clicked.connect(self.getSkinData)
+    self.setAllCvsKeysBtn.setStyleSheet(buttonStyleB)     
+       
+    self.deleteCvsKeysBtn = QtWidgets.QPushButton(self.defineSpineCharacterGrpBox)
+    self.deleteCvsKeysBtn.setGeometry(QtCore.QRect(170, 250, 130, 30))
+    self.deleteCvsKeysBtn.setObjectName("deleteCvsKeysBtn")
+    self.deleteCvsKeysBtn.setText(QtWidgets.QApplication.translate("MainWindow", "delete CVs Keys", None, -1))
+   # self.defineMeshBtn.clicked.connect(self.getSkinData)
+    self.deleteCvsKeysBtn.setStyleSheet(buttonStyleB)               
+                
     ###### defineClippedGrpBox
     self.defineClippedGrpBox = QtWidgets.QGroupBox(self.dockSpineMeshProgress )
     self.defineClippedGrpBox.setGeometry(QtCore.QRect(10, 170, 370, 210))
@@ -2268,18 +2286,18 @@ def defineImageButtonDock(self,fontScale):
     
     ###### defineSpineSlotBoneGrpBox
     self.defineSpineSlotBoneGrpBox = QtWidgets.QGroupBox(self.dockSpineMeshProgress )
-    self.defineSpineSlotBoneGrpBox.setGeometry(QtCore.QRect(20, 170, 370, 360))
+    self.defineSpineSlotBoneGrpBox.setGeometry(QtCore.QRect(20, 170, 370, 260))
     self.defineSpineSlotBoneGrpBox.setObjectName("defineSpineCharacterGrpBox")
     self.defineSpineSlotBoneGrpBox.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
     self.defineSpineSlotBoneGrpBox.setStyleSheet(QGroupBoxCreateSlotBox)     
     self.defineSpineSlotBoneGrpBox.setVisible(True)
  
     
-
     self.createSlotBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
     self.createSlotBtn.setGeometry(QtCore.QRect(30, 50, 220, 30))
     self.createSlotBtn.setObjectName("createSlot")
-    self.createSlotBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Slot", None, -1))
+   # self.createSlotBtn.setText(QtWidgets.QApplication.translate("MainWindow", "create Slot", None, -1))
+    self.createSlotBtn.setText("create Slot")
     self.createSlotBtn.setStyleSheet(buttonStyleMain)   
     
     self.duplicateSlotBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
@@ -2291,7 +2309,7 @@ def defineImageButtonDock(self,fontScale):
 
  
     self.changeParentBoneBtn = QtWidgets.QPushButton(self.defineSpineSlotBoneGrpBox)
-    self.changeParentBoneBtn.setGeometry(QtCore.QRect(30, 320, 220, 30))
+    self.changeParentBoneBtn.setGeometry(QtCore.QRect(30, 220, 220, 30))
     self.changeParentBoneBtn.setObjectName("changeParentBoneBtn")
     self.changeParentBoneBtn.setText(QtWidgets.QApplication.translate("MainWindow", "change Parent", None, -1))
     self.changeParentBoneBtn.setStyleSheet(buttonStyleB)    
@@ -2358,7 +2376,7 @@ def defineImageButtonDock(self,fontScale):
   #  self.amountSlotSlider.setStyleSheet(lineEditA)
 
     self.dynamicSlotGrp = QtWidgets.QGroupBox(self.dockSpineMeshProgress )
-    self.dynamicSlotGrp.setGeometry(QtCore.QRect(10,575, 370, 300))
+    self.dynamicSlotGrp.setGeometry(QtCore.QRect(10,485, 370, 300))
     self.dynamicSlotGrp.setObjectName("dynamicSlotGrp")
     self.dynamicSlotGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
     self.dynamicSlotGrp.setStyleSheet(QGroupBoxA)     
@@ -2679,7 +2697,7 @@ def defineImageButtonDock(self,fontScale):
 
     #### extra Grp
     self.extraToolGrp = QtWidgets.QGroupBox(self.dockSpineMeshProgress)
-    self.extraToolGrp.setGeometry(QtCore.QRect(10, 880, 370, 200))
+    self.extraToolGrp.setGeometry(QtCore.QRect(10, 790, 370, 300))
     self.extraToolGrp.setTitle("")
     self.extraToolGrp.setTitle(QtWidgets.QApplication.translate("MainWindow", "", None, -1))   
 
@@ -2774,8 +2792,66 @@ def defineImageButtonDock(self,fontScale):
     self.selectExportFileBTnLEdit.setText('')
     self.selectExportFileBTnLEdit.setStyleSheet(lineEditRightB)     
 
+
+          
+    self.checkBox_texturePackage = QtWidgets.QCheckBox(self.extraToolGrp)
+    self.checkBox_texturePackage.setGeometry(QtCore.QRect(15, 125, 150, 25))
+    self.checkBox_texturePackage.setChecked(False)
+    self.checkBox_texturePackage.setObjectName("checkBox_texturePackage")
+    self.checkBox_texturePackage.setText(QtWidgets.QApplication.translate("MainWindow", "texture Package", None, -1))
+    self.checkBox_texturePackage.setStyleSheet(checkA)   
+
+
+          
+    self.checkBox_prettyPrint = QtWidgets.QCheckBox(self.extraToolGrp)
+    self.checkBox_prettyPrint.setGeometry(QtCore.QRect(170, 125, 150, 25))
+    self.checkBox_prettyPrint.setChecked(True)
+    self.checkBox_prettyPrint.setObjectName("checkBox_prettyPrint")
+    self.checkBox_prettyPrint.setText(QtWidgets.QApplication.translate("MainWindow", "pretty print", None, -1))
+    self.checkBox_prettyPrint.setStyleSheet(checkA)   
+
+
+
+
+    self.textureWidthLabel = QtWidgets.QLabel(self.extraToolGrp)
+    self.textureWidthLabel.setGeometry(QtCore.QRect(30,160, 70, 25))
+    self.textureWidthLabel.setObjectName("textureWidthLabel")
+    self.textureWidthLabel.setText(QtWidgets.QApplication.translate("MainWindow", "width:", None, -1))
+    self.textureWidthLabel.setStyleSheet(labelTextA)  
+   # self.textureWidthLabel.setEnabled(False)    
+
+
+    self.textureWidthLEdit = QtWidgets.QLineEdit(self.extraToolGrp)
+    self.textureWidthLEdit.setGeometry(QtCore.QRect(70, 160, 70, 25))
+    self.textureWidthLEdit.setObjectName("textureWidthLEdit")
+    self.textureWidthLEdit.setText(QtWidgets.QApplication.translate("MainWindow", "2048", None, -1))
+    self.textureWidthLEdit.setAlignment(QtCore.Qt.AlignCenter)
+    self.textureWidthLEdit.setStyleSheet(lineEditCMiddle)     
+    #self.textureWidthLEdit.setEnabled(False)    
+             
+    self.textureHeightLabel = QtWidgets.QLabel(self.extraToolGrp)
+    self.textureHeightLabel.setGeometry(QtCore.QRect(150,160, 70, 25))
+    self.textureHeightLabel.setObjectName("textureHeightLabel")
+    self.textureHeightLabel.setText(QtWidgets.QApplication.translate("MainWindow", "height:", None, -1))
+    self.textureHeightLabel.setStyleSheet(labelTextA)  
+  #  self.textureHeightLabel.setEnabled(False)    
+
+
+    self.textureHeightLEdit = QtWidgets.QLineEdit(self.extraToolGrp)
+    self.textureHeightLEdit.setGeometry(QtCore.QRect(190, 160, 70, 25))
+    self.textureHeightLEdit.setObjectName("textureHeightLEdit")
+    self.textureHeightLEdit.setText(QtWidgets.QApplication.translate("MainWindow", "2048", None, -1))
+    self.textureHeightLEdit.setAlignment(QtCore.Qt.AlignCenter)
+    self.textureHeightLEdit.setStyleSheet(lineEditCMiddle)   
+   # self.textureHeightLEdit.setEnabled(False)    
+
+
+
+
+
+
     self.exportToSpineFileBtn = QtWidgets.QPushButton(self.extraToolGrp)
-    self.exportToSpineFileBtn.setGeometry(QtCore.QRect(10, 150, 350, 30))
+    self.exportToSpineFileBtn.setGeometry(QtCore.QRect(10, 250, 350, 30))
     self.exportToSpineFileBtn.setObjectName("exportToSpineFileBtn")
     self.exportToSpineFileBtn.setText(QtWidgets.QApplication.translate("MainWindow", "Export To Spine", None, -1))
    # self.exportToSpineFileBtn.clicked.connect(self.exortTOSpineJson)              
